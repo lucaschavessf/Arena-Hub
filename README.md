@@ -11,9 +11,9 @@ O arena HUB é uma solução tecnológica desenvolvida para a disciplina de Prog
 
 ### Entrega 01
 
-- Histórias de usuário
-- Protótipo Lo-fi no Figma
-- Screencast do protótipo
+- Histórias de usuário - [Link](https://docs.google.com/document/d/1kxJoYZtxQxUNRqABCmeUsULKwRhVwGpejBHDX-3AZqQ/edit?tab=t.wlvzoempfwse)
+- Protótipo Lo-fi no Figma - [Link](https://www.figma.com/design/5iBReB6S1BmCdn2mF8iPc2/ArenaHub?node-id=0-1&p=f)
+- Screencast do protótipo - [Link](https://www.youtube.com/watch?v=Dwhu_xolZiU)
 
 ### Entrega 02
 
