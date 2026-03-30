@@ -5,7 +5,7 @@ import com.arenahub.backend.dto.RegisterRequestDTO;
 import com.arenahub.backend.dto.ResponseDTO;
 import com.arenahub.backend.infra.security.TokenService;
 import com.arenahub.backend.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.arenahub.backend.domain.usuario.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,11 +19,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 public class AuthController {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+
+    @Autowired
+    public AuthController(UserRepository repository, PasswordEncoder passwordEncoder, TokenService tokenService) {
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
