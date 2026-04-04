@@ -53,7 +53,7 @@
           </form>
 
           <footer class="auth-footer">
-            <p>Já possui uma conta? <router-link to="/">Fazer Login</router-link></p>
+            <p>Já possui uma conta? <router-link to="/login">Fazer Login</router-link></p>
           </footer>
         </div>
       </div>

@@ -13,6 +13,10 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Cadastro',
     component: () => import('@/views/Cadastro.vue') 
   },
+  {
+  path: '/login',
+  component: () => import('../views/Login.vue'),
+  },
   { 
     path: '/evento/:id', 
     name: 'EventoDetalhes',
@@ -53,7 +57,7 @@ const routes: Array<RouteRecordRaw> = [
   {
   path: '/:pathMatch(.*)*',
   component: () => import('@/views/NotFound.vue'),
-}
+  }
 ]
 
 const router = createRouter({
