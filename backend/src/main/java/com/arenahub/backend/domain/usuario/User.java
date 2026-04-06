@@ -3,9 +3,12 @@ package com.arenahub.backend.domain.usuario;
 import jakarta.persistence.*;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "usuarios")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
