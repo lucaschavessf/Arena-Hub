@@ -6,18 +6,17 @@ import com.arenahub.backend.domain.cliente.Cliente;
 import com.arenahub.backend.domain.administrador.Administrador;
 import com.arenahub.backend.repository.IUserRepository;
 
-import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService {
 
     private final IUserRepository _usuarioRepository;
+
+    public UsuarioService(IUserRepository _usuarioRepository) {
+        this._usuarioRepository = _usuarioRepository;
+    }
 
     public UsuarioResponseDTO cadastrarAdmin(AdminRequestDTO dto) {
         Administrador admin = new Administrador();
@@ -83,5 +82,3 @@ public class UsuarioService {
         return builder.build();
     }
 }
-
-
