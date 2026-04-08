@@ -1,17 +1,25 @@
 package com.arenahub.backend.dto;
 
-import lombok.Builder;
-
-import java.util.UUID;
-
-@Builder
 public class UsuarioResponseDTO {
+
     private String id;
-    private String  nome;
-    private String  email;
-    private String  tipo;
-    private String  setorDepartamento;
-    private String  cpf;
+    private String nome;
+    private String email;
+    private String tipo;
+    private String setorDepartamento;
+    private String cpf;
+
+    public UsuarioResponseDTO(String id, String nome, String email, String tipo, String setorDepartamento, String cpf) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.tipo = tipo;
+        this.setorDepartamento = setorDepartamento;
+        this.cpf = cpf;
+    }
+
+    public UsuarioResponseDTO() {
+    }
 
     public String getId() {
         return id;
@@ -57,7 +65,7 @@ public class UsuarioResponseDTO {
         return nome;
     }
 
-    public void setName(String nome) {
+    public void setNome(String nome) {
         this.nome = nome;
     }
 }
