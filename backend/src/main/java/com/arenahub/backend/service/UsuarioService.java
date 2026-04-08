@@ -66,19 +66,26 @@ public class UsuarioService {
     }
 
     private UsuarioResponseDTO toResponse(User u) {
-        UsuarioResponseDTO.UsuarioResponseDTOBuilder builder = UsuarioResponseDTO.builder()
-                .id(u.getId())
-                .nome(u.getName())
-                .email(u.getEmail());
+
+        String tipo = null;
+        String setorDepartamento = null;
+        String cpf = null;
 
         if (u instanceof Administrador a) {
-            builder.tipo("ADMIN")
-                    .setorDepartamento(a.getSetorDepartamento());
+            tipo = "ADMIN";
+            setorDepartamento = a.getSetorDepartamento();
         } else if (u instanceof Cliente c) {
-            builder.tipo("CLIENTE")
-                    .cpf(c.getCpf());
+            tipo = "CLIENTE";
+            cpf = c.getCpf();
         }
 
-        return builder.build();
+        return new UsuarioResponseDTO(
+                u.getId(),
+                u.getName(),
+                u.getEmail(),
+                tipo,
+                setorDepartamento,
+                cpf
+        );
     }
 }
