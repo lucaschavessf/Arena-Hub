@@ -6,18 +6,17 @@ import com.arenahub.backend.domain.cliente.Cliente;
 import com.arenahub.backend.domain.administrador.Administrador;
 import com.arenahub.backend.repository.IUserRepository;
 
-import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService {
 
     private final IUserRepository _usuarioRepository;
+
+    public UsuarioService(IUserRepository _usuarioRepository) {
+        this._usuarioRepository = _usuarioRepository;
+    }
 
     public UsuarioResponseDTO cadastrarAdmin(AdminRequestDTO dto) {
         Administrador admin = new Administrador();
@@ -67,21 +66,26 @@ public class UsuarioService {
     }
 
     private UsuarioResponseDTO toResponse(User u) {
-        UsuarioResponseDTO.UsuarioResponseDTOBuilder builder = UsuarioResponseDTO.builder()
-                .id(u.getId())
-                .nome(u.getName())
-                .email(u.getEmail());
+
+        String tipo = null;
+        String setorDepartamento = null;
+        String cpf = null;
 
         if (u instanceof Administrador a) {
-            builder.tipo("ADMIN")
-                    .setorDepartamento(a.getSetorDepartamento());
+            tipo = "ADMIN";
+            setorDepartamento = a.getSetorDepartamento();
         } else if (u instanceof Cliente c) {
-            builder.tipo("CLIENTE")
-                    .cpf(c.getCpf());
+            tipo = "CLIENTE";
+            cpf = c.getCpf();
         }
 
-        return builder.build();
+        return new UsuarioResponseDTO(
+                u.getId(),
+                u.getName(),
+                u.getEmail(),
+                tipo,
+                setorDepartamento,
+                cpf
+        );
     }
 }
-
-

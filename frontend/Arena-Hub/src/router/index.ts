@@ -50,6 +50,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Agenda.vue') 
   },
   { 
+    path: '/admin/solicitacoes', 
+    name: 'AdminSolicitacoes',
+    component: () => import('@/views/Solicitacoes.vue') 
+  },
+  { 
     path: '/pagamento', 
     name: 'Pagamento',
     component: () => import('@/views/Pagamento.vue') 

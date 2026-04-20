@@ -4,6 +4,19 @@
     
     <main class="main-content">
       <div class="checkout-container" v-if="evento">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+          <router-link to="/" class="breadcrumb-link">Início</router-link>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+          <router-link :to="`/evento/${evento.id}`" class="breadcrumb-link">{{ evento.title }}</router-link>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+          <span class="breadcrumb-current">Comprar Ingressos</span>
+        </div>
+
         <section class="event-summary-card">
           <div class="event-image">
             <img :src="evento.image" :alt="evento.title" />
@@ -14,15 +27,27 @@
             <h1 class="event-title">{{ evento.title }}</h1>
             <div class="event-meta">
               <div class="meta-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                <div class="meta-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                  </svg>
+                </div>
                 <span>{{ evento.date }}</span>
               </div>
               <div class="meta-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <div class="meta-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                  </svg>
+                </div>
                 <span>{{ evento.time }}</span>
               </div>
               <div class="meta-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div class="meta-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                </div>
                 <span>{{ evento.venue }}</span>
               </div>
             </div>
@@ -33,7 +58,10 @@
 
         <section class="ticket-selection-area">
           <header class="section-header">
-            <h2 class="section-title">Escolha seus Ingressos</h2>
+            <div class="header-content">
+              <h2 class="section-title">Escolha seus Ingressos</h2>
+              <div class="title-line"></div>
+            </div>
             <p class="section-subtitle">Selecione a quantidade para cada setor disponível</p>
           </header>
 
@@ -57,15 +85,22 @@
 
               <div class="ticket-qty-control">
                 <button class="control-btn" @click="alterarQuantidade(idx, -1)" :disabled="!cart.ingressos[idx]">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
                 </button>
                 <span class="qty-display">{{ cart.ingressos[idx] || 0 }}</span>
                 <button class="control-btn" @click="alterarQuantidade(idx, 1)">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
                 </button>
               </div>
 
-              <div class="desktop-only text-center price-unit">R$ {{ ing.preco.toFixed(2) }}</div>
+              <div class="desktop-only text-center price-unit">
+                <span class="price-value">R$ {{ ing.preco.toFixed(2) }}</span>
+                <span v-if="ing.taxa > 0" class="tax-info">+ R$ {{ ing.taxa.toFixed(2) }} taxa</span>
+              </div>
               
               <div class="ticket-subtotal text-right">
                 <span class="subtotal-label">Subtotal:</span>
@@ -94,12 +129,21 @@
               <div class="total-display" v-if="totalGeral > 0">
                 <span class="label">VALOR TOTAL</span>
                 <span class="val">R$ {{ totalGeral.toFixed(2) }}</span>
+                <span class="installment-info">em até 12x sem juros</span>
               </div>
-              <div class="empty-msg" v-else>Selecione ao menos um ingresso</div>
+              <div class="empty-msg" v-else>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span>Selecione ao menos um ingresso para continuar</span>
+              </div>
 
               <button class="btn-checkout" :disabled="totalGeral === 0" @click="irParaPagamento">
                 <span>FECHAR PEDIDO</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
               </button>
             </div>
           </footer>
@@ -190,7 +234,12 @@ const irParaPagamento = () => {
 </script>
 
 <style scoped>
-.page { background: #0a0e17; min-height: 100vh; display: flex; flex-direction: column; }
+.page { 
+  background: #0a0e17; 
+  min-height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+}
 
 .main-content { 
   flex: 1;
@@ -202,19 +251,133 @@ const irParaPagamento = () => {
 
 .checkout-container { 
   width: 100%;
-  max-width: 1100px; /* ALINHAMENTO MESTRE */
+  max-width: 1100px;
   display: flex; 
   flex-direction: column; 
   gap: 32px; 
 }
 
-/* Event Summary Card - Desktop Proportions */
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: #8e9aaf;
+}
+
+.breadcrumb-link {
+  color: #8e9aaf;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-link:hover {
+  color: #c9a84c;
+}
+
+.breadcrumb-current {
+  color: #c9a84c;
+  font-weight: 600;
+}
+
+.breadcrumb svg {
+  color: #4a5568;
+}
+
+/* Event Summary Card */
 .event-summary-card {
   display: grid; 
   grid-template-columns: 380px 1fr;
-  background: #121826; 
-  border-radius: 20px; 
+  background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
+  border-radius: 24px; 
   overflow: hidden;
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-summary-card:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+.event-image { 
+  position: relative; 
+  height: 100%;
+  min-height: 280px;
+}
+
+.event-image img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  transition: transform 0.6s ease;
+}
+
+.event-summary-card:hover .event-image img {
+  transform: scale(1.05);
+}
+
+.image-overlay { 
+  position: absolute; 
+  inset: 0; 
+  background: linear-gradient(to right, 
+    transparent 0%, 
+    rgba(18, 24, 38, 0.3) 50%,
+    #121826 100%
+  ); 
+}
+
+.event-details { 
+  padding: 40px; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  position: relative;
+}
+
+.category-badge { 
+  background: linear-gradient(135deg, #c9a84c, #d4af37);
+  color: #0a0e17; 
+  padding: 6px 14px; 
+  border-radius: 30px; 
+  font-size: 0.75rem; 
+  font-weight: 800; 
+  text-transform: uppercase; 
+  margin-bottom: 16px; 
+  width: fit-content; 
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(201, 168, 76, 0.2);
+}
+
+.event-title { 
+  font-size: 2rem; 
+  font-weight: 800; 
+  margin-bottom: 24px; 
+  color: #fff; 
+  line-height: 1.2;
+  background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.event-meta { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 20px; 
+  color: #b0b8c5; 
+  font-size: 0.95rem; 
+}
+
+.meta-item { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  background: rgba(28, 36, 51, 0.5);
+  padding: 8px 16px;
+  border-radius: 30px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -231,21 +394,56 @@ const irParaPagamento = () => {
 .event-description { margin-top: 24px; color: #d1d5db; font-size: 1.05rem; line-height: 1.6; }
 
 /* Tickets Area */
-.ticket-selection-area { background: #121826; border-radius: 20px; padding: 40px; border: 1px solid rgba(255, 255, 255, 0.05); }
-.section-header { margin-bottom: 32px; }
-.section-title { font-size: 1.5rem; font-weight: 700; color: #fff; }
-.section-subtitle { color: #8e9aaf; font-size: 1rem; }
+.ticket-selection-area { 
+  background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
+  border-radius: 24px; 
+  padding: 40px; 
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
 
-/* Grid de Ingressos Otimizado */
+.section-header { 
+  margin-bottom: 36px; 
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.section-title { 
+  font-size: 1.6rem; 
+  font-weight: 700; 
+  color: #fff; 
+  margin: 0;
+}
+
+.title-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, #c9a84c, transparent);
+  border-radius: 1px;
+}
+
+.section-subtitle { 
+  color: #8e9aaf; 
+  font-size: 0.95rem; 
+  margin-left: 8px;
+}
+
+/* Grid de Ingressos */
 .table-header-desktop {
   display: grid; 
   grid-template-columns: 1fr 160px 140px 160px;
   padding: 0 20px 16px; 
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 2px solid rgba(201, 168, 76, 0.2);
   color: #c9a84c; 
   font-size: 0.8rem; 
   font-weight: 700; 
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .ticket-item {
@@ -253,59 +451,330 @@ const irParaPagamento = () => {
   grid-template-columns: 1fr 160px 140px 160px;
   align-items: center; 
   padding: 24px 20px; 
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  transition: background 0.3s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  border-radius: 8px;
 }
-.is-selected { background: rgba(201, 168, 76, 0.05); }
 
-.ticket-name { display: block; font-size: 1.2rem; font-weight: 700; color: #fff; }
-.ticket-subtext { font-size: 0.85rem; color: #8e9aaf; }
-.price-unit { color: #fff; font-weight: 500; }
+.ticket-item:hover {
+  background: rgba(28, 36, 51, 0.5);
+}
+
+.is-selected { 
+  background: linear-gradient(90deg, rgba(201, 168, 76, 0.08), transparent);
+  border-left: 3px solid #c9a84c;
+}
+
+.ticket-name { 
+  display: block; 
+  font-size: 1.2rem; 
+  font-weight: 700; 
+  color: #fff; 
+  margin-bottom: 4px;
+}
+
+.ticket-subtext { 
+  font-size: 0.85rem; 
+  color: #8e9aaf; 
+}
+
+.price-unit {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.price-value {
+  color: #fff; 
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.tax-info {
+  font-size: 0.7rem;
+  color: #8e9aaf;
+}
 
 /* Qty Controls */
-.ticket-qty-control { display: flex; align-items: center; gap: 16px; justify-content: center; }
+.ticket-qty-control { 
+  display: flex; 
+  align-items: center; 
+  gap: 16px; 
+  justify-content: center; 
+}
+
 .control-btn {
-  width: 36px; height: 36px; border-radius: 50%; border: 2px solid #c9a84c;
-  background: transparent; color: #c9a84c; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: 0.2s;
+  width: 36px; 
+  height: 36px; 
+  border-radius: 12px; 
+  border: 2px solid rgba(201, 168, 76, 0.5);
+  background: transparent; 
+  color: #c9a84c; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.control-btn:hover:not(:disabled) { background: #c9a84c; color: #121826; }
-.qty-display { font-size: 1.2rem; font-weight: 800; min-width: 30px; text-align: center; color: #fff; }
 
-/* Resumo de Pagamento */
+.control-btn:hover:not(:disabled) { 
+  background: #c9a84c; 
+  color: #121826; 
+  border-color: #c9a84c;
+  transform: scale(1.05);
+}
+
+.control-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.qty-display { 
+  font-size: 1.3rem; 
+  font-weight: 800; 
+  min-width: 30px; 
+  text-align: center; 
+  color: #fff; 
+}
+
+.ticket-subtotal {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subtotal-label {
+  font-size: 0.7rem;
+  color: #8e9aaf;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subtotal-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #c9a84c;
+}
+
+/* Checkout Footer */
 .checkout-footer {
-  margin-top: 40px; background: #1c2433; border-radius: 20px;
-  padding: 40px; border: 1px solid rgba(201, 168, 76, 0.2);
+  margin-top: 40px; 
+  background: linear-gradient(135deg, #1a2233 0%, #151c2a 100%);
+  border-radius: 20px;
+  padding: 36px; 
+  border: 1px solid rgba(201, 168, 76, 0.15);
 }
-.checkout-summary-details {
-  display: flex; flex-direction: column; gap: 14px;
-  padding-bottom: 30px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.summary-line { display: flex; justify-content: space-between; font-size: 1rem; color: #8e9aaf; }
-.summary-line.highlight { font-size: 1.3rem; font-weight: 800; margin-top: 10px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); }
-.white-text { color: #fff; }
-.gold-text { color: #c9a84c; }
 
-.checkout-actions { display: flex; justify-content: space-between; align-items: center; }
-.total-display .label { font-size: 0.85rem; color: #8e9aaf; font-weight: 700; display: block; }
-.total-display .val { font-size: 2.2rem; font-weight: 900; color: #c9a84c; }
+.checkout-summary-details {
+  display: flex; 
+  flex-direction: column; 
+  gap: 14px;
+  padding-bottom: 28px; 
+  margin-bottom: 28px; 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.summary-line { 
+  display: flex; 
+  justify-content: space-between; 
+  font-size: 1rem; 
+  color: #8e9aaf; 
+}
+
+.summary-line.highlight { 
+  font-size: 1.4rem; 
+  font-weight: 800; 
+  margin-top: 12px; 
+  padding-top: 20px; 
+  border-top: 2px dashed rgba(201, 168, 76, 0.3);
+}
+
+.white-text { 
+  color: #fff; 
+  font-weight: 600;
+}
+
+.gold-text { 
+  color: #c9a84c; 
+  font-size: 1.6rem;
+}
+
+.checkout-actions { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+.total-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.total-display .label { 
+  font-size: 0.85rem; 
+  color: #8e9aaf; 
+  font-weight: 700; 
+  display: block; 
+  letter-spacing: 1px;
+}
+
+.total-display .val { 
+  font-size: 2.5rem; 
+  font-weight: 900; 
+  color: #c9a84c; 
+  line-height: 1.2;
+}
+
+.installment-info {
+  font-size: 0.75rem;
+  color: #8e9aaf;
+  margin-top: 4px;
+}
+
+.empty-msg {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #8e9aaf;
+  font-size: 0.95rem;
+  padding: 12px 20px;
+  background: rgba(255, 94, 94, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 94, 94, 0.2);
+}
+
+.empty-msg svg {
+  color: #ff5e5e;
+  flex-shrink: 0;
+}
 
 .btn-checkout {
-  background: #c9a84c; color: #0a0e17; border: none; padding: 20px 48px;
-  border-radius: 14px; font-weight: 800; font-size: 1.1rem; cursor: pointer;
-  display: flex; align-items: center; gap: 12px; transition: 0.3s;
+  background: linear-gradient(135deg, #c9a84c, #d4af37);
+  color: #0a0e17; 
+  border: none; 
+  padding: 20px 48px;
+  border-radius: 16px; 
+  font-weight: 800; 
+  font-size: 1.1rem; 
+  cursor: pointer;
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 20px rgba(201, 168, 76, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-.btn-checkout:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(201, 168, 76, 0.3); }
 
-/* Responsive adjustments */
-@media (max-width: 900px) {
-  .event-summary-card { grid-template-columns: 1fr; }
-  .table-header-desktop { display: none; }
-  .ticket-item { grid-template-columns: 1fr auto; }
-  .checkout-actions { flex-direction: column; gap: 30px; text-align: center; }
-  .btn-checkout { width: 100%; }
+.btn-checkout:hover:not(:disabled) { 
+  transform: translateY(-3px); 
+  box-shadow: 0 15px 30px rgba(201, 168, 76, 0.3);
 }
 
+.btn-checkout:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-checkout svg {
+  transition: transform 0.3s ease;
+}
+
+.btn-checkout:hover:not(:disabled) svg {
+  transform: translateX(4px);
+}
+
+/* Utilitários */
 .text-center { text-align: center; }
 .text-right { text-align: right; }
+.desktop-only { display: block; }
+.mobile-price-tag { display: none; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .event-summary-card { 
+    grid-template-columns: 1fr; 
+  }
+  
+  .image-overlay {
+    background: linear-gradient(to bottom, 
+      transparent 0%, 
+      rgba(18, 24, 38, 0.5) 50%,
+      #121826 100%
+    );
+  }
+  
+  .table-header-desktop { 
+    display: none; 
+  }
+  
+  .ticket-item { 
+    grid-template-columns: 1fr auto; 
+    gap: 16px;
+  }
+  
+  .desktop-only { 
+    display: none; 
+  }
+  
+  .mobile-price-tag {
+    display: block;
+    color: #c9a84c;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+  
+  .checkout-actions { 
+    flex-direction: column; 
+    gap: 24px; 
+    text-align: center; 
+  }
+  
+  .btn-checkout { 
+    width: 100%; 
+    justify-content: center;
+  }
+  
+  .total-display {
+    text-align: center;
+  }
+  
+  .empty-msg {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    padding: 40px 16px;
+  }
+  
+  .event-details {
+    padding: 28px;
+  }
+  
+  .event-title {
+    font-size: 1.6rem;
+  }
+  
+  .ticket-selection-area {
+    padding: 28px 20px;
+  }
+  
+  .checkout-footer {
+    padding: 24px 20px;
+  }
+  
+  .total-display .val {
+    font-size: 2rem;
+  }
+  
+  .btn-checkout {
+    padding: 16px 32px;
+    font-size: 1rem;
+  }
+}
 </style>

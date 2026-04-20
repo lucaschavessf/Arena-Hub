@@ -4,7 +4,6 @@ package com.arenahub.backend.controller;
 import com.arenahub.backend.dto.*;
 import com.arenahub.backend.service.UsuarioService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-@RequiredArgsConstructor
 public class UserController {
 
-    private final UsuarioService _usuarioService;
+    private UsuarioService _usuarioService;
+
+    public UserController(UsuarioService _usuarioService){
+        this._usuarioService = _usuarioService;
+    }
 
     @PostMapping("/admin")
     public ResponseEntity<UsuarioResponseDTO> postAdmin(

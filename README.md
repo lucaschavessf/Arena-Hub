@@ -18,8 +18,14 @@ O arena HUB é uma solução tecnológica desenvolvida para a disciplina de Prog
 ### Entrega 02
 
 - Implementar ao menos 2 histórias
+*CRIAR EVENTO*
+<img width="1861" height="967" alt="image" src="https://github.com/user-attachments/assets/5c680b76-8faf-44e0-83a3-c5a3ac2a5aa0" />
+*LISTAR EVENTO*
+<img width="1875" height="968" alt="image" src="https://github.com/user-attachments/assets/5d016056-8f03-45ce-8d68-4a8343a19439" />
+<img width="1860" height="968" alt="image" src="https://github.com/user-attachments/assets/d8f5849d-7caf-4764-b276-9744a4dbf37f" />
+
 - Issue/bug tracker
-- Screencast
+- Screencast - [Link](https://youtu.be/W-_i4vvJgSI)
 
 ### Entrega 03
 
