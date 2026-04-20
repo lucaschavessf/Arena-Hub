@@ -87,12 +87,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
 import EventCard from '../components/EventCard.vue'
 import LoginModal from '../components/LoginModal.vue'
-import { eventos } from '../data/mock.js'
 
 const search = ref('')
 const activeCategory = ref('Todos')
@@ -100,8 +99,30 @@ const showLogin = ref(false)
 const isSearching = ref(false)
 const categorias = ['Todos', 'Show', 'Esportes', 'Comédia', 'Teatro', 'Corporativo']
 
+const eventos = ref([])
+
+onMounted(async () => {
+  try {
+    const response = await fetch('http://localhost:8080/eventos')
+    if (!response.ok) {
+      throw new Error('Erro ao buscar eventos da API')
+    }
+    const data = await response.json()
+    eventos.value = data.map(ev => ({
+      id: ev.id,
+      title: ev.nome,
+      category: ev.categoria || 'Show',
+      date: ev.dataInicio ? new Date(ev.dataInicio).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : 'Data a definir',
+      venue: 'Arena Hub',
+      image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&q=80'
+    }))
+  } catch (error) {
+    console.error('Erro ao carregar eventos:', error)
+  }
+})
+
 const eventosFiltrados = computed(() => {
-  return eventos.filter(e => {
+  return eventos.value.filter(e => {
     const matchCat = activeCategory.value === 'Todos' || e.category === activeCategory.value
     const matchSearch = !search.value || e.title.toLowerCase().includes(search.value.toLowerCase())
     return matchCat && matchSearch

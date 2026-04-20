@@ -146,9 +146,39 @@ const form = reactive({
   descricao: '', instagram: '',
 })
 
-function submeter() { 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  step.value = 3 
+async function submeter() { 
+  try {
+    const dataInicio = form.dataEvento ? `${form.dataEvento}T20:00:00` : new Date().toISOString().substring(0, 19);
+    const dataFim = form.dataEvento ? `${form.dataEvento}T23:59:59` : new Date().toISOString().substring(0, 19);
+
+    const payload = {
+      nome: form.nomeEvento,
+      descricao: form.descricao || "Sem descrição",
+      dataInicio: dataInicio,
+      dataFim: dataFim,
+      expectativaPublico: 1000, // Valor padrão
+      categoria: form.categoria || "Outros",
+      espacoId: 1 // Valor fixo conforme solicitado
+    };
+
+    const response = await fetch('http://localhost:8080/eventos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro na requisição para criar evento');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    step.value = 3; 
+  } catch (error) {
+    console.error('Erro ao enviar evento:', error);
+    alert('Ocorreu um erro ao cadastrar o evento. Verifique a conexão com o servidor.');
+  }
 }
 </script>
 

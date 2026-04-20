@@ -26,6 +26,8 @@
                 <span>{{ evento.venue }}</span>
               </div>
             </div>
+            
+            <p class="event-description" v-if="evento.description">{{ evento.description }}</p>
           </div>
         </section>
 
@@ -109,11 +111,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
-import { eventos } from '../data/mock.js'
 import { useCartStore } from '../stores/cart'
 
 const route = useRoute()
@@ -121,11 +122,36 @@ const router = useRouter()
 const cart = useCartStore()
 
 const eventoId = computed(() => Number(route.params.id))
-const evento = computed(() => eventos.find((e: any) => e.id === eventoId.value))
+const evento = ref<any>(null)
 
-onMounted(() => {
+onMounted(async () => {
   window.scrollTo(0, 0)
-  if (evento.value) cart.eventoSelecionado = evento.value
+  try {
+    const response = await fetch(`http://localhost:8080/eventos/${eventoId.value}`)
+    if (!response.ok) {
+      throw new Error('Erro ao buscar evento da API')
+    }
+    const data = await response.json()
+    
+    evento.value = {
+      id: data.id,
+      title: data.nome,
+      category: data.categoria || 'Show',
+      date: data.dataInicio ? new Date(data.dataInicio).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : 'Data a definir',
+      time: data.dataInicio ? new Date(data.dataInicio).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '20:00',
+      venue: 'Arena Hub',
+      image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&q=80',
+      description: data.descricao,
+      // Ingressos fixos (mock) para manter o checkout funcionando
+      ingressos: [
+        { tipo: 'PISTA', subtipo: null, preco: 85.00, taxa: 8.50 },
+        { tipo: 'PISTA PREMIUM', subtipo: 'Acesso VIP', preco: 150.00, taxa: 15.00 }
+      ]
+    }
+    cart.eventoSelecionado = evento.value
+  } catch (error) {
+    console.error('Erro ao carregar evento:', error)
+  }
 })
 
 const alterarQuantidade = (idx: number, delta: number) => {
@@ -202,6 +228,7 @@ const irParaPagamento = () => {
 .event-meta { display: flex; flex-wrap: wrap; gap: 24px; color: #8e9aaf; font-size: 0.95rem; }
 .meta-item { display: flex; align-items: center; gap: 8px; }
 .meta-item svg { color: #c9a84c; }
+.event-description { margin-top: 24px; color: #d1d5db; font-size: 1.05rem; line-height: 1.6; }
 
 /* Tickets Area */
 .ticket-selection-area { background: #121826; border-radius: 20px; padding: 40px; border: 1px solid rgba(255, 255, 255, 0.05); }
