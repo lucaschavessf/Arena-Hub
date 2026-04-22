@@ -7,22 +7,25 @@ import com.arenahub.backend.domain.administrador.Administrador;
 import com.arenahub.backend.repository.IUserRepository;
 
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Service
 public class UsuarioService {
 
     private final IUserRepository _usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(IUserRepository _usuarioRepository) {
+    public UsuarioService(IUserRepository _usuarioRepository, PasswordEncoder passwordEncoder) {
         this._usuarioRepository = _usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UsuarioResponseDTO cadastrarAdmin(AdminRequestDTO dto) {
         Administrador admin = new Administrador();
         admin.setName(dto.getName());
         admin.setEmail(dto.getEmail());
-        admin.setPassword(dto.getPassword());
+        admin.setPassword(passwordEncoder.encode(dto.getPassword()));
         admin.setSetorDepartamento(dto.getSetorDepartamento());
 
         _usuarioRepository.inserir(admin);
@@ -33,7 +36,7 @@ public class UsuarioService {
         Cliente cliente = new Cliente();
         cliente.setName(dto.getName());
         cliente.setEmail(dto.getEmail());
-        cliente.setPassword(dto.getPassword());
+        cliente.setPassword(passwordEncoder.encode(dto.getPassword()));
         cliente.setCpf(dto.getCpf());
 
         _usuarioRepository.inserir(cliente);
@@ -52,7 +55,7 @@ public class UsuarioService {
 
         usuario.setName(dto.getName());
         usuario.setEmail(dto.getEmail());
-        usuario.setPassword(dto.getPassword());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         _usuarioRepository.atualizar(usuario);
         return toResponse(usuario);
