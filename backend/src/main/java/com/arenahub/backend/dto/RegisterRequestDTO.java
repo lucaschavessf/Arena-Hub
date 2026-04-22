@@ -1,4 +1,17 @@
 package com.arenahub.backend.dto;
 
-public record RegisterRequestDTO (String name, String email, String password){
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record RegisterRequestDTO (
+        @NotBlank(message = "Nome obrigatorio")
+        String name,
+        @NotBlank(message = "E-mail obrigatorio")
+        @Email(message = "E-mail invalido")
+        String email,
+        @NotBlank(message = "Senha obrigatoria")
+        @Size(min = 6, message = "Senha deve ter no minimo 6 caracteres")
+        String password
+){
 }

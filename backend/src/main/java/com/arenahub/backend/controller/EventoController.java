@@ -3,6 +3,7 @@ package com.arenahub.backend.controller;
 import com.arenahub.backend.domain.evento.Evento;
 import com.arenahub.backend.dto.EventoRequestDTO;
 import com.arenahub.backend.service.EventoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,14 +39,14 @@ public class EventoController {
     }
 
     @PostMapping
-    public ResponseEntity<Evento> createEvento(@RequestBody EventoRequestDTO data, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Evento> createEvento(@Valid @RequestBody EventoRequestDTO data, UriComponentsBuilder uriBuilder) {
         Evento evento = eventoService.cadastrarEvento(data);
         URI uri = uriBuilder.path("/eventos/{id}").buildAndExpand(evento.getId()).toUri();
         return ResponseEntity.created(uri).body(evento);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Evento> updateEvento(@PathVariable Long id, @RequestBody EventoRequestDTO data) {
+    public ResponseEntity<Evento> updateEvento(@PathVariable Long id, @Valid @RequestBody EventoRequestDTO data) {
         try {
             Evento eventoAtualizado = eventoService.atualizarEvento(id, data);
             return ResponseEntity.ok(eventoAtualizado);
