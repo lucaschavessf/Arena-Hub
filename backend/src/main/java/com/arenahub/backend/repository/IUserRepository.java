@@ -1,6 +1,6 @@
 package  com.arenahub.backend.repository;
 
-import com.arenahub.backend.domain.usuario.User;
+import com.arenahub.backend.domain.User;
 
 import java.util.Optional;
 

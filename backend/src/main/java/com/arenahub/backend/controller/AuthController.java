@@ -7,7 +7,7 @@ import com.arenahub.backend.infra.security.TokenService;
 import com.arenahub.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import com.arenahub.backend.domain.usuario.User;
+import com.arenahub.backend.domain.User;
 import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;

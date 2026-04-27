@@ -1,6 +1,5 @@
-package com.arenahub.backend.domain.cliente;
+package com.arenahub.backend.domain;
 
-import com.arenahub.backend.domain.usuario.User;
 import jakarta.persistence.*;
 
 @Entity

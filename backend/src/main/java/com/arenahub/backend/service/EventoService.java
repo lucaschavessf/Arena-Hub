@@ -1,6 +1,6 @@
 package com.arenahub.backend.service;
 
-import com.arenahub.backend.domain.evento.Evento;
+import com.arenahub.backend.domain.Evento;
 import com.arenahub.backend.dto.EventoRequestDTO;
 import com.arenahub.backend.repository.EventoRepository;
 import jakarta.persistence.EntityNotFoundException;

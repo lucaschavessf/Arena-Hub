@@ -1,4 +1,4 @@
-package com.arenahub.backend.domain.evento;
+package com.arenahub.backend.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "eventos")
-public class Evento {
+public class  Evento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

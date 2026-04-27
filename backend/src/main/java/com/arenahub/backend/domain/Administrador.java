@@ -1,9 +1,6 @@
-package com.arenahub.backend.domain.administrador;
+package com.arenahub.backend.domain;
 
-import com.arenahub.backend.domain.usuario.User;
 import jakarta.persistence.*;
-
-import java.util.Objects;
 
 @Entity
 @Table(name = "administradores")

@@ -1,9 +1,8 @@
-package com.arenahub.backend.domain.usuario;
+package com.arenahub.backend.domain;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "usuarios")

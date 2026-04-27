@@ -1,8 +1,8 @@
 package com.arenahub.backend.service;
 
-import com.arenahub.backend.domain.administrador.Administrador;
-import com.arenahub.backend.domain.cliente.Cliente;
-import com.arenahub.backend.domain.usuario.User;
+import com.arenahub.backend.domain.Administrador;
+import com.arenahub.backend.domain.Cliente;
+import com.arenahub.backend.domain.User;
 import com.arenahub.backend.dto.AdminRequestDTO;
 import com.arenahub.backend.dto.AtualizarUsuarioDTO;
 import com.arenahub.backend.dto.ClienteRequestDTO;

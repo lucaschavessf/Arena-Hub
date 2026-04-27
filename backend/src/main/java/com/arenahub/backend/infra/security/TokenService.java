@@ -1,6 +1,6 @@
 package com.arenahub.backend.infra.security;
 
-import com.arenahub.backend.domain.usuario.User;
+import com.arenahub.backend.domain.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

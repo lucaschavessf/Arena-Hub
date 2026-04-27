@@ -1,6 +1,6 @@
 package com.arenahub.backend.infra.security;
 
-import com.arenahub.backend.domain.usuario.User;
+import com.arenahub.backend.domain.User;
 import com.arenahub.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
