@@ -37,22 +37,19 @@ public class PedidoService {
     @Transactional
     public PedidoResponseDTO realizarCompra(PedidoRequestDTO dto) {
 
-        // 1. busca o cliente
         Cliente cliente = (Cliente) _userRepository.buscarPorId(dto.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado: " + dto.getClienteId()));
 
-        // 2. busca o lote
+
         Lote lote = _loteRepository.buscarPorId(dto.getLoteId())
                 .orElseThrow(() -> new RuntimeException("Lote não encontrado: " + dto.getLoteId()));
 
-        // 3. valida estoque
         if (lote.getQuantidadeDisponivel() < dto.getQuantidade()) {
             throw new RuntimeException(
                     "Quantidade indisponível. Disponível: " + lote.getQuantidadeDisponivel()
             );
         }
 
-        // 4. cria o Pedido
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setDataCompra(LocalDateTime.now());
@@ -61,7 +58,6 @@ public class PedidoService {
                 lote.getPreco().multiply(BigDecimal.valueOf(dto.getQuantidade()))
         );
 
-        // 5. gera os Ingressos
         List<Ingresso> ingressos = new ArrayList<>();
         for (int i = 0; i < dto.getQuantidade(); i++) {
             Ingresso ingresso = new Ingresso();
@@ -72,12 +68,10 @@ public class PedidoService {
         }
         pedido.setIngressos(ingressos);
 
-        // 6. atualiza o estoque do Lote
         lote.setQuantidadeDisponivel(
                 lote.getQuantidadeDisponivel() - dto.getQuantidade()
         );
 
-        // 7. salva tudo
         _pedidoRepository.inserir(pedido);
         _loteRepository.atualizar(lote);
 

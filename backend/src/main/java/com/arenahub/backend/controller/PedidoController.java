@@ -20,7 +20,6 @@ public class PedidoController {
         this._pedidoService = _pedidoService;
     }
 
-    // POST /pedidos → realiza a compra
     @PostMapping
     public ResponseEntity<PedidoResponseDTO> realizarCompra(
             @Valid @RequestBody PedidoRequestDTO dto) {
@@ -28,7 +27,6 @@ public class PedidoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // GET /pedidos/{id} → busca um pedido
     @GetMapping("/{id}")
     public ResponseEntity<PedidoResponseDTO> getPedido(
             @PathVariable Long id) {
@@ -36,7 +34,6 @@ public class PedidoController {
         return ResponseEntity.ok(response);
     }
 
-    // GET /pedidos/cliente/{clienteId} → todos os pedidos do cliente
     @GetMapping("/cliente/{clienteId}")
     public ResponseEntity<List<PedidoResponseDTO>> getPedidosPorCliente(
             @PathVariable String clienteId) {
