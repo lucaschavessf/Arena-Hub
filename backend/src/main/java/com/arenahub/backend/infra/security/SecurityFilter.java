@@ -21,7 +21,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final UserRepository userRepository;
 
-    // Construtor com injeção (melhor prática)
     public SecurityFilter(TokenService tokenService, UserRepository userRepository) {
         this.tokenService = tokenService;
         this.userRepository = userRepository;
@@ -32,17 +31,44 @@ public class SecurityFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        var token = this.recoverToken(request);
-        var login = tokenService.validateToken(token);
+        String path = request.getRequestURI();
 
-        if (login != null) {
-            User user = userRepository.findByEmail(login)
-                    .orElseThrow(() -> new RuntimeException("User Not Found"));
+        if (path.equals("/") ||
+            path.startsWith("/auth") ||
+            path.startsWith("/eventos") ||
+            path.startsWith("/pedidos")) {
 
-            var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            var token = recoverToken(request);
+
+            // 🔥 SÓ valida se tiver token
+            if (token != null) {
+                var login = tokenService.validateToken(token);
+
+                if (login != null) {
+                    User user = userRepository.findByEmail(login)
+                            .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+                    var authorities = Collections.singletonList(
+                            new SimpleGrantedAuthority("ROLE_USER")
+                    );
+
+                    var authentication = new UsernamePasswordAuthenticationToken(
+                            user,
+                            null,
+                            authorities
+                    );
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
+
+        } catch (Exception e) {
+            // 🔥 NÃO quebra a request por causa de token inválido
         }
 
         filterChain.doFilter(request, response);
@@ -50,7 +76,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private String recoverToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
-        if (authHeader == null) return null;
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) return null;
         return authHeader.replace("Bearer ", "");
     }
 }
