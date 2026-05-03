@@ -261,8 +261,6 @@ const form = reactive({
   descricao: '', instagram: '',
 })
 
-const API_URL = import.meta.env.VITE_API_URL
-
 async function submeter() { 
   try {
     const dataInicio = form.dataEvento ? `${form.dataEvento}T20:00:00` : new Date().toISOString().substring(0, 19);
@@ -278,7 +276,7 @@ async function submeter() {
       espacoId: 1 // Valor fixo conforme solicitado
     };
 
-    const response = await fetch(`${API_URL}/eventos`, {
+    const response = await fetch('https://api.torreszx.space/eventos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -157,11 +157,9 @@ const categorias = ['Todos', 'Show', 'Esportes', 'Comédia', 'Teatro', 'Corporat
 
 const eventos = ref([])
 
-const API_URL = import.meta.env.VITE_API_URL
-
 onMounted(async () => {
   try {
-    const response = await fetch(`${API_URL}/eventos`)
+    const response = await fetch('https://api.torreszx.space/eventos')
     if (!response.ok) {
       throw new Error('Erro ao buscar eventos da API')
     }

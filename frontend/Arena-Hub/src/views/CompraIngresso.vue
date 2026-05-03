@@ -167,12 +167,10 @@ const cart = useCartStore()
 const eventoId = computed(() => Number(route.params.id))
 const evento = ref<any>(null)
 
-const API_URL = import.meta.env.VITE_API_URL
-
 onMounted(async () => {
   window.scrollTo(0, 0)
   try {
-    const response = await fetch(`${API_URL}/eventos/${eventoId.value}`)
+    const response = await fetch(`https://api.torreszx.space/eventos/${eventoId.value}`)
     if (!response.ok) {
       throw new Error('Erro ao buscar evento da API')
     }
