@@ -10,9 +10,7 @@
     :aria-label="`Evento: ${event.title}, ${event.date} em ${event.venue}`"
   >
     <div class="card-image">
-      <!-- Placeholder enquanto carrega -->
       <div class="card-image__placeholder" v-if="!imageLoaded"></div>
-      
       <img 
         :src="event.image" 
         :alt="`Imagem do evento ${event.title}`"
@@ -21,10 +19,7 @@
         @error="handleImageError"
         :style="{ opacity: imageLoaded ? 1 : 0 }"
       />
-      
       <div class="card-overlay"></div>
-      
-      <!-- Badges múltiplos -->
       <div class="card-badges">
         <span 
           class="card-badge" 
@@ -51,7 +46,6 @@
         </span>
       </div>
       
-      <!-- Botão de favorito -->
       <button 
         class="card-favorite"
         :class="{ 'card-favorite--active': isFavorite }"
@@ -83,7 +77,6 @@
           <span>{{ event.venue }}</span>
         </div>
 
-        <!-- Preço (opcional) -->
         <div class="meta-item meta-item--price" v-if="event.price">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <circle cx="12" cy="12" r="10"/><path d="M15 9.5c0 .8-.7 1.5-1.5 1.5h-3c-.8 0-1.5-.7-1.5-1.5v-3c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5z"/><path d="M9 15.5c0 .8.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5v-3c0-.8-.7-1.5-1.5-1.5h-3c-.8 0-1.5.7-1.5 1.5z"/>
@@ -92,7 +85,6 @@
         </div>
       </div>
 
-      <!-- Botão de ação -->
       <button 
         class="btn-primary card-btn" 
         @click.stop="handleBuyClick"
@@ -279,7 +271,6 @@ const toggleFavorite = () => {
   opacity: 0.85;
 }
 
-/* Imagem */
 .card-image {
   position: relative;
   aspect-ratio: 16 / 10;
@@ -328,7 +319,6 @@ const toggleFavorite = () => {
   opacity: 0.8;
 }
 
-/* Badges */
 .card-badges {
   position: absolute;
   top: 12px;
@@ -372,7 +362,6 @@ const toggleFavorite = () => {
   color: white;
 }
 
-/* Botão de favorito */
 .card-favorite {
   position: absolute;
   top: 12px;
@@ -408,7 +397,6 @@ const toggleFavorite = () => {
   outline-offset: 2px;
 }
 
-/* Corpo do card */
 .card-body {
   padding: 20px;
 }
@@ -452,7 +440,6 @@ const toggleFavorite = () => {
   font-weight: 600;
 }
 
-/* Botão */
 .card-btn {
   width: 100%;
   justify-content: center;

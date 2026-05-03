@@ -24,14 +24,12 @@
             </svg>
           </button>
 
-          <!-- Modo Login -->
           <div v-if="!recoverMode" class="modal-content">
             <header class="modal-header">
               <h2 class="modal-title">Bem-vindo de volta</h2>
               <p class="modal-subtitle">Acesse sua conta Arena Hub</p>
             </header>
 
-            <!-- Mensagem de erro geral -->
             <div v-if="loginError" class="error-banner" role="alert">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -139,7 +137,6 @@
             </form>
           </div>
 
-          <!-- Modo Recuperação de Senha -->
           <div v-else class="modal-content">
             <header class="modal-header">
               <h2 class="modal-title">Recuperar Senha</h2>
@@ -392,7 +389,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Estilos base (mantidos do original) */
 .modal-overlay {
   position: fixed; 
   inset: 0;
@@ -471,7 +467,6 @@ onUnmounted(() => {
   font-size: 0.9rem; 
 }
 
-/* Formulário */
 .modal-form { 
   display: flex; 
   flex-direction: column; 
@@ -528,7 +523,6 @@ onUnmounted(() => {
   outline-offset: 1px;
 }
 
-/* Password wrapper */
 .password-wrapper {
   position: relative;
 }
@@ -558,7 +552,6 @@ onUnmounted(() => {
   color: var(--gold, #c9a84c);
 }
 
-/* Mensagens de erro */
 .error-message {
   font-size: 0.7rem;
   color: var(--red, #ef4444);
@@ -578,7 +571,6 @@ onUnmounted(() => {
   font-size: 0.8rem;
 }
 
-/* Checkbox */
 .checkbox-group {
   margin-top: -4px;
 }
@@ -635,7 +627,6 @@ onUnmounted(() => {
   user-select: none;
 }
 
-/* Links e botões */
 .forgot-link { 
   font-size: 0.75rem; 
   color: var(--muted, #8a8f9e); 
@@ -698,7 +689,6 @@ onUnmounted(() => {
   cursor: not-allowed;
 }
 
-/* Estado de sucesso */
 .success-state { 
   text-align: center; 
   padding: 20px 0; 
@@ -733,7 +723,6 @@ onUnmounted(() => {
   margin-bottom: 24px !important;
 }
 
-/* Animações */
 .fade-enter-active, 
 .fade-leave-active { 
   transition: opacity 0.3s ease; 
@@ -744,7 +733,6 @@ onUnmounted(() => {
   opacity: 0; 
 }
 
-/* Variáveis de fallback */
 :root {
   --navy-mid: #131a2a;
   --navy-light: #1a2332;

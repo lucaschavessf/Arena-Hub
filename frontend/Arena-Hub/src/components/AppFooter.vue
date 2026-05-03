@@ -1,7 +1,6 @@
 <template>
   <footer class="footer">
     <div class="footer-inner">
-      <!-- Logo e descrição -->
       <div class="footer__brand">
         <div class="footer__logo">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -16,62 +15,32 @@
           A maior plataforma de eventos da Arena Pernambuco
         </p>
         
-        <!-- Badge de status -->
         <div class="footer__status">
           <span class="status-dot"></span>
           <span>Online 24h</span>
         </div>
       </div>
 
-      <!-- Links essenciais -->
-      <div class="footer__links">
-        <router-link to="/eventos" class="footer-link">
-          <span>Eventos</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-        </router-link>
-        <router-link to="/meus-ingressos" class="footer-link">
-          <span>Meus Ingressos</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-        </router-link>
-        <router-link to="/termos" class="footer-link">
-          <span>Termos de Uso</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-        </router-link>
-        <router-link to="/privacidade" class="footer-link">
-          <span>Privacidade</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-        </router-link>
-      </div>
 
-      <!-- Redes sociais minimalistas -->
       <div class="footer__social">
-        <a href="#" aria-label="Instagram" class="social-link">
+        <a href="https://www.instagram.com/arenadepernambuco/" target="_blank"  aria-label="Instagram" class="social-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="2" width="20" height="20" rx="5"/>
             <circle cx="12" cy="12" r="4"/>
           </svg>
         </a>
-        <a href="#" aria-label="Facebook" class="social-link">
+        <a href="https://www.facebook.com/arenadepernambuco" target="_blank" aria-label="Facebook" class="social-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
           </svg>
         </a>
-        <a href="#" aria-label="Twitter" class="social-link">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
-          </svg>
-        </a>
+      <a href="https://x.com/arenapernambuco" target="_blank" aria-label="X" class="social-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
       </div>
 
-      <!-- Copyright com gradiente -->
       <div class="footer__copyright">
         <span>© 2026 Arena Pernambuco</span>
         <span class="separator">•</span>
@@ -91,7 +60,6 @@
   overflow: hidden;
 }
 
-/* Efeito de glow no topo */
 .footer::before {
   content: '';
   position: absolute;
@@ -113,7 +81,6 @@
   gap: 28px;
 }
 
-/* Brand */
 .footer__brand {
   display: flex;
   flex-direction: column;
@@ -178,7 +145,6 @@
   50% { opacity: 0.5; }
 }
 
-/* Links modernos */
 .footer__links {
   display: flex;
   flex-wrap: wrap;
@@ -220,7 +186,6 @@
   transform: translateX(0);
 }
 
-/* Redes sociais */
 .footer__social {
   display: flex;
   align-items: center;
@@ -250,7 +215,6 @@
   box-shadow: 0 8px 16px rgba(201, 168, 76, 0.15);
 }
 
-/* Copyright */
 .footer__copyright {
   display: flex;
   align-items: center;
@@ -276,7 +240,6 @@
   font-weight: 600;
 }
 
-/* Responsivo */
 @media (min-width: 768px) {
   .footer-inner {
     flex-direction: row;

@@ -233,7 +233,6 @@ function copyToClipboard(text: string) {
   margin: 0 auto;
 }
 
-/* Breadcrumb */
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -262,7 +261,6 @@ function copyToClipboard(text: string) {
   color: #4a5568;
 }
 
-/* Header */
 .tickets-header { 
   display: flex; 
   justify-content: space-between; 
@@ -336,7 +334,6 @@ function copyToClipboard(text: string) {
   transform: translateX(-2px);
 }
 
-/* Ticket Cards */
 .tickets-grid { 
   display: flex; 
   flex-direction: column; 
@@ -377,7 +374,6 @@ function copyToClipboard(text: string) {
   opacity: 0.7;
 }
 
-/* Visual Side */
 .ticket-visual { 
   position: relative; 
   width: 240px; 
@@ -453,7 +449,6 @@ function copyToClipboard(text: string) {
   50% { opacity: 0.5; }
 }
 
-/* Body Side */
 .ticket-body { 
   flex: 1; 
   padding: 28px; 
@@ -525,7 +520,6 @@ function copyToClipboard(text: string) {
   font-weight: 700;
 }
 
-/* Divider com Notches */
 .ticket-divider-wrapper {
   width: 40px; 
   position: relative; 
@@ -561,7 +555,6 @@ function copyToClipboard(text: string) {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Botão QR */
 .ticket-action-area { 
   display: flex; 
   align-items: center; 
@@ -616,7 +609,6 @@ function copyToClipboard(text: string) {
   transform: translateX(4px);
 }
 
-/* QR Modal */
 .qr-overlay {
   position: fixed; 
   inset: 0; 
@@ -774,7 +766,6 @@ function copyToClipboard(text: string) {
   color: #4cc98e;
 }
 
-/* Empty State */
 .empty-tickets {
   text-align: center;
   padding: 80px 20px;
@@ -829,7 +820,6 @@ function copyToClipboard(text: string) {
   transform: translateX(4px);
 }
 
-/* Animações */
 .fade-scale-enter-active, 
 .fade-scale-leave-active { 
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -841,7 +831,6 @@ function copyToClipboard(text: string) {
   transform: scale(0.9); 
 }
 
-/* Mobile */
 @media (max-width: 850px) {
   .ticket-card { 
     flex-direction: column; 

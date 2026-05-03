@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import LandingPage from '@/views/LandingPage.vue'
 
-// Definimos o tipo das rotas para o TS ajudar no preenchimento
 const routes: Array<RouteRecordRaw> = [
   { 
     path: '/', 
@@ -17,6 +16,16 @@ const routes: Array<RouteRecordRaw> = [
   path: '/login',
   component: () => import('../views/Login.vue'),
   },
+  {
+    path: '/esqueceu-senha',
+    name: 'EsqueceuSenha',
+    component: () => import('@/views/EsqueceuSenha.vue'),
+  },
+  {
+    path: '/recuperar-senha',
+    name: 'RecuperarSenha',
+    component: () => import('@/views/RecuperarSenha.vue'),
+  },
   { 
     path: '/evento/:id', 
     name: 'EventoDetalhes',
@@ -30,7 +39,7 @@ const routes: Array<RouteRecordRaw> = [
     props: true
   },
   { 
-    path: '/criar-evento', 
+    path: '/solicitar-evento', 
     name: 'SolicitarEvento',
     component: () => import('@/views/FormsEventos.vue') 
   },
@@ -47,17 +56,22 @@ const routes: Array<RouteRecordRaw> = [
   { 
     path: '/admin/agenda', 
     name: 'AdminAgenda',
-    component: () => import('@/views/Agenda.vue') 
+    component: () => import('@/views/AdminAgenda.vue') 
   },
   { 
     path: '/admin/solicitacoes', 
     name: 'AdminSolicitacoes',
-    component: () => import('@/views/Solicitacoes.vue') 
+    component: () => import('@/views/AdminSolicitacoes.vue') 
   },
   { 
     path: '/pagamento', 
     name: 'Pagamento',
     component: () => import('@/views/Pagamento.vue') 
+  },
+  {
+    path: '/loja',
+    name: 'Loja',
+    component: () => import('@/views/Loja.vue'),
   },
   {
   path: '/:pathMatch(.*)*',

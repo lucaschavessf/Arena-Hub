@@ -4,15 +4,12 @@
 
     <main class="main-content">
       <section class="notfound-section">
-        <!-- Partículas decorativas de fundo -->
         <div class="particles">
           <div class="particle" v-for="i in 20" :key="i" :style="getParticleStyle(i)"></div>
         </div>
 
         <div class="container">
           <div class="notfound-content">
-            
-            <!-- Código 404 com animação -->
             <div class="code-wrapper">
               <h1 class="code">
                 <span class="digit">4</span>
@@ -22,14 +19,11 @@
               <div class="code-glitch"></div>
             </div>
 
-            <!-- Ilustração decorativa -->
             <div class="illustration">
               <svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Lua/Planeta -->
                 <circle cx="100" cy="60" r="30" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.3"/>
                 <circle cx="100" cy="60" r="15" fill="#c9a84c" opacity="0.1"/>
                 
-                <!-- Estrelas -->
                 <circle cx="30" cy="25" r="2" fill="#c9a84c" opacity="0.6"/>
                 <circle cx="170" cy="35" r="1.5" fill="#c9a84c" opacity="0.4"/>
                 <circle cx="50" cy="80" r="1" fill="#c9a84c" opacity="0.5"/>
@@ -37,7 +31,6 @@
                 <circle cx="180" cy="20" r="1" fill="#c9a84c" opacity="0.6"/>
                 <circle cx="20" cy="60" r="1.5" fill="#c9a84c" opacity="0.4"/>
                 
-                <!-- Linhas de conexão -->
                 <line x1="30" y1="25" x2="50" y2="80" stroke="#c9a84c" stroke-width="0.5" opacity="0.15"/>
                 <line x1="170" y1="35" x2="150" y2="75" stroke="#c9a84c" stroke-width="0.5" opacity="0.15"/>
                 <line x1="100" y1="60" x2="30" y2="25" stroke="#c9a84c" stroke-width="0.5" opacity="0.1"/>
@@ -53,8 +46,6 @@
               Parece que você se aventurou em território desconhecido. 
               A página que você está procurando não existe ou foi movida.
             </p>
-
-            <!-- Sugestões -->
             <div class="suggestions">
               <div class="suggestion-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -70,7 +61,6 @@
               </div>
             </div>
 
-            <!-- Botão único -->
             <div class="actions">
               <router-link to="/" class="btn-primary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -78,18 +68,6 @@
                 </svg>
                 <span>Voltar para Home</span>
               </router-link>
-            </div>
-
-            <!-- Links rápidos -->
-            <div class="quick-links">
-              <span>Ou acesse:</span>
-              <div class="links-row">
-                <router-link to="/eventos">Eventos</router-link>
-                <span class="separator">•</span>
-                <router-link to="/meus-ingressos">Meus Ingressos</router-link>
-                <span class="separator">•</span>
-                <a href="#">Ajuda</a>
-              </div>
             </div>
 
           </div>
@@ -108,7 +86,6 @@ import AppFooter from '../components/AppFooter.vue'
 
 const router = useRouter()
 
-// Gerar posições aleatórias para partículas
 const getParticleStyle = (index: number) => {
   const size = Math.random() * 4 + 2
   const left = Math.random() * 100
@@ -151,7 +128,6 @@ const getParticleStyle = (index: number) => {
   width: 100%;
 }
 
-/* Partículas animadas */
 .particles {
   position: absolute;
   inset: 0;
@@ -185,7 +161,6 @@ const getParticleStyle = (index: number) => {
   }
 }
 
-/* 404 Section */
 .notfound-section {
   display: flex;
   align-items: center;
@@ -215,7 +190,6 @@ const getParticleStyle = (index: number) => {
   }
 }
 
-/* Código 404 Animado */
 .code-wrapper {
   position: relative;
   margin-bottom: 24px;
@@ -278,7 +252,6 @@ const getParticleStyle = (index: number) => {
   40%, 90% { transform: translateX(-100%); }
 }
 
-/* Ilustração */
 .illustration {
   margin-bottom: 32px;
   animation: fadeIn 1s ease-out 0.3s both;
@@ -289,7 +262,6 @@ const getParticleStyle = (index: number) => {
   to { opacity: 1; }
 }
 
-/* Título */
 .title {
   font-size: clamp(1.8rem, 4vw, 2.2rem);
   font-weight: 800;
@@ -309,7 +281,6 @@ const getParticleStyle = (index: number) => {
   }
 }
 
-/* Subtítulo */
 .subtitle {
   color: #8e9aaf;
   margin-bottom: 32px;
@@ -321,7 +292,6 @@ const getParticleStyle = (index: number) => {
   animation: slideIn 0.6s ease-out 0.3s both;
 }
 
-/* Sugestões */
 .suggestions {
   display: flex;
   flex-direction: column;
@@ -349,7 +319,6 @@ const getParticleStyle = (index: number) => {
   flex-shrink: 0;
 }
 
-/* Botão */
 .actions {
   margin-bottom: 32px;
   animation: slideIn 0.6s ease-out 0.5s both;
@@ -408,7 +377,6 @@ const getParticleStyle = (index: number) => {
   transform: translateX(-3px);
 }
 
-/* Links rápidos */
 .quick-links {
   animation: fadeIn 0.8s ease-out 0.6s both;
   padding-top: 24px;
@@ -466,7 +434,6 @@ const getParticleStyle = (index: number) => {
   margin: 0 !important;
 }
 
-/* Responsivo */
 @media (max-width: 600px) {
   .notfound-section {
     padding: 50px 0;
@@ -521,7 +488,6 @@ const getParticleStyle = (index: number) => {
   }
 }
 
-/* Redução de movimento */
 @media (prefers-reduced-motion: reduce) {
   .digit,
   .code-glitch,

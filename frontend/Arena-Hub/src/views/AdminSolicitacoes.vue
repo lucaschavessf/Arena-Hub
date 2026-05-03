@@ -57,7 +57,6 @@
       <AppNavbar :isAdmin="true" />
       
       <main class="content-container">
-        <!-- Breadcrumb -->
         <div class="breadcrumb">
           <router-link to="/admin" class="breadcrumb-link">Admin</router-link>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -87,7 +86,6 @@
           </div>
         </header>
 
-        <!-- Stats Cards -->
         <section class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1);">
@@ -138,7 +136,6 @@
           </div>
         </section>
 
-        <!-- Barra de busca e filtros -->
         <div class="search-bar-container">
           <div class="search-wrapper">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -161,7 +158,6 @@
           </select>
         </div>
 
-        <!-- Tabela de Solicitações -->
         <section class="card table-card">
           <div class="table-wrapper">
             <table class="admin-table">
@@ -237,7 +233,6 @@
             </table>
           </div>
 
-          <!-- Empty State -->
           <div v-if="solicitacoesFiltradas.length === 0" class="empty-state">
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -251,7 +246,6 @@
       </main>
     </div>
 
-    <!-- Modal de Visualização -->
     <transition name="fade-scale">
       <div v-if="solicitacaoSelecionada" class="modal-overlay" @click.self="fecharModal">
         <div class="modal-card">
@@ -563,7 +557,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
 </script>
 
 <style scoped>
-/* Estrutura Base */
 .admin-layout { 
   display: flex; 
   min-height: 100vh; 
@@ -572,7 +565,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   font-family: 'Plus Jakarta Sans', sans-serif; 
 }
 
-/* Sidebar */
 .sidebar { 
   width: 260px; 
   background: linear-gradient(180deg, #111827 0%, #0d121c 100%);
@@ -670,7 +662,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   color: #ef4444;
 }
 
-/* Layout Central */
 .main-wrapper { 
   flex: 1; 
   margin-left: 260px; 
@@ -686,7 +677,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   padding: 32px 40px; 
 }
 
-/* Breadcrumb */
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -711,7 +701,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   font-weight: 600;
 }
 
-/* Header */
 .content-header { 
   display: flex; 
   justify-content: space-between; 
@@ -787,7 +776,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   background: rgba(10, 14, 23, 0.2);
 }
 
-/* Stats Cards */
 .stats-grid { 
   display: grid; 
   grid-template-columns: repeat(4, 1fr); 
@@ -840,7 +828,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   line-height: 1.2;
 }
 
-/* Barra de Busca */
 .search-bar-container {
   display: flex;
   gap: 16px;
@@ -897,7 +884,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   background-position: right 14px center;
 }
 
-/* Tabela */
 .card {
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border-radius: 20px;
@@ -1057,7 +1043,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* Ações */
 .acoes-cell {
   display: flex;
   gap: 6px;
@@ -1092,7 +1077,7 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   background: rgba(239, 68, 68, 0.1);
 }
 
-/* Empty State */
+
 .empty-state {
   text-align: center;
   padding: 60px 20px;
@@ -1112,7 +1097,7 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   margin-bottom: 8px;
 }
 
-/* Modal */
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1358,7 +1343,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   background: #1e2638;
 }
 
-/* Menu Toggle Mobile */
 .menu-toggle {
   display: none;
   position: fixed;
@@ -1386,7 +1370,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   z-index: 90;
 }
 
-/* Animações */
 .fade-scale-enter-active,
 .fade-scale-leave-active {
   transition: all 0.3s ease;
@@ -1398,7 +1381,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   transform: scale(0.95);
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
   .sidebar { 
     transform: translateX(-100%); 

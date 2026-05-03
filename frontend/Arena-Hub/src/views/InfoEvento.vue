@@ -208,7 +208,6 @@ const evento = computed(() => eventos.find((e: any) => e.id === eventoId.value))
   align-items: start;
 }
 
-/* Loading State */
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -231,7 +230,6 @@ const evento = computed(() => eventos.find((e: any) => e.id === eventoId.value))
   to { transform: rotate(360deg); }
 }
 
-/* Sidebar */
 .info-sidebar { 
   position: sticky; 
   top: 100px; 
@@ -408,7 +406,6 @@ const evento = computed(() => eventos.find((e: any) => e.id === eventoId.value))
   color: #0a0e17;
 }
 
-/* Conteúdo Central */
 .details-card { 
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border-radius: 24px; 
@@ -580,7 +577,6 @@ const evento = computed(() => eventos.find((e: any) => e.id === eventoId.value))
   transform: translateX(4px);
 }
 
-/* Lineup */
 .lineup-card { 
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border-radius: 24px; 
@@ -700,7 +696,6 @@ const evento = computed(() => eventos.find((e: any) => e.id === eventoId.value))
   letter-spacing: 0.5px;
 }
 
-/* Responsive */
 @media (max-width: 1150px) {
   .info-grid { 
     grid-template-columns: 280px 1fr; 

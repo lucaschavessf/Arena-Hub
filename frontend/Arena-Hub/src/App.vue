@@ -9,17 +9,11 @@
 </template>
 
 <script setup lang="ts">
-/**
- * Aqui você pode centralizar lógicas globais, 
- * como verificar se o usuário está logado ao carregar o app.
- */
 </script>
 
 <style>
-/* 1. FONTES PREMIUM (Importação Centralizada) */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-/* 2. RESET MODERNO */
 *, *::before, *::after { 
   box-sizing: border-box; 
   margin: 0; 
@@ -29,9 +23,6 @@
 }
 
 :root {
-  /* --- DESIGN SYSTEM ARENA HUB --- */
-  
-  /* Cores Dark Mode */
   --navy: #0a0e17;
   --navy-mid: #121826;
   --navy-light: #1c2433;
@@ -48,11 +39,9 @@
   --red: #ff5e5e;
   --green: #4cc98e;
   
-  /* Tipografia */
   --font-display: 'Bebas Neue', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
   
-  /* Layout Global */
   --container-max: 1200px;
   --radius-sm: 8px;
   --radius: 12px;
@@ -62,7 +51,6 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 3. ESTILO BASE */
 html { 
   scroll-behavior: smooth; 
   font-size: 16px; 
@@ -84,7 +72,6 @@ body {
   min-height: 100vh;
 }
 
-/* 4. SCROLLBAR PREMIUM */
 ::-webkit-scrollbar { 
   width: 10px; 
   height: 10px;
@@ -104,7 +91,6 @@ body {
   background: linear-gradient(180deg, var(--gold-dark) 0%, var(--gold) 100%);
 }
 
-/* 5. TIPOGRAFIA GLOBAL */
 h1, h2, h3, h4, .text-display { 
   font-family: var(--font-display); 
   letter-spacing: 0.05em; 
@@ -137,7 +123,6 @@ p {
   font-weight: 400;
 }
 
-/* 6. COMPONENTES GLOBAIS REUTILIZÁVEIS */
 button { 
   cursor: pointer; 
   border: none; 
@@ -153,7 +138,6 @@ button:active {
   transform: scale(0.98);
 }
 
-/* Botão Primário */
 .btn-primary {
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
   color: var(--navy);
@@ -194,7 +178,6 @@ button:active {
   box-shadow: none !important;
 }
 
-/* 7. ANIMAÇÃO DE TRANSIÇÃO DE PÁGINA */
 .page-fade-enter-active,
 .page-fade-leave-active {
   transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -211,7 +194,6 @@ button:active {
   transform: translateY(-12px);
 }
 
-/* 8. FORMULÁRIOS GLOBAIS */
 input, 
 textarea, 
 select {
@@ -248,7 +230,6 @@ textarea::placeholder {
   font-weight: 300;
 }
 
-/* 9. LINKS GLOBAIS */
 a {
   color: inherit;
   text-decoration: none;
@@ -259,7 +240,6 @@ a:hover {
   color: var(--gold);
 }
 
-/* 10. SELEÇÃO DE TEXTO */
 ::selection {
   background: var(--gold);
   color: var(--navy);
@@ -270,7 +250,6 @@ a:hover {
   color: var(--navy);
 }
 
-/* 11. GARANTE QUE IMAGENS NÃO QUEBREM O LAYOUT */
 img { 
   max-width: 100%; 
   height: auto; 
@@ -292,7 +271,6 @@ img[loading="lazy"] {
   100% { background-position: -200% 0; }
 }
 
-/* 12. RESPONSIVIDADE */
 @media (max-width: 768px) {
   html {
     font-size: 14px;
@@ -310,7 +288,6 @@ img[loading="lazy"] {
   }
 }
 
-/* 13. REDUÇÃO DE MOVIMENTO */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

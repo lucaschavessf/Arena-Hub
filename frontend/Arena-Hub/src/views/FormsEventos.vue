@@ -4,8 +4,6 @@
     
     <main class="main-wizard">
       <div class="wizard-container">
-        
-        <!-- Breadcrumb -->
         <div class="breadcrumb">
           <router-link to="/" class="breadcrumb-link">Início</router-link>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -263,6 +261,8 @@ const form = reactive({
   descricao: '', instagram: '',
 })
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+
 async function submeter() { 
   try {
     const dataInicio = form.dataEvento ? `${form.dataEvento}T20:00:00` : new Date().toISOString().substring(0, 19);
@@ -278,7 +278,7 @@ async function submeter() {
       espacoId: 1 // Valor fixo conforme solicitado
     };
 
-    const response = await fetch('http://localhost:8080/eventos', {
+    const response = await fetch(`${API_URL}/eventos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -321,7 +321,6 @@ async function submeter() {
   margin: 0 auto; 
 }
 
-/* Breadcrumb */
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -350,7 +349,6 @@ async function submeter() {
   color: #4a5568;
 }
 
-/* Stepper UI */
 .stepper-nav {
   display: flex; 
   align-items: center; 
@@ -427,7 +425,6 @@ async function submeter() {
   background: linear-gradient(90deg, #4cc98e, #c9a84c);
 }
 
-/* Card Wizard */
 .wizard-card {
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border-radius: 28px; 
@@ -477,7 +474,6 @@ async function submeter() {
   line-height: 1.5; 
 }
 
-/* Form Content */
 .form-content { 
   display: flex; 
   flex-direction: column; 
@@ -585,7 +581,6 @@ textarea {
   line-height: 1.6;
 }
 
-/* Info Note */
 .info-note {
   display: flex;
   align-items: center;
@@ -603,7 +598,6 @@ textarea {
   flex-shrink: 0;
 }
 
-/* Checkbox */
 .custom-checkbox {
   display: flex; 
   align-items: flex-start; 
@@ -648,7 +642,6 @@ textarea {
   line-height: 1.5;
 }
 
-/* Actions */
 .form-actions { 
   display: flex; 
   justify-content: space-between; 
@@ -719,7 +712,6 @@ textarea {
   transform: translateX(-4px);
 }
 
-/* Success Screen */
 .success-screen { 
   text-align: center; 
   padding: 60px 20px; 
@@ -811,7 +803,6 @@ textarea {
   transform: translateX(4px);
 }
 
-/* Transições */
 .slide-enter-active, 
 .slide-leave-active { 
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -827,7 +818,6 @@ textarea {
   transform: translateX(-30px); 
 }
 
-/* Responsive */
 @media (max-width: 650px) {
   .main-wizard { 
     padding: 40px 16px; 

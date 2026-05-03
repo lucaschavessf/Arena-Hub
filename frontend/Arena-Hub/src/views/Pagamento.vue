@@ -4,7 +4,6 @@
 
     <main class="main-payment">
       <div class="payment-container">
-        <!-- Breadcrumb -->
         <div class="breadcrumb-wrapper">
           <div class="breadcrumb">
             <router-link to="/" class="breadcrumb-link">Início</router-link>
@@ -251,7 +250,6 @@ function confirmarPagamento() {
   gap: 24px;
 }
 
-/* Breadcrumb */
 .breadcrumb-wrapper {
   grid-column: 1 / -1;
   margin-bottom: 8px;
@@ -284,7 +282,6 @@ function confirmarPagamento() {
   color: #4a5568;
 }
 
-/* Layout Grid */
 @media (min-width: 951px) {
   .payment-container {
     display: grid;
@@ -298,7 +295,6 @@ function confirmarPagamento() {
   }
 }
 
-/* Header */
 .section-header { 
   margin-bottom: 32px; 
 }
@@ -334,7 +330,6 @@ function confirmarPagamento() {
   margin-left: 4px;
 }
 
-/* Métodos de Pagamento */
 .methods-grid { 
   display: flex; 
   flex-direction: column; 
@@ -448,7 +443,6 @@ function confirmarPagamento() {
   font-weight: 900;
 }
 
-/* Formulário Cartão */
 .card-details-form {
   margin-top: 20px; 
   padding: 28px; 
@@ -554,7 +548,6 @@ function confirmarPagamento() {
   padding: 8px;
 }
 
-/* Aside / Resumo */
 .payment-summary { 
   position: sticky; 
   top: 100px; 
@@ -715,7 +708,6 @@ function confirmarPagamento() {
   color: #4cc98e;
 }
 
-/* Animações */
 .slide-down-enter-active, 
 .slide-down-leave-active { 
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -727,7 +719,6 @@ function confirmarPagamento() {
   transform: translateY(-20px); 
 }
 
-/* Responsive */
 @media (max-width: 950px) {
   .payment-summary { 
     position: static; 

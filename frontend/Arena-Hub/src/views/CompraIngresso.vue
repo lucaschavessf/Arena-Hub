@@ -4,7 +4,6 @@
     
     <main class="main-content">
       <div class="checkout-container" v-if="evento">
-        <!-- Breadcrumb -->
         <div class="breadcrumb">
           <router-link to="/" class="breadcrumb-link">Início</router-link>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -168,10 +167,12 @@ const cart = useCartStore()
 const eventoId = computed(() => Number(route.params.id))
 const evento = ref<any>(null)
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+
 onMounted(async () => {
   window.scrollTo(0, 0)
   try {
-    const response = await fetch(`http://localhost:8080/eventos/${eventoId.value}`)
+    const response = await fetch(`${API_URL}/eventos/${eventoId.value}`)
     if (!response.ok) {
       throw new Error('Erro ao buscar evento da API')
     }
@@ -257,7 +258,6 @@ const irParaPagamento = () => {
   gap: 32px; 
 }
 
-/* Breadcrumb */
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -286,7 +286,6 @@ const irParaPagamento = () => {
   color: #4a5568;
 }
 
-/* Event Summary Card */
 .event-summary-card {
   display: grid; 
   grid-template-columns: 380px 1fr;
@@ -381,19 +380,75 @@ const irParaPagamento = () => {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.event-image { position: relative; height: 100%; }
-.event-image img { width: 100%; height: 100%; object-fit: cover; }
-.image-overlay { position: absolute; inset: 0; background: linear-gradient(to right, transparent, #121826); }
+.event-image { 
+  position: relative;
+  height: 100%; 
+}
 
-.event-details { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
-.category-badge { background: #c9a84c; color: #0a0e17; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 16px; width: fit-content; }
-.event-title { font-size: 2rem; font-weight: 800; margin-bottom: 20px; color: #fff; }
-.event-meta { display: flex; flex-wrap: wrap; gap: 24px; color: #8e9aaf; font-size: 0.95rem; }
-.meta-item { display: flex; align-items: center; gap: 8px; }
-.meta-item svg { color: #c9a84c; }
-.event-description { margin-top: 24px; color: #d1d5db; font-size: 1.05rem; line-height: 1.6; }
+.event-image img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+}
 
-/* Tickets Area */
+.image-overlay { 
+  position: absolute; 
+  inset: 0; 
+  background: linear-gradient(to right, transparent, #121826); 
+}
+
+.event-details { 
+  padding: 40px; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+}
+
+.category-badge { 
+  background: #c9a84c; 
+  color: #0a0e17; 
+  padding: 4px 12px; 
+  border-radius: 20px; 
+  font-size: 0.75rem; 
+  font-weight: 800; 
+  text-transform: uppercase; 
+  margin-bottom: 16px; 
+  width: fit-content; 
+}
+
+.event-title { 
+  font-size: 2rem; 
+  font-weight: 800;
+  margin-bottom: 20px; 
+  color: #fff; 
+}
+
+.event-meta { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 24px; 
+  color: #8e9aaf; 
+  font-size: 0.95rem; 
+}
+
+.meta-item { 
+  display: flex; 
+  align-items: 
+  center; 
+  gap: 8px; 
+}
+
+.meta-item svg { 
+  color: #c9a84c;
+}
+
+.event-description { 
+  margin-top: 24px;
+  color: #d1d5db;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
 .ticket-selection-area { 
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border-radius: 24px; 
@@ -433,7 +488,6 @@ const irParaPagamento = () => {
   margin-left: 8px;
 }
 
-/* Grid de Ingressos */
 .table-header-desktop {
   display: grid; 
   grid-template-columns: 1fr 160px 140px 160px;
@@ -495,7 +549,6 @@ const irParaPagamento = () => {
   color: #8e9aaf;
 }
 
-/* Qty Controls */
 .ticket-qty-control { 
   display: flex; 
   align-items: center; 
@@ -556,7 +609,6 @@ const irParaPagamento = () => {
   color: #c9a84c;
 }
 
-/* Checkout Footer */
 .checkout-footer {
   margin-top: 40px; 
   background: linear-gradient(135deg, #1a2233 0%, #151c2a 100%);
@@ -686,13 +738,11 @@ const irParaPagamento = () => {
   transform: translateX(4px);
 }
 
-/* Utilitários */
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .desktop-only { display: block; }
 .mobile-price-tag { display: none; }
 
-/* Responsive */
 @media (max-width: 900px) {
   .event-summary-card { 
     grid-template-columns: 1fr; 

@@ -157,9 +157,11 @@ const categorias = ['Todos', 'Show', 'Esportes', 'Comédia', 'Teatro', 'Corporat
 
 const eventos = ref([])
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+
 onMounted(async () => {
   try {
-    const response = await fetch('http://localhost:8080/eventos')
+    const response = await fetch(`${API_URL}/eventos`)
     if (!response.ok) {
       throw new Error('Erro ao buscar eventos da API')
     }
@@ -206,7 +208,6 @@ const resetFilters = () => {
   width: 100%;
 }
 
-/* Hero Section */
 .hero-section {
   position: relative;
   padding: 100px 0 120px;
@@ -283,7 +284,6 @@ const resetFilters = () => {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Stats rápidos */
 .hero-stats {
   display: flex;
   align-items: center;
@@ -316,7 +316,6 @@ const resetFilters = () => {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* Busca */
 .search-wrapper { 
   max-width: 550px; 
 }
@@ -381,7 +380,6 @@ const resetFilters = () => {
   color: #fff;
 }
 
-/* Sugestões de busca */
 .search-suggestions {
   display: flex;
   align-items: center;
@@ -414,7 +412,6 @@ const resetFilters = () => {
   color: #c9a84c;
 }
 
-/* Filtros */
 .filter-section { 
   padding: 28px 0; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -476,7 +473,6 @@ const resetFilters = () => {
   box-shadow: 0 4px 12px rgba(201, 168, 76, 0.2);
 }
 
-/* Grid de Eventos */
 .events-section { 
   padding: 60px 0 80px; 
   background: #0a0e17;
@@ -526,7 +522,6 @@ const resetFilters = () => {
   gap: 32px;
 }
 
-/* Empty State */
 .empty-state { 
   text-align: center; 
   padding: 80px 20px; 
@@ -573,7 +568,6 @@ const resetFilters = () => {
   transform: translateY(-2px);
 }
 
-/* Animações */
 .animate-in {
   animation: slideUp 0.5s ease-out forwards;
   opacity: 0;
@@ -590,7 +584,6 @@ const resetFilters = () => {
   }
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
   .hero-container {
     align-items: center;

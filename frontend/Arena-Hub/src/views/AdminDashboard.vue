@@ -39,7 +39,7 @@
             <polyline points="14 2 14 8 20 8"/>
             <path d="M9 15l2 2 4-4"/>
           </svg>
-          <span>solicitações</span>
+          <span>Solicitações</span>
         </router-link>
         
         <div class="nav-spacer"></div>
@@ -72,7 +72,7 @@
             <p>Análise de performance em tempo real • Unidade Arena Pernambuco</p>
           </div>
           <div class="header-actions">
-            <button class="btn-export">
+            <button class="btn-export" @click="exportarRelatorio">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
               </svg>
@@ -82,34 +82,77 @@
         </header>
 
         <section class="stats-grid">
-          <div v-for="(val, label) in formattedStats" :key="label" class="stat-card">
-            <div class="stat-icon" :class="getStatIconClass(label)">
-              <!-- Ícone de Vendas Totais -->
-              <svg v-if="label === 'Vendas Totais'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2v20M17 7H7M17 12H7M17 17h-4"/>
-              </svg>
-              <!-- Ícone de Ticket Médio -->
-              <svg v-else-if="label === 'Ticket Médio'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2L2 7v10l10 5 10-5V7l-10-5z"/><path d="M2 7l10 5 10-5M12 22V12"/>
-              </svg>
-              <!-- Ícone de Taxa de Compra -->
-              <svg v-else-if="label === 'Taxa de Compra'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-              </svg>
-              <!-- Ícone de Visualizações -->
-              <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+          <div class="stat-card">
+            <div class="stat-icon sales">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h2M21 12h-2M12 3v2M12 19v2M5.64 5.64l1.5 1.5M16.86 16.86l1.5 1.5M18.36 5.64l-1.5 1.5M7.14 16.86l-1.5 1.5M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
               </svg>
             </div>
             <div class="stat-info">
-              <span class="stat-label">{{ label }}</span>
-              <div class="stat-value">{{ val }}</div>
+              <span class="stat-label">Vendas Totais (Mês)</span>
+              <div class="stat-value">{{ formatCurrency(vendasTotais) }}</div>
+              <div class="stat-trend up">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+                <span>+{{ crescimentoVendas }}% vs mês anterior</span>
+              </div>
             </div>
-            <div class="stat-trend" :class="getTrendClass(label)">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline :points="label === 'Taxa de Compra' ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"/>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon ticket">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.5 1.5-2 2-2h12M4 17v-2a2 2 0 0 1 2-2h14v-2"/>
+                <path d="M16 22h2a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-2"/>
               </svg>
-              <span>{{ getTrendValue(label) }}</span>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Ticket Médio</span>
+              <div class="stat-value">{{ formatCurrency(ticketMedio) }}</div>
+              <div class="stat-trend up">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+                <span>+{{ crescimentoTicket }}% vs mês anterior</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon conversion">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4-3-9s1.34-9 3-9"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Taxa de Conversão</span>
+              <div class="stat-value">{{ taxaConversao }}%</div>
+              <div class="stat-trend up">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+                <span>+{{ crescimentoConversao }}% vs mês anterior</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon visitors">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Visualizações (Mês)</span>
+              <div class="stat-value">{{ formatVisualizacoes(visualizacoes) }}</div>
+              <div class="stat-trend up">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+                <span>+{{ crescimentoVisualizacoes }}% vs mês anterior</span>
+              </div>
             </div>
           </div>
         </section>
@@ -124,31 +167,13 @@
                 </svg>
                 Fluxo de Receita Mensal
               </h3>
-              <select class="mini-select">
-                <option>Ano 2026</option>
-                <option>Ano 2025</option>
+              <select class="mini-select" v-model="anoSelecionado" @change="atualizarGrafico">
+                <option value="2025">Ano 2025</option>
+                <option value="2026">Ano 2026</option>
               </select>
             </div>
             <div class="chart-container">
-              <div class="chart-y-axis">
-                <span v-for="v in yLabels" :key="v">{{ v >= 1000 ? v/1000 + 'k' : v }}</span>
-              </div>
-              <div class="chart-body">
-                <svg :viewBox="`0 0 ${svgW} ${svgH}`" class="chart-svg" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.25"/>
-                      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  <polygon :points="areaPoints" fill="url(#goldGrad)" />
-                  <polyline :points="linePoints" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle v-for="(pt, i) in chartPoints" :key="i" :cx="pt.x" :cy="pt.y" r="4" fill="#0a0e17" stroke="#c9a84c" stroke-width="2"/>
-                </svg>
-                <div class="chart-x-axis">
-                  <span v-for="d in chartData" :key="d.mes">{{ d.mes.substring(0,3) }}</span>
-                </div>
-              </div>
+              <canvas ref="receitaChart"></canvas>
             </div>
           </section>
 
@@ -185,14 +210,21 @@
                   <span class="dot green"></span>
                   <div class="status-content">
                     <span class="status-label">Arena Operacional</span>
-                    <span class="status-time">Atualizado agora</span>
+                    <span class="status-time">{{ ultimaAtualizacao }}</span>
                   </div>
                 </div>
                 <div class="status-item">
                   <span class="dot gold"></span>
                   <div class="status-content">
-                    <span class="status-label">12 Eventos este mês</span>
-                    <span class="status-time">+3 vs mês anterior</span>
+                    <span class="status-label">{{ eventosMes }} Eventos este mês</span>
+                    <span class="status-time">+{{ eventosCrescimento }} vs mês anterior</span>
+                  </div>
+                </div>
+                <div class="status-item">
+                  <span class="dot blue"></span>
+                  <div class="status-content">
+                    <span class="status-label">{{ ingressosVendidos }} Ingressos Vendidos</span>
+                    <span class="status-time">Ocupação média de {{ ocupacaoMedia }}%</span>
                   </div>
                 </div>
               </div>
@@ -214,6 +246,7 @@
                     <th>Evento</th>
                     <th>Setor</th>
                     <th>Data/Hora</th>
+                    <th>Valor</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -228,6 +261,7 @@
                     <td>{{ venda.evento }}</td>
                     <td>{{ venda.setor }}</td>
                     <td>{{ venda.horario }}</td>
+                    <td>{{ formatCurrency(venda.valor) }}</td>
                     <td><span class="badge success">{{ venda.status }}</span></td>
                   </tr>
                 </tbody>
@@ -248,82 +282,174 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import AppNavbar from '../components/AppNavbar.vue'
+import { Chart, registerables } from 'chart.js'
+
+Chart.register(...registerables)
 
 const isSidebarOpen = ref(false)
+const receitaChart = ref<HTMLCanvasElement | null>(null)
+let chartInstance: Chart | null = null
+const anoSelecionado = ref('2026')
 
-const chartData = [
-  { mes: 'Jan', valor: 8000 }, 
-  { mes: 'Fev', valor: 9500 }, 
-  { mes: 'Mar', valor: 11000 },
-  { mes: 'Abr', valor: 10500 }, 
-  { mes: 'Mai', valor: 13000 }, 
-  { mes: 'Jun', valor: 15000 },
-  { mes: 'Jul', valor: 14000 }, 
-  { mes: 'Ago', valor: 12000 }, 
-  { mes: 'Set', valor: 10000 }
-]
+const vendasMensais = {
+  2025: [42500, 48750, 52300, 49800, 58750, 62300, 65400, 68900, 64500, 71200, 75800, 82300],
+  2026: [85000, 89700, 94500, 89500, 102300, 115000, 124500, 132000, 128500, 141000, 149000, 158000]
+}
 
-const categoriasVendas = [
-  { nome: 'Shows', percentual: 65 },
-  { nome: 'Futebol', percentual: 25 },
-  { nome: 'Outros', percentual: 10 }
-]
+const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-const ultimasVendas = [
-  { cliente: 'João Silva', evento: 'Rock Nacional 2026', setor: 'Cadeira Premium', horario: 'Há 5 minutos', status: 'Aprovado' },
-  { cliente: 'Maria Santos', evento: 'Clássico Pernambucano', setor: 'Arquibancada', horario: 'Há 12 minutos', status: 'Aprovado' },
-  { cliente: 'Pedro Costa', evento: 'Festival de Verão', setor: 'Pista', horario: 'Há 25 minutos', status: 'Aprovado' }
-]
+const vendasTotais = computed(() => {
+  const mesAtual = new Date().getMonth()
+  return vendasMensais[anoSelecionado.value as keyof typeof vendasMensais][mesAtual]
+})
 
-const formattedStats = computed(() => ({
-  "Vendas Totais": "R$ 42.850",
-  "Ticket Médio": "R$ 215,00",
-  "Taxa de Compra": "18.5%",
-  "Visualizações": "12.402"
-}))
+const ticketMedio = computed(() => 185.50)
 
-const getStatIconClass = (label: string) => {
-  const map: Record<string, string> = {
-    'Vendas Totais': 'icon-sales',
-    'Ticket Médio': 'icon-ticket',
-    'Taxa de Compra': 'icon-rate',
-    'Visualizações': 'icon-views'
+const taxaConversao = computed(() => 23.8)
+
+const visualizacoes = computed(() => 48500)
+
+const crescimentoVendas = computed(() => 12.5)
+const crescimentoTicket = computed(() => 5.8)
+const crescimentoConversao = computed(() => 3.2)
+const crescimentoVisualizacoes = computed(() => 18.5)
+
+const categoriasVendas = ref([
+  { nome: 'Shows e Festivais', percentual: 58 },
+  { nome: 'Eventos Esportivos', percentual: 28 },
+  { nome: 'Teatro e Cultura', percentual: 9 },
+  { nome: 'Outros Eventos', percentual: 5 }
+])
+
+const eventosMes = computed(() => 14)
+const eventosCrescimento = computed(() => 3)
+const ingressosVendidos = computed(() => 18500)
+const ocupacaoMedia = computed(() => 72)
+const ultimaAtualizacao = computed(() => {
+  const agora = new Date()
+  return `Atualizado ${agora.toLocaleTimeString('pt-BR')}`
+})
+
+const ultimasVendas = ref([
+  { cliente: 'João Silva', evento: 'Rock Nacional 2026', setor: 'Cadeira Premium', horario: 'Há 5 minutos', valor: 250.00, status: 'Aprovado' },
+  { cliente: 'Maria Santos', evento: 'Clássico Pernambucano', setor: 'Arquibancada', horario: 'Há 12 minutos', valor: 80.00, status: 'Aprovado' },
+  { cliente: 'Pedro Costa', evento: 'Festival de Verão', setor: 'Pista', horario: 'Há 25 minutos', valor: 180.00, status: 'Aprovado' },
+  { cliente: 'Ana Beatriz', evento: 'Rock Nacional 2026', setor: 'Camarote', horario: 'Há 38 minutos', valor: 450.00, status: 'Pendente' },
+  { cliente: 'Lucas Pereira', evento: 'Teatro Mágico', setor: 'Plateia VIP', horario: 'Há 1 hora', valor: 120.00, status: 'Aprovado' }
+])
+
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value)
+}
+
+function formatVisualizacoes(value: number): string {
+  if (value >= 1000) {
+    return (value / 1000).toFixed(1) + 'k'
   }
-  return map[label] || ''
+  return value.toString()
 }
 
-const getTrendClass = (label: string) => {
-  return label === 'Taxa de Compra' ? 'down' : 'up'
+function atualizarGrafico() {
+  if (chartInstance) {
+    const dados = vendasMensais[anoSelecionado.value as keyof typeof vendasMensais]
+    chartInstance.data.datasets[0].data = dados
+    chartInstance.update()
+  }
 }
 
-const getTrendValue = (label: string) => {
-  return label === 'Taxa de Compra' ? '2%' : '12%'
+function initChart() {
+  if (receitaChart.value) {
+    const ctx = receitaChart.value.getContext('2d')
+    if (ctx) {
+      if (chartInstance) {
+        chartInstance.destroy()
+      }
+      
+      const dados = vendasMensais[anoSelecionado.value as keyof typeof vendasMensais]
+      
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: meses,
+          datasets: [{
+            label: 'Receita (R$)',
+            data: dados,
+            borderColor: '#c9a84c',
+            backgroundColor: 'rgba(201, 168, 76, 0.05)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#c9a84c',
+            pointBorderColor: '#0a0e17',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: '#1a2233',
+              titleColor: '#c9a84c',
+              bodyColor: '#e0e0e0',
+              borderColor: '#c9a84c',
+              borderWidth: 1,
+              callbacks: {
+                label: function(context) {
+                  return `Receita: ${formatCurrency(context.parsed.y)}`
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              },
+              ticks: {
+                color: '#8e9aaf',
+                callback: function(value) {
+                  return formatCurrency(value as number)
+                }
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#8e9aaf'
+              }
+            }
+          }
+        }
+      })
+    }
+  }
 }
 
-const svgW = 800
-const svgH = 200
-const maxVal = 15000
-const yLabels = [0, 5000, 10000, 15000].reverse()
+function exportarRelatorio() {
+  console.log('Exportando relatório PDF...')
+  alert('Funcionalidade de exportação em desenvolvimento')
+}
 
-const chartPoints = computed(() =>
-  chartData.map((d, i) => ({
-    x: (i / (chartData.length - 1)) * (svgW - 20) + 10,
-    y: svgH - 10 - ((d.valor / maxVal) * (svgH - 30)),
-  }))
-)
-
-const linePoints = computed(() => chartPoints.value.map(p => `${p.x},${p.y}`).join(' '))
-
-const areaPoints = computed(() => {
-  const pts = chartPoints.value
-  return `${pts[0].x},${svgH} ${linePoints.value} ${pts[pts.length-1].x},${svgH}`
+onMounted(() => {
+  initChart()
 })
 </script>
 
 <style scoped>
-/* Estrutura Base */
+
 .admin-layout { 
   display: flex; 
   min-height: 100vh; 
@@ -332,7 +458,6 @@ const areaPoints = computed(() => {
   font-family: 'Plus Jakarta Sans', sans-serif; 
 }
 
-/* Sidebar */
 .sidebar { 
   width: 260px; 
   background: linear-gradient(180deg, #111827 0%, #0d121c 100%);
@@ -430,7 +555,6 @@ const areaPoints = computed(() => {
   color: #ef4444;
 }
 
-/* Layout Central */
 .main-wrapper { 
   flex: 1; 
   margin-left: 260px; 
@@ -446,7 +570,6 @@ const areaPoints = computed(() => {
   padding: 32px 40px; 
 }
 
-/* Breadcrumb */
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -471,7 +594,6 @@ const areaPoints = computed(() => {
   font-weight: 600;
 }
 
-/* Header */
 .content-header { 
   display: flex; 
   justify-content: space-between; 
@@ -516,7 +638,6 @@ const areaPoints = computed(() => {
   transform: translateY(-2px);
 }
 
-/* Stats Cards */
 .stats-grid { 
   display: grid; 
   grid-template-columns: repeat(4, 1fr); 
@@ -542,18 +663,45 @@ const areaPoints = computed(() => {
 }
 
 .stat-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: rgba(201, 168, 76, 0.08);
 }
 
-.stat-icon svg {
+.stat-icon.sales {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.15), rgba(201, 168, 76, 0.05));
+}
+
+.stat-icon.sales svg {
   color: #c9a84c;
+}
+
+.stat-icon.ticket {
+  background: linear-gradient(135deg, rgba(76, 135, 201, 0.15), rgba(76, 135, 201, 0.05));
+}
+
+.stat-icon.ticket svg {
+  color: #4c87c9;
+}
+
+.stat-icon.conversion {
+  background: linear-gradient(135deg, rgba(76, 201, 142, 0.15), rgba(76, 201, 142, 0.05));
+}
+
+.stat-icon.conversion svg {
+  color: #4cc98e;
+}
+
+.stat-icon.visitors {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+}
+
+.stat-icon.visitors svg {
+  color: #ef4444;
 }
 
 .stat-info {
@@ -566,13 +714,14 @@ const areaPoints = computed(() => {
   text-transform: uppercase; 
   letter-spacing: 0.8px; 
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .stat-value { 
   font-size: 1.6rem; 
   font-weight: 800; 
   line-height: 1.2;
+  margin-bottom: 6px;
 }
 
 .stat-trend { 
@@ -580,7 +729,7 @@ const areaPoints = computed(() => {
   padding: 4px 8px; 
   border-radius: 20px; 
   font-weight: 700; 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
 }
@@ -595,7 +744,6 @@ const areaPoints = computed(() => {
   color: #ef4444; 
 }
 
-/* Grid Principal */
 .dashboard-main-grid { 
   display: grid; 
   grid-template-columns: 2fr 1fr; 
@@ -639,44 +787,16 @@ const areaPoints = computed(() => {
   font-weight: 600;
 }
 
-/* Gráfico */
 .chart-container { 
-  display: flex; 
-  gap: 15px; 
-  height: 250px; 
+  height: 280px; 
+  position: relative;
 }
 
-.chart-y-axis { 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: space-between; 
-  color: #6b7280; 
-  font-size: 0.65rem; 
-  padding-bottom: 30px; 
-  font-weight: 600;
+.chart-container canvas {
+  max-height: 100%;
+  width: 100% !important;
 }
 
-.chart-body { 
-  flex: 1; 
-  display: flex; 
-  flex-direction: column; 
-}
-
-.chart-svg {
-  width: 100%;
-  height: 100%;
-}
-
-.chart-x-axis { 
-  display: flex; 
-  justify-content: space-between; 
-  padding-top: 15px; 
-  color: #6b7280; 
-  font-size: 0.65rem; 
-  font-weight: 600;
-}
-
-/* Bar Chart */
 .bar-chart { 
   display: flex; 
   flex-direction: column; 
@@ -705,7 +825,6 @@ const areaPoints = computed(() => {
   transition: width 0.5s ease;
 }
 
-/* Status List */
 .side-info-stack {
   display: flex;
   flex-direction: column;
@@ -746,6 +865,11 @@ const areaPoints = computed(() => {
   box-shadow: 0 0 10px rgba(201, 168, 76, 0.5);
 }
 
+.blue {
+  background: #4c87c9;
+  box-shadow: 0 0 10px rgba(76, 135, 201, 0.5);
+}
+
 .status-content {
   display: flex;
   flex-direction: column;
@@ -763,7 +887,6 @@ const areaPoints = computed(() => {
   font-size: 0.7rem;
 }
 
-/* Tabela */
 .table-card { 
   grid-column: span 2; 
 }
@@ -825,7 +948,6 @@ const areaPoints = computed(() => {
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-/* Menu Toggle Mobile */
 .menu-toggle {
   display: none;
   position: fixed;
@@ -853,7 +975,6 @@ const areaPoints = computed(() => {
   z-index: 90;
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
   .sidebar { 
     transform: translateX(-100%); 
@@ -910,7 +1031,7 @@ const areaPoints = computed(() => {
   }
   
   .chart-container {
-    height: 200px;
+    height: 240px;
   }
   
   .admin-table {
