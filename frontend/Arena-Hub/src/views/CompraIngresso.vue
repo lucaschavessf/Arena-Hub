@@ -167,7 +167,7 @@ const cart = useCartStore()
 const eventoId = computed(() => Number(route.params.id))
 const evento = ref<any>(null)
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+const API_URL = import.meta.env.VITE_API_URL
 
 onMounted(async () => {
   window.scrollTo(0, 0)
