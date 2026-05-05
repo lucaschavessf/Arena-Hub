@@ -156,6 +156,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import api from '../services/api'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
 import { useCartStore } from '../stores/cart'
@@ -170,11 +171,8 @@ const evento = ref<any>(null)
 onMounted(async () => {
   window.scrollTo(0, 0)
   try {
-    const response = await fetch(`https://api.torreszx.space/eventos/${eventoId.value}`)
-    if (!response.ok) {
-      throw new Error('Erro ao buscar evento da API')
-    }
-    const data = await response.json()
+    const response = await api.get(`/eventos/${eventoId.value}`)
+    const data = response.data
     
     evento.value = {
       id: data.id,

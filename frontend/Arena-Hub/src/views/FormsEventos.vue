@@ -250,6 +250,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import api from '../services/api'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
 
@@ -276,17 +277,7 @@ async function submeter() {
       espacoId: 1 // Valor fixo conforme solicitado
     };
 
-    const response = await fetch('https://api.torreszx.space/eventos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      throw new Error('Erro na requisição para criar evento');
-    }
+    await api.post('/eventos', payload);
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
     step.value = 3; 

@@ -144,6 +144,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import api from '../services/api'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
 import EventCard from '../components/EventCard.vue'
@@ -159,11 +160,8 @@ const eventos = ref([])
 
 onMounted(async () => {
   try {
-    const response = await fetch('https://api.torreszx.space/eventos')
-    if (!response.ok) {
-      throw new Error('Erro ao buscar eventos da API')
-    }
-    const data = await response.json()
+    const response = await api.get('/eventos')
+    const data = response.data
     eventos.value = data.map(ev => ({
       id: ev.id,
       title: ev.nome,
