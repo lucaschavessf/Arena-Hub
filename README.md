@@ -40,11 +40,50 @@ O arena HUB é uma solução tecnológica desenvolvida para a disciplina de Prog
 - Novo screencast
 - Documentação para configuração de ambiente
 
-## 👥 Equipe
-
-* [Gabriel Henrique](https://www.linkedin.com/in/gabriel-henrique-2289aa350/)
-* [Allysson Fellype](https://www.linkedin.com/in/allysson-fellype-868390249/) 
-* [Fernando Marinho](https://www.linkedin.com/in/fernando-marinho-05589335a/)
-* [Diogo Felipe](https://www.linkedin.com/in/diogo-felipe-626688268/)
-* [Lucas Chaves](https://www.linkedin.com/in/lucaschavesf/)
-* [Matheus Andrade](https://www.linkedin.com/in/matheus-andrade-silva1/)
+## 👥 Membros da Equipe
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://github.com/GabrielHen-dev">
+        <img src="https://avatars.githubusercontent.com/u/113862540?v=4" width="100" style="border-radius:50%;" alt="Foto de Gabriel Henrique"/>
+        <br />
+        <sub><b>Gabriel Henrique</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/dgcavalcante">
+        <img src="https://avatars.githubusercontent.com/u/210120655?v=4" width="100" style="border-radius:50%;" alt="Foto de Diogo Cavalcante"/>
+        <br />
+        <sub><b>Diogo Cavalcante</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/lucaschavessf">
+        <img src="https://avatars.githubusercontent.com/u/153633041?v=4" width="100" style="border-radius:50%;" alt="Foto de Lucas Chaves"/>
+        <br />
+        <sub><b>Lucas Chaves</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/allyssonifx">
+        <img src="https://avatars.githubusercontent.com/u/68469620?v=4" width="100" style="border-radius:50%;" alt="Foto de Allysson Fellype"/>
+        <br />
+        <sub><b>Allysson Fellype</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Fernando2732">
+        <img src="https://avatars.githubusercontent.com/u/209713382?v=4" width="100" style="border-radius:50%;" alt="Foto de Fernando Marinho"/>
+        <br />
+        <sub><b>Fernando Marinho</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/MatheusAS1">
+        <img src="https://avatars.githubusercontent.com/u/210196636?v=4" width="100" style="border-radius:50%;" alt="Foto de Matheus Andrade"/>
+        <br />
+        <sub><b>Matheus Andrade</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
