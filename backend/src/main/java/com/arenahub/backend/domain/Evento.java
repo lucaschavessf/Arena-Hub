@@ -1,15 +1,22 @@
 package com.arenahub.backend.domain;
 
+import com.arenahub.backend.domain.categoria.CategoriaEvento;
+import com.arenahub.backend.domain.espaco.Espaco;
+import com.arenahub.backend.domain.evento.ClassificacaoIndicativa;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "eventos")
-public class  Evento {
+public class Evento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,22 +27,32 @@ public class  Evento {
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
     private Integer expectativaPublico;
-    private String categoria;
-    private Long espacoId;
 
-    // Construtores, Getters e Setters
+    @Enumerated(EnumType.STRING)
+    private ClassificacaoIndicativa classificacaoIndicativa;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private CategoriaEvento categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "espaco_id")
+    private Espaco espaco;
 
     public Evento() {
     }
 
-    public Evento(String nome, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, Integer expectativaPublico, String categoria, Long espacoId) {
+    public Evento(String nome, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim,
+            Integer expectativaPublico, ClassificacaoIndicativa classificacaoIndicativa, CategoriaEvento categoria,
+            Espaco espaco) {
         this.nome = nome;
         this.descricao = descricao;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.expectativaPublico = expectativaPublico;
+        this.classificacaoIndicativa = classificacaoIndicativa;
         this.categoria = categoria;
-        this.espacoId = espacoId;
+        this.espaco = espaco;
     }
 
     public Long getId() {
@@ -86,19 +103,27 @@ public class  Evento {
         this.expectativaPublico = expectativaPublico;
     }
 
-    public String getCategoria() {
+    public ClassificacaoIndicativa getClassificacaoIndicativa() {
+        return classificacaoIndicativa;
+    }
+
+    public void setClassificacaoIndicativa(ClassificacaoIndicativa classificacaoIndicativa) {
+        this.classificacaoIndicativa = classificacaoIndicativa;
+    }
+
+    public CategoriaEvento getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(CategoriaEvento categoria) {
         this.categoria = categoria;
     }
 
-    public Long getEspacoId() {
-        return espacoId;
+    public Espaco getEspaco() {
+        return espaco;
     }
 
-    public void setEspacoId(Long espacoId) {
-        this.espacoId = espacoId;
+    public void setEspaco(Espaco espaco) {
+        this.espaco = espaco;
     }
 }

@@ -1,7 +1,14 @@
 package com.arenahub.backend.service;
 
 import com.arenahub.backend.domain.Evento;
+import com.arenahub.backend.domain.categoria.CategoriaEvento;
+import com.arenahub.backend.domain.espaco.Espaco;
+import com.arenahub.backend.domain.espaco.StatusEspaco;
+import com.arenahub.backend.domain.espaco.TipoCobranca;
+import com.arenahub.backend.domain.evento.ClassificacaoIndicativa;
 import com.arenahub.backend.dto.EventoRequestDTO;
+import com.arenahub.backend.repository.CategoriaEventoRepository;
+import com.arenahub.backend.repository.EspacoRepository;
 import com.arenahub.backend.repository.EventoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -11,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +33,26 @@ class EventoServiceTest {
     @Mock
     private EventoRepository eventoRepository;
 
+    @Mock
+    private CategoriaEventoRepository categoriaRepository;
+
+    @Mock
+    private EspacoRepository espacoRepository;
+
     @InjectMocks
     private EventoService eventoService;
+
+    private CategoriaEvento criarCategoria() {
+        CategoriaEvento cat = new CategoriaEvento("Musica");
+        cat.setId(1L);
+        return cat;
+    }
+
+    private Espaco criarEspaco() {
+        Espaco esp = new Espaco("Palco", 1000, "Centro", TipoCobranca.DIA, BigDecimal.valueOf(100), StatusEspaco.ATIVO);
+        esp.setId(1L);
+        return esp;
+    }
 
     private EventoRequestDTO criarDto() {
         return new EventoRequestDTO(
@@ -35,8 +61,9 @@ class EventoServiceTest {
                 LocalDateTime.of(2025, 6, 1, 20, 0),
                 LocalDateTime.of(2025, 6, 1, 23, 0),
                 500,
-                "Musica",
-                1L
+                ClassificacaoIndicativa.LIVRE,
+                1L, // categoriaId
+                1L // espacoId
         );
     }
 
@@ -47,9 +74,9 @@ class EventoServiceTest {
                 LocalDateTime.of(2025, 6, 1, 20, 0),
                 LocalDateTime.of(2025, 6, 1, 23, 0),
                 500,
-                "Musica",
-                1L
-        );
+                ClassificacaoIndicativa.LIVRE,
+                criarCategoria(),
+                criarEspaco());
         evento.setId(1L);
         return evento;
     }
@@ -130,6 +157,9 @@ class EventoServiceTest {
     void deveCadastrarEventoComSucesso() {
         EventoRequestDTO dto = criarDto();
         Evento eventoSalvo = criarEvento();
+
+        when(categoriaRepository.findById(dto.categoriaId())).thenReturn(Optional.of(criarCategoria()));
+        when(espacoRepository.findById(dto.espacoId())).thenReturn(Optional.of(criarEspaco()));
         when(eventoRepository.save(any(Evento.class))).thenReturn(eventoSalvo);
 
         Evento resultado = eventoService.cadastrarEvento(dto);
@@ -142,6 +172,10 @@ class EventoServiceTest {
     @Test
     void deveCriarEventoComDadosCorretosDoDTOAoCadastrar() {
         EventoRequestDTO dto = criarDto();
+
+        when(categoriaRepository.findById(dto.categoriaId())).thenReturn(Optional.of(criarCategoria()));
+        when(espacoRepository.findById(dto.espacoId())).thenReturn(Optional.of(criarEspaco()));
+
         when(eventoRepository.save(any(Evento.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         eventoService.cadastrarEvento(dto);
@@ -155,8 +189,9 @@ class EventoServiceTest {
         assertEquals(dto.dataInicio(), capturado.getDataInicio());
         assertEquals(dto.dataFim(), capturado.getDataFim());
         assertEquals(500, capturado.getExpectativaPublico());
-        assertEquals("Musica", capturado.getCategoria());
-        assertEquals(1L, capturado.getEspacoId());
+        assertEquals(ClassificacaoIndicativa.LIVRE, capturado.getClassificacaoIndicativa());
+        assertEquals(1L, capturado.getCategoria().getId());
+        assertEquals(1L, capturado.getEspaco().getId());
     }
 
     @Test
@@ -168,10 +203,18 @@ class EventoServiceTest {
                 LocalDateTime.of(2025, 7, 10, 18, 0),
                 LocalDateTime.of(2025, 7, 10, 22, 0),
                 300,
-                "Jazz",
-                2L
-        );
+                ClassificacaoIndicativa.DOZE,
+                2L,
+                2L);
+
+        CategoriaEvento novaCategoria = new CategoriaEvento("Jazz");
+        novaCategoria.setId(2L);
+        Espaco novoEspaco = criarEspaco();
+        novoEspaco.setId(2L);
+
         when(eventoRepository.findById(1L)).thenReturn(Optional.of(existente));
+        when(categoriaRepository.findById(2L)).thenReturn(Optional.of(novaCategoria));
+        when(espacoRepository.findById(2L)).thenReturn(Optional.of(novoEspaco));
         when(eventoRepository.save(existente)).thenReturn(existente);
 
         Evento resultado = eventoService.atualizarEvento(1L, dto);
@@ -182,8 +225,10 @@ class EventoServiceTest {
         assertEquals(LocalDateTime.of(2025, 7, 10, 18, 0), existente.getDataInicio());
         assertEquals(LocalDateTime.of(2025, 7, 10, 22, 0), existente.getDataFim());
         assertEquals(300, existente.getExpectativaPublico());
-        assertEquals("Jazz", existente.getCategoria());
-        assertEquals(2L, existente.getEspacoId());
+        assertEquals(ClassificacaoIndicativa.DOZE, existente.getClassificacaoIndicativa());
+        assertEquals(2L, existente.getCategoria().getId());
+        assertEquals(2L, existente.getEspaco().getId());
+
         verify(eventoRepository).findById(1L);
         verify(eventoRepository).save(existente);
     }

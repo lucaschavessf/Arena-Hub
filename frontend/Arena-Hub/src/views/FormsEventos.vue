@@ -118,32 +118,44 @@
                 </div>
               </div>
 
-              <div class="form-row triplet">
+              <div class="form-row">
                 <div class="form-group">
-                  <label>Data</label>
+                  <label>Data Início</label>
                   <div class="input-with-icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
                     </svg>
-                    <input v-model="form.dataEvento" type="date" />
+                    <input v-model="form.dataInicio" type="date" />
                   </div>
                 </div>
                 <div class="form-group">
-                  <label>Cidade</label>
+                  <label>Hora Início</label>
                   <div class="input-with-icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                     </svg>
-                    <input v-model="form.cidade" type="text" placeholder="Ex: Recife" />
+                    <input v-model="form.horaInicio" type="time" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Data Final</label>
+                  <div class="input-with-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                    </svg>
+                    <input v-model="form.dataFinal" type="date" />
                   </div>
                 </div>
                 <div class="form-group">
-                  <label>Estado</label>
+                  <label>Hora Final</label>
                   <div class="input-with-icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 2L2 7v10l10 5 10-5V7l-10-5z"/><path d="M2 7l10 5 10-5M12 22V12"/>
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                     </svg>
-                    <input v-model="form.estado" type="text" placeholder="Ex: PE" maxlength="2" />
+                    <input v-model="form.horaFinal" type="time" />
                   </div>
                 </div>
               </div>
@@ -155,16 +167,46 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M20 7h-4.5L12 3 8.5 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
                     </svg>
-                    <select v-model="form.categoria" class="custom-select">
+                    <select v-model="form.categoriaId" class="custom-select">
                       <option value="" disabled selected>Selecione uma categoria...</option>
-                      <option>Show</option>
-                      <option>Esportes</option>
-                      <option>Corporativo</option>
-                      <option>Teatro</option>
-                      <option>Comédia</option>
+                      <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.nome }}</option>
                     </select>
                   </div>
                 </div>
+                
+                <div class="form-group">
+                  <label>Espaço</label>
+                  <div class="input-with-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                    <select v-model="form.espacoId" class="custom-select">
+                      <option value="" disabled selected>Selecione o espaço...</option>
+                      <option v-for="esp in espacos" :key="esp.id" :value="esp.id">{{ esp.nome }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Classificação Indicativa</label>
+                  <div class="input-with-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    <select v-model="form.classificacaoIndicativa" class="custom-select">
+                      <option value="" disabled selected>Selecione a classificação...</option>
+                      <option value="LIVRE">Livre</option>
+                      <option value="DEZ">10 Anos</option>
+                      <option value="DOZE">12 Anos</option>
+                      <option value="QUATORZE">14 Anos</option>
+                      <option value="DEZESSEIS">16 Anos</option>
+                      <option value="DEZOITO">18 Anos</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div class="form-group">
                   <label>Instagram</label>
                   <div class="input-with-icon">
@@ -249,32 +291,67 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import api from '../services/api'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
 
 const step = ref(1)
+
 const form = reactive({
   nome: '', email: '', whatsapp: '',
-  nomeEvento: '', dataEvento: '', cidade: '', estado: '',
-  categoria: '', menoresAcompanhados: false,
+  nomeEvento: '', 
+  dataInicio: '', horaInicio: '', 
+  dataFinal: '', horaFinal: '',
+  categoriaId: '', espacoId: '', classificacaoIndicativa: '', 
+  menoresAcompanhados: false,
   descricao: '', instagram: '',
+})
+
+interface Categoria {
+  id: number;
+  nome: string;
+}
+
+interface Espaco {
+  id: number;
+  nome: string;
+}
+
+const categorias = ref<Categoria[]>([])
+const espacos = ref<Espaco[]>([])
+
+onMounted(async () => {
+  try {
+    const resCat = await api.get('/api/categoria-evento')
+    categorias.value = resCat.data
+    
+    const resEsp = await api.get('/api/espaco')
+    espacos.value = resEsp.data
+  } catch (error) {
+    console.error('Erro ao carregar categorias ou espaços:', error)
+  }
 })
 
 async function submeter() { 
   try {
-    const dataInicio = form.dataEvento ? `${form.dataEvento}T20:00:00` : new Date().toISOString().substring(0, 19);
-    const dataFim = form.dataEvento ? `${form.dataEvento}T23:59:59` : new Date().toISOString().substring(0, 19);
+    const dataInicioFormatada = (form.dataInicio && form.horaInicio) 
+      ? `${form.dataInicio}T${form.horaInicio}:00` 
+      : new Date().toISOString().substring(0, 19);
+      
+    const dataFimFormatada = (form.dataFinal && form.horaFinal) 
+      ? `${form.dataFinal}T${form.horaFinal}:00` 
+      : new Date().toISOString().substring(0, 19);
 
     const payload = {
       nome: form.nomeEvento,
       descricao: form.descricao || "Sem descrição",
-      dataInicio: dataInicio,
-      dataFim: dataFim,
-      expectativaPublico: 1000, // Valor padrão
-      categoria: form.categoria || "Outros",
-      espacoId: 1 // Valor fixo conforme solicitado
+      dataInicio: dataInicioFormatada,
+      dataFim: dataFimFormatada,
+      expectativaPublico: 1000,
+      categoriaId: form.categoriaId,
+      espacoId: form.espacoId,
+      classificacaoIndicativa: form.classificacaoIndicativa
     };
 
     await api.post('/eventos', payload);
@@ -799,79 +876,10 @@ textarea {
 
 .slide-enter-from { 
   opacity: 0; 
-  transform: translateX(30px); 
+  transform: translateX(20px); 
 }
-
 .slide-leave-to { 
   opacity: 0; 
-  transform: translateX(-30px); 
-}
-
-@media (max-width: 650px) {
-  .main-wizard { 
-    padding: 40px 16px; 
-  }
-  
-  .form-row, 
-  .form-row.triplet { 
-    grid-template-columns: 1fr; 
-  }
-  
-  .wizard-card { 
-    padding: 32px 24px; 
-  }
-  
-  .stepper-nav { 
-    gap: 10px; 
-  }
-  
-  .step-divider { 
-    width: 30px; 
-  }
-  
-  .wizard-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .wizard-title {
-    font-size: 1.5rem;
-  }
-  
-  .form-actions {
-    flex-direction: column-reverse;
-    gap: 12px;
-  }
-  
-  .btn-next,
-  .btn-submit,
-  .btn-ghost {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .success-badge {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .success-title {
-    font-size: 1.8rem;
-  }
-}
-
-@media (max-width: 450px) {
-  .step-label {
-    display: none;
-  }
-  
-  .stepper-nav {
-    gap: 20px;
-  }
-  
-  .step-divider {
-    width: 20px;
-  }
+  transform: translateX(-20px); 
 }
 </style>

@@ -30,19 +30,18 @@ public class SecurityConfig {
                         .requestMatchers("/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers("/api/categoria-evento", "/api/categoria-evento/**").permitAll()
+                        .requestMatchers("/api/espaco", "/api/espaco/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/eventos", "/eventos/**").permitAll()
                         .requestMatchers("/pedidos/**").permitAll()
                         .requestMatchers("/eventos/**").permitAll()
-                        .requestMatchers("/api/categoria-evento/**").permitAll()
-                        .requestMatchers("/api/espaco/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/eventos", "/eventos/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/eventos", "/eventos/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/eventos", "/eventos/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/user/admin", "/user/cliente").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/user/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/user/**").authenticated()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -53,7 +52,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
