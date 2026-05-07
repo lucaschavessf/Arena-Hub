@@ -775,14 +775,12 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn-modal-fechar" @click="fecharModalEspacoDetalhes">Fechar</button>
           <button
             class="btn-modal-confirmar"
-            @click="
-              selecionarEspaco()
-              fecharModalEspacoDetalhes()
-            "
-          >
+            @click="selecionarEspaco(); fecharModalEspacoDetalhes()"
+            >
+            Selecionar este espaço
+            </button>
             Selecionar este espaço
           </button>
         </div>
@@ -983,7 +981,7 @@ const novoEvento = ref({
   classificacao: 'Livre',
   menoresAcompanhados: true,
   imagem: null as File | null,
-  imagemPreview: '' as string,
+  imagemPreview: ''
 })
 
 const espacosDisponiveis = ref([
