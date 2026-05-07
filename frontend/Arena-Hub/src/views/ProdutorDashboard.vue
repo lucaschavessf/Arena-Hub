@@ -781,8 +781,6 @@
             >
             Selecionar este espaço
             </button>
-            Selecionar este espaço
-          </button>
         </div>
       </div>
     </div>
