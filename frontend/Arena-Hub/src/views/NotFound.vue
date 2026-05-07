@@ -20,42 +20,101 @@
             </div>
 
             <div class="illustration">
-              <svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="60" r="30" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.3"/>
-                <circle cx="100" cy="60" r="15" fill="#c9a84c" opacity="0.1"/>
-                
-                <circle cx="30" cy="25" r="2" fill="#c9a84c" opacity="0.6"/>
-                <circle cx="170" cy="35" r="1.5" fill="#c9a84c" opacity="0.4"/>
-                <circle cx="50" cy="80" r="1" fill="#c9a84c" opacity="0.5"/>
-                <circle cx="150" cy="75" r="2" fill="#c9a84c" opacity="0.3"/>
-                <circle cx="180" cy="20" r="1" fill="#c9a84c" opacity="0.6"/>
-                <circle cx="20" cy="60" r="1.5" fill="#c9a84c" opacity="0.4"/>
-                
-                <line x1="30" y1="25" x2="50" y2="80" stroke="#c9a84c" stroke-width="0.5" opacity="0.15"/>
-                <line x1="170" y1="35" x2="150" y2="75" stroke="#c9a84c" stroke-width="0.5" opacity="0.15"/>
-                <line x1="100" y1="60" x2="30" y2="25" stroke="#c9a84c" stroke-width="0.5" opacity="0.1"/>
-                <line x1="100" y1="60" x2="170" y2="35" stroke="#c9a84c" stroke-width="0.5" opacity="0.1"/>
+              <svg
+                width="200"
+                height="120"
+                viewBox="0 0 200 120"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="100"
+                  cy="60"
+                  r="30"
+                  fill="none"
+                  stroke="#c9a84c"
+                  stroke-width="1.5"
+                  opacity="0.3"
+                />
+                <circle cx="100" cy="60" r="15" fill="#c9a84c" opacity="0.1" />
+
+                <circle cx="30" cy="25" r="2" fill="#c9a84c" opacity="0.6" />
+                <circle cx="170" cy="35" r="1.5" fill="#c9a84c" opacity="0.4" />
+                <circle cx="50" cy="80" r="1" fill="#c9a84c" opacity="0.5" />
+                <circle cx="150" cy="75" r="2" fill="#c9a84c" opacity="0.3" />
+                <circle cx="180" cy="20" r="1" fill="#c9a84c" opacity="0.6" />
+                <circle cx="20" cy="60" r="1.5" fill="#c9a84c" opacity="0.4" />
+
+                <line
+                  x1="30"
+                  y1="25"
+                  x2="50"
+                  y2="80"
+                  stroke="#c9a84c"
+                  stroke-width="0.5"
+                  opacity="0.15"
+                />
+                <line
+                  x1="170"
+                  y1="35"
+                  x2="150"
+                  y2="75"
+                  stroke="#c9a84c"
+                  stroke-width="0.5"
+                  opacity="0.15"
+                />
+                <line
+                  x1="100"
+                  y1="60"
+                  x2="30"
+                  y2="25"
+                  stroke="#c9a84c"
+                  stroke-width="0.5"
+                  opacity="0.1"
+                />
+                <line
+                  x1="100"
+                  y1="60"
+                  x2="170"
+                  y2="35"
+                  stroke="#c9a84c"
+                  stroke-width="0.5"
+                  opacity="0.1"
+                />
               </svg>
             </div>
 
-            <h2 class="title">
-              Ops! Página não encontrada
-            </h2>
+            <h2 class="title">Ops! Página não encontrada</h2>
 
             <p class="subtitle">
-              Parece que você se aventurou em território desconhecido. 
-              A página que você está procurando não existe ou foi movida.
+              Parece que você se aventurou em território desconhecido. A página que você está
+              procurando não existe ou foi movida.
             </p>
             <div class="suggestions">
               <div class="suggestion-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
                 </svg>
                 <span>Verifique a URL digitada</span>
               </div>
               <div class="suggestion-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M2 12h20M12 2v20"/>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M2 12h20M12 2v20" />
                 </svg>
                 <span>Use a busca para encontrar eventos</span>
               </div>
@@ -63,13 +122,19 @@
 
             <div class="actions">
               <router-link to="/" class="btn-primary">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M3 12h18M3 12l6-6M3 12l6 6M21 12h-4"/>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path d="M3 12h18M3 12l6-6M3 12l6 6M21 12h-4" />
                 </svg>
                 <span>Voltar para Home</span>
               </router-link>
             </div>
-
           </div>
         </div>
       </section>
@@ -92,23 +157,23 @@ const getParticleStyle = (index: number) => {
   const top = Math.random() * 100
   const delay = Math.random() * 5
   const duration = Math.random() * 10 + 10
-  
+
   return {
     width: `${size}px`,
     height: `${size}px`,
     left: `${left}%`,
     top: `${top}%`,
     animationDelay: `${delay}s`,
-    animationDuration: `${duration}s`
+    animationDuration: `${duration}s`,
   }
 }
 </script>
 
 <style scoped>
-.page { 
-  background: #0a0e17; 
-  color: white; 
-  min-height: 100vh; 
+.page {
+  background: #0a0e17;
+  color: white;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -121,10 +186,10 @@ const getParticleStyle = (index: number) => {
   justify-content: center;
 }
 
-.container { 
-  max-width: 1200px; 
-  margin: 0 auto; 
-  padding: 0 24px; 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
   width: 100%;
 }
 
@@ -212,22 +277,40 @@ const getParticleStyle = (index: number) => {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradientShift 3s ease infinite, float 3s ease-in-out infinite;
+  animation:
+    gradientShift 3s ease infinite,
+    float 3s ease-in-out infinite;
   text-shadow: 0 0 30px rgba(201, 168, 76, 0.3);
 }
 
-.digit:nth-child(1) { animation-delay: 0s; }
-.digit:nth-child(2) { animation-delay: 0.2s; }
-.digit:nth-child(3) { animation-delay: 0.4s; }
+.digit:nth-child(1) {
+  animation-delay: 0s;
+}
+.digit:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.digit:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .code-glitch {
@@ -236,10 +319,11 @@ const getParticleStyle = (index: number) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(201, 168, 76, 0.1) 45%, 
-    rgba(201, 168, 76, 0.1) 55%, 
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 168, 76, 0.1) 45%,
+    rgba(201, 168, 76, 0.1) 55%,
     transparent 100%
   );
   animation: glitchSweep 4s ease-in-out infinite;
@@ -247,9 +331,18 @@ const getParticleStyle = (index: number) => {
 }
 
 @keyframes glitchSweep {
-  0%, 100% { transform: translateX(-100%); }
-  10%, 30% { transform: translateX(100%); }
-  40%, 90% { transform: translateX(-100%); }
+  0%,
+  100% {
+    transform: translateX(-100%);
+  }
+  10%,
+  30% {
+    transform: translateX(100%);
+  }
+  40%,
+  90% {
+    transform: translateX(-100%);
+  }
 }
 
 .illustration {
@@ -258,8 +351,12 @@ const getParticleStyle = (index: number) => {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .title {
@@ -438,35 +535,35 @@ const getParticleStyle = (index: number) => {
   .notfound-section {
     padding: 50px 0;
   }
-  
+
   .code {
     font-size: 7rem;
     gap: 4px;
   }
-  
+
   .title {
     font-size: 1.6rem;
   }
-  
+
   .subtitle {
     font-size: 0.9rem;
     padding: 0 16px;
   }
-  
+
   .suggestions {
     padding: 0 16px;
   }
-  
+
   .btn-primary {
     padding: 14px 28px;
     font-size: 0.9rem;
   }
-  
+
   .quick-links {
     padding-left: 16px;
     padding-right: 16px;
   }
-  
+
   .illustration svg {
     width: 160px;
     height: 100px;
@@ -477,12 +574,12 @@ const getParticleStyle = (index: number) => {
   .code {
     font-size: 6rem;
   }
-  
+
   .links-row {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .separator {
     display: none;
   }
@@ -500,7 +597,7 @@ const getParticleStyle = (index: number) => {
   .quick-links {
     animation: none;
   }
-  
+
   .digit {
     text-shadow: none;
   }

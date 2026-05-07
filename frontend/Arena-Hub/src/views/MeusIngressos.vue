@@ -4,11 +4,17 @@
 
     <main class="main-tickets">
       <div class="tickets-container">
-        <!-- Breadcrumb -->
         <div class="breadcrumb">
           <router-link to="/" class="breadcrumb-link">Início</router-link>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="9 18 15 12 9 6"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <polyline points="9 18 15 12 9 6" />
           </svg>
           <span class="breadcrumb-current">Meus Ingressos</span>
         </div>
@@ -22,19 +28,28 @@
             <p class="page-subtitle">Gerencie suas entradas e prepare seu QR Code</p>
           </div>
           <button class="btn-back" @click="$router.back()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             <span>VOLTAR</span>
           </button>
         </header>
 
         <div class="tickets-grid" v-if="meusIngressos.length > 0">
-          <div v-for="(ing, index) in meusIngressos" :key="ing.id" 
-               class="ticket-card" 
-               :class="{ 'is-used': ing.status !== 'ativo' }"
-               :style="{ animationDelay: `${index * 0.1}s` }">
-            
+          <div
+            v-for="(ing, index) in meusIngressos"
+            :key="ing.id"
+            class="ticket-card"
+            :class="{ 'is-used': ing.status !== 'ativo' }"
+            :style="{ animationDelay: `${index * 0.1}s` }"
+          >
             <div class="ticket-visual">
               <img :src="ing.image" :alt="ing.title" class="event-thumb" />
               <div class="image-overlay"></div>
@@ -49,20 +64,44 @@
                 <h2 class="event-name">{{ ing.title }}</h2>
                 <div class="event-meta-group">
                   <div class="meta-inline">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" />
+                      <path d="M16 2v4M8 2v4M3 10h18" />
                     </svg>
                     <span>{{ ing.date }}</span>
                   </div>
                   <div class="meta-inline">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 6v6l4 2" />
                     </svg>
                     <span>{{ ing.time }}</span>
                   </div>
                   <div class="meta-inline">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                      <circle cx="12" cy="10" r="3" />
                     </svg>
                     <span>{{ ing.venue || 'Arena Pernambuco' }}</span>
                   </div>
@@ -71,22 +110,46 @@
 
               <div class="ticket-footer-details">
                 <div class="detail-pill">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4"/>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4" />
                   </svg>
                   <span class="label">SETOR:</span>
                   <span class="val">{{ ing.tipo }}</span>
                 </div>
                 <div class="detail-pill">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="9" cy="9" r="2"/><circle cx="15" cy="9" r="2"/><path d="M5 15h14"/>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <circle cx="9" cy="9" r="2" />
+                    <circle cx="15" cy="9" r="2" />
+                    <path d="M5 15h14" />
                   </svg>
                   <span class="label">QTD:</span>
                   <span class="val">{{ ing.quantidade }}x</span>
                 </div>
                 <div class="detail-pill">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v6l4 2" />
                   </svg>
                   <span class="label">PEDIDO:</span>
                   <span class="val">#{{ ing.id.toString().padStart(6, '0') }}</span>
@@ -101,21 +164,40 @@
             </div>
 
             <div class="ticket-action-area">
-              <button class="view-qr-btn" @click="toggleQr(ing.id)" :disabled="ing.status !== 'ativo'">
+              <button
+                class="view-qr-btn"
+                @click="toggleQr(ing.id)"
+                :disabled="ing.status !== 'ativo'"
+              >
                 <div class="qr-icon-wrapper">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7"/>
-                    <rect x="14" y="3" width="7" height="7"/>
-                    <rect x="3" y="14" width="7" height="7"/>
-                    <rect x="14" y="14" width="3" height="3"/>
-                    <rect x="18" y="18" width="3" height="3"/>
-                    <rect x="18" y="14" width="3" height="3"/>
-                    <rect x="14" y="18" width="3" height="3"/>
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="3" height="3" />
+                    <rect x="18" y="18" width="3" height="3" />
+                    <rect x="18" y="14" width="3" height="3" />
+                    <rect x="14" y="18" width="3" height="3" />
                   </svg>
                 </div>
                 <span>ACESSAR QR</span>
-                <svg v-if="ing.status === 'ativo'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="9 18 15 12 9 6"/>
+                <svg
+                  v-if="ing.status === 'ativo'"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <polyline points="9 18 15 12 9 6" />
                 </svg>
               </button>
             </div>
@@ -124,42 +206,79 @@
               <div v-if="activeQr === ing.id" class="qr-overlay" @click.self="activeQr = null">
                 <div class="qr-modal">
                   <button class="close-qr" @click="activeQr = null">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                   </button>
-                  
+
                   <div class="qr-modal-header">
                     <div class="qr-icon-lg">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                      <svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
                       </svg>
                     </div>
                     <h3 class="qr-title">Seu Ingresso</h3>
                     <p class="qr-subtitle">{{ ing.title }}</p>
                   </div>
-                  
+
                   <div class="qr-code-container">
-                    <img 
-                      src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ARENAHUB-12345" 
-                      alt="QR Code do ingresso" 
+                    <img
+                      src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ARENAHUB-12345"
+                      alt="QR Code do ingresso"
                     />
                     <div class="qr-code-border"></div>
                   </div>
-                  
+
                   <div class="qr-info">
                     <div class="qr-hash-wrapper">
                       <code class="qr-hash">{{ ing.qrCode || 'ARENA-HUB-ING-2026' }}</code>
-                      <button class="copy-btn" @click="copyToClipboard(ing.qrCode || 'ARENA-HUB-ING-2026')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                      <button
+                        class="copy-btn"
+                        @click="copyToClipboard(ing.qrCode || 'ARENA-HUB-ING-2026')"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <rect x="9" y="9" width="13" height="13" rx="2" />
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                         </svg>
                       </button>
                     </div>
                     <p class="qr-warning">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
                       </svg>
                       Apresente este código na entrada do evento
                     </p>
@@ -172,19 +291,34 @@
 
         <div v-else class="empty-tickets">
           <div class="empty-icon">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4"/>
-              <path d="M2 15v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4"/>
-              <path d="M2 9a3 3 0 0 1 0 6"/>
-              <path d="M22 9a3 3 0 0 0 0 6"/>
+            <svg
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4" />
+              <path d="M2 15v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4" />
+              <path d="M2 9a3 3 0 0 1 0 6" />
+              <path d="M22 9a3 3 0 0 0 0 6" />
             </svg>
           </div>
           <h3>Você ainda não possui ingressos</h3>
           <p>Explore os eventos disponíveis e garanta sua presença!</p>
           <button class="btn-explore" @click="$router.push('/')">
             <span>Explorar Eventos</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
             </svg>
           </button>
         </div>
@@ -202,8 +336,8 @@ import { meusIngressos } from '../data/mock.js'
 
 const activeQr = ref<number | null>(null)
 
-function toggleQr(id: number) { 
-  activeQr.value = activeQr.value === id ? null : id 
+function toggleQr(id: number) {
+  activeQr.value = activeQr.value === id ? null : id
 }
 
 function copyToClipboard(text: string) {
@@ -213,21 +347,21 @@ function copyToClipboard(text: string) {
 </script>
 
 <style scoped>
-.page { 
-  background: #0a0e17; 
-  min-height: 100vh; 
-  display: flex; 
-  flex-direction: column; 
+.page {
+  background: #0a0e17;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.main-tickets { 
-  flex: 1; 
-  padding: 60px 20px; 
+.main-tickets {
+  flex: 1;
+  padding: 60px 20px;
   display: flex;
   justify-content: center;
 }
 
-.tickets-container { 
+.tickets-container {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
@@ -261,11 +395,11 @@ function copyToClipboard(text: string) {
   color: #4a5568;
 }
 
-.tickets-header { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: flex-end; 
-  margin-bottom: 40px; 
+.tickets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
 }
 
 .header-text {
@@ -279,10 +413,10 @@ function copyToClipboard(text: string) {
   margin-bottom: 8px;
 }
 
-.page-title { 
-  font-size: 2.2rem; 
-  font-weight: 900; 
-  color: #fff; 
+.page-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #fff;
   margin: 0;
   background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
   -webkit-background-clip: text;
@@ -297,9 +431,9 @@ function copyToClipboard(text: string) {
   border-radius: 1px;
 }
 
-.page-subtitle { 
-  color: #8e9aaf; 
-  font-size: 0.95rem; 
+.page-subtitle {
+  color: #8e9aaf;
+  font-size: 0.95rem;
   margin-left: 4px;
 }
 
@@ -334,10 +468,10 @@ function copyToClipboard(text: string) {
   transform: translateX(-2px);
 }
 
-.tickets-grid { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 28px; 
+.tickets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .ticket-card {
@@ -374,18 +508,18 @@ function copyToClipboard(text: string) {
   opacity: 0.7;
 }
 
-.ticket-visual { 
-  position: relative; 
-  width: 240px; 
-  flex-shrink: 0; 
-  overflow: hidden; 
-  border-radius: 24px 0 0 24px; 
+.ticket-visual {
+  position: relative;
+  width: 240px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 24px 0 0 24px;
 }
 
-.event-thumb { 
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover; 
+.event-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform 0.6s ease;
 }
 
@@ -396,22 +530,23 @@ function copyToClipboard(text: string) {
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, 
-    rgba(10, 14, 23, 0.3) 0%, 
+  background: linear-gradient(
+    135deg,
+    rgba(10, 14, 23, 0.3) 0%,
     transparent 50%,
     rgba(10, 14, 23, 0.6) 100%
   );
 }
 
 .status-badge {
-  position: absolute; 
-  top: 16px; 
+  position: absolute;
+  top: 16px;
   left: 16px;
-  padding: 6px 12px; 
-  border-radius: 30px; 
-  font-size: 0.7rem; 
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 0.7rem;
   font-weight: 800;
-  text-transform: uppercase; 
+  text-transform: uppercase;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
@@ -419,15 +554,15 @@ function copyToClipboard(text: string) {
   backdrop-filter: blur(8px);
 }
 
-.status-badge.ativo { 
+.status-badge.ativo {
   background: rgba(76, 201, 142, 0.15);
-  color: #4cc98e; 
+  color: #4cc98e;
   border: 1px solid rgba(76, 201, 142, 0.3);
 }
 
-.status-badge.utilizado { 
+.status-badge.utilizado {
   background: rgba(142, 154, 175, 0.15);
-  color: #8e9aaf; 
+  color: #8e9aaf;
   border: 1px solid rgba(142, 154, 175, 0.3);
 }
 
@@ -445,57 +580,62 @@ function copyToClipboard(text: string) {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
-.ticket-body { 
-  flex: 1; 
-  padding: 28px; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: space-between; 
+.ticket-body {
+  flex: 1;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.event-name { 
-  font-size: 1.5rem; 
-  font-weight: 800; 
-  color: #fff; 
-  margin-bottom: 16px; 
+.event-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 16px;
   line-height: 1.3;
 }
 
-.event-meta-group { 
-  display: flex; 
+.event-meta-group {
+  display: flex;
   flex-wrap: wrap;
-  gap: 20px; 
+  gap: 20px;
 }
 
-.meta-inline { 
-  display: flex; 
-  align-items: center; 
-  gap: 8px; 
-  font-size: 0.9rem; 
-  color: #b0b8c5; 
+.meta-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #b0b8c5;
 }
 
-.meta-inline svg { 
-  color: #c9a84c; 
+.meta-inline svg {
+  color: #c9a84c;
   opacity: 0.8;
 }
 
-.ticket-footer-details { 
-  display: flex; 
+.ticket-footer-details {
+  display: flex;
   flex-wrap: wrap;
-  gap: 12px; 
-  margin-top: 24px; 
+  gap: 12px;
+  margin-top: 24px;
 }
 
-.detail-pill { 
+.detail-pill {
   background: rgba(28, 36, 51, 0.6);
-  padding: 8px 16px; 
-  border-radius: 30px; 
-  font-size: 0.8rem; 
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -508,10 +648,10 @@ function copyToClipboard(text: string) {
   opacity: 0.7;
 }
 
-.detail-pill .label { 
-  color: #8e9aaf; 
-  font-weight: 700; 
-  margin-right: 4px; 
+.detail-pill .label {
+  color: #8e9aaf;
+  font-weight: 700;
+  margin-right: 4px;
   letter-spacing: 0.3px;
 }
 
@@ -521,62 +661,62 @@ function copyToClipboard(text: string) {
 }
 
 .ticket-divider-wrapper {
-  width: 40px; 
-  position: relative; 
-  display: flex; 
-  justify-content: center; 
+  width: 40px;
+  position: relative;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.dashed-line { 
-  width: 1px; 
-  height: 70%; 
+.dashed-line {
+  width: 1px;
+  height: 70%;
   border-left: 2px dashed rgba(201, 168, 76, 0.2);
 }
 
-.notch { 
-  width: 32px; 
-  height: 32px; 
-  background: #0a0e17; 
-  border-radius: 50%; 
-  position: absolute; 
+.notch {
+  width: 32px;
+  height: 32px;
+  background: #0a0e17;
+  border-radius: 50%;
+  position: absolute;
   left: 4px;
 }
 
-.notch.top { 
-  top: -16px; 
+.notch.top {
+  top: -16px;
   box-shadow: inset 0 -2px 8px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.notch.bottom { 
-  bottom: -16px; 
+.notch.bottom {
+  bottom: -16px;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.ticket-action-area { 
-  display: flex; 
-  align-items: center; 
-  padding-right: 16px; 
+.ticket-action-area {
+  display: flex;
+  align-items: center;
+  padding-right: 16px;
 }
 
 .view-qr-btn {
-  padding: 24px 20px; 
-  background: transparent; 
-  border: none; 
+  padding: 24px 20px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  gap: 12px; 
-  transition: all 0.3s ease; 
-  width: 160px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  width: 160px;
   border-radius: 0 24px 24px 0;
   color: #b0b8c5;
 }
 
-.view-qr-btn:hover:not(:disabled) { 
+.view-qr-btn:hover:not(:disabled) {
   background: linear-gradient(90deg, rgba(201, 168, 76, 0.08), transparent);
   color: #c9a84c;
 }
@@ -586,7 +726,7 @@ function copyToClipboard(text: string) {
   cursor: not-allowed;
 }
 
-.qr-icon-wrapper { 
+.qr-icon-wrapper {
   color: currentColor;
   transition: transform 0.3s ease;
 }
@@ -595,9 +735,9 @@ function copyToClipboard(text: string) {
   transform: scale(1.1);
 }
 
-.view-qr-btn span { 
-  font-size: 0.75rem; 
-  font-weight: 800; 
+.view-qr-btn span {
+  font-size: 0.75rem;
+  font-weight: 800;
   letter-spacing: 1.5px;
 }
 
@@ -610,25 +750,25 @@ function copyToClipboard(text: string) {
 }
 
 .qr-overlay {
-  position: fixed; 
-  inset: 0; 
+  position: fixed;
+  inset: 0;
   background: rgba(10, 14, 23, 0.95);
-  z-index: 2000; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
   backdrop-filter: blur(12px);
 }
 
 .qr-modal {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  color: #0a0e17; 
-  width: 100%; 
+  color: #0a0e17;
+  width: 100%;
   max-width: 400px;
-  padding: 40px 32px; 
-  border-radius: 32px; 
-  text-align: center; 
+  padding: 40px 32px;
+  border-radius: 32px;
+  text-align: center;
   position: relative;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
 }
@@ -684,18 +824,18 @@ function copyToClipboard(text: string) {
   color: #6b7280;
 }
 
-.qr-code-container { 
-  padding: 24px; 
-  background: white; 
-  border-radius: 20px; 
+.qr-code-container {
+  padding: 24px;
+  background: white;
+  border-radius: 20px;
   margin: 20px 0;
   position: relative;
   display: inline-block;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-.qr-code-container img { 
-  width: 100%; 
+.qr-code-container img {
+  width: 100%;
   max-width: 200px;
   display: block;
 }
@@ -820,69 +960,69 @@ function copyToClipboard(text: string) {
   transform: translateX(4px);
 }
 
-.fade-scale-enter-active, 
-.fade-scale-leave-active { 
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+.fade-scale-enter-active,
+.fade-scale-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.fade-scale-enter-from, 
-.fade-scale-leave-to { 
-  opacity: 0; 
-  transform: scale(0.9); 
+.fade-scale-enter-from,
+.fade-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
 }
 
 @media (max-width: 850px) {
-  .ticket-card { 
-    flex-direction: column; 
+  .ticket-card {
+    flex-direction: column;
   }
-  
-  .ticket-visual { 
-    width: 100%; 
-    height: 180px; 
-    border-radius: 24px 24px 0 0; 
+
+  .ticket-visual {
+    width: 100%;
+    height: 180px;
+    border-radius: 24px 24px 0 0;
   }
-  
-  .ticket-divider-wrapper { 
-    height: 40px; 
-    width: 100%; 
+
+  .ticket-divider-wrapper {
+    height: 40px;
+    width: 100%;
   }
-  
-  .dashed-line { 
-    width: 80%; 
-    height: 1px; 
-    border-left: none; 
-    border-top: 2px dashed rgba(201, 168, 76, 0.2); 
+
+  .dashed-line {
+    width: 80%;
+    height: 1px;
+    border-left: none;
+    border-top: 2px dashed rgba(201, 168, 76, 0.2);
   }
-  
-  .notch { 
-    left: auto; 
-    top: 4px; 
+
+  .notch {
+    left: auto;
+    top: 4px;
   }
-  
-  .notch.top { 
-    left: -16px; 
-    top: 4px; 
+
+  .notch.top {
+    left: -16px;
+    top: 4px;
   }
-  
-  .notch.bottom { 
-    right: -16px; 
-    top: 4px; 
+
+  .notch.bottom {
+    right: -16px;
+    top: 4px;
   }
-  
-  .view-qr-btn { 
-    width: 100%; 
-    border-radius: 0 0 24px 24px; 
+
+  .view-qr-btn {
+    width: 100%;
+    border-radius: 0 0 24px 24px;
     padding: 20px;
     flex-direction: row;
     justify-content: center;
   }
-  
+
   .tickets-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
   }
-  
+
   .btn-back {
     width: 100%;
     justify-content: center;
@@ -893,28 +1033,28 @@ function copyToClipboard(text: string) {
   .main-tickets {
     padding: 40px 16px;
   }
-  
+
   .page-title {
     font-size: 1.8rem;
   }
-  
+
   .event-name {
     font-size: 1.3rem;
   }
-  
+
   .event-meta-group {
     gap: 12px;
   }
-  
+
   .ticket-footer-details {
     gap: 8px;
   }
-  
+
   .detail-pill {
     padding: 6px 12px;
     font-size: 0.7rem;
   }
-  
+
   .qr-modal {
     padding: 32px 20px;
   }

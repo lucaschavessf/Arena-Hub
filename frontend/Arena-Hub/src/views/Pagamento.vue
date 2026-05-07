@@ -7,12 +7,26 @@
         <div class="breadcrumb-wrapper">
           <div class="breadcrumb">
             <router-link to="/" class="breadcrumb-link">Início</router-link>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="9 18 15 12 9 6"/>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <polyline points="9 18 15 12 9 6" />
             </svg>
             <router-link to="/" class="breadcrumb-link">Eventos</router-link>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="9 18 15 12 9 6"/>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <polyline points="9 18 15 12 9 6" />
             </svg>
             <span class="breadcrumb-current">Pagamento</span>
           </div>
@@ -31,8 +45,19 @@
             <label class="method-card" :class="{ active: metodo === 'pix' }">
               <input type="radio" v-model="metodo" value="pix" name="pagamento" />
               <div class="method-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2L3 12l9 10 9-10-9-10zM12 8l4 4-4 4-4-4 4-4z"/>
+                <svg
+                  viewBox="0 0 135 135"
+                  width="24"
+                  height="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                >
+                  <g fill="#32BCAD">
+                    <path d="M67.31 0L100.86 33.55 67.31 67.11 33.76 33.55 67.31 0z" />
+                    <path d="M101.22 33.91L134.77 67.46 101.22 101.02 67.66 67.46 101.22 33.91z" />
+                    <path d="M67.31 67.66L100.86 101.22 67.31 134.77 33.76 101.22 67.31 67.66z" />
+                    <path d="M33.4 33.91L66.96 67.46 33.4 101.02-.15 67.46 33.4 33.91z" />
+                  </g>
                 </svg>
               </div>
               <div class="method-info">
@@ -48,8 +73,16 @@
             <label class="method-card" :class="{ active: metodo === 'cartao' }">
               <input type="radio" v-model="metodo" value="cartao" name="pagamento" />
               <div class="method-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <line x1="2" y1="10" x2="22" y2="10" />
                 </svg>
               </div>
               <div class="method-info">
@@ -63,49 +96,55 @@
                 <div class="check-mark"></div>
               </div>
             </label>
-
-            <label class="method-card" :class="{ active: metodo === 'boleto' }">
-              <input type="radio" v-model="metodo" value="boleto" name="pagamento" />
-              <div class="method-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="8" y1="6" x2="8" y2="18"/><line x1="12" y1="6" x2="12" y2="18"/><line x1="16" y1="6" x2="16" y2="18"/><rect x="3" y="3" width="18" height="18" rx="2"/>
-                </svg>
-              </div>
-              <div class="method-info">
-                <span class="method-name">Boleto Bancário</span>
-                <span class="method-desc">Processamento em até 3 dias úteis</span>
-              </div>
-              <div class="check-container">
-                <div class="check-mark"></div>
-              </div>
-            </label>
           </div>
 
           <transition name="slide-down">
             <div v-if="metodo === 'cartao'" class="card-details-form">
               <div class="form-header">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
                 </svg>
                 <span>Dados do Cartão</span>
               </div>
-              
+
               <div class="form-group full">
                 <label>Número do Cartão</label>
                 <div class="input-with-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="5" width="20" height="14" rx="2"/>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
                   </svg>
                   <input type="text" placeholder="0000 0000 0000 0000" v-model="cartao.numero" />
                 </div>
               </div>
-              
+
               <div class="form-row">
                 <div class="form-group">
                   <label>Validade</label>
                   <div class="input-with-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" />
+                      <path d="M3 10h18" />
                     </svg>
                     <input type="text" placeholder="MM/AA" v-model="cartao.validade" />
                   </div>
@@ -113,19 +152,35 @@
                 <div class="form-group">
                   <label>CVV</label>
                   <div class="input-with-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="3" y="11" width="18" height="11" rx="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
                     <input type="text" placeholder="123" v-model="cartao.cvv" />
                   </div>
                 </div>
               </div>
-              
+
               <div class="form-group full">
                 <label>Nome no Cartão</label>
                 <div class="input-with-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
                   </svg>
                   <input type="text" placeholder="NOME IMPRESSO NO CARTÃO" v-model="cartao.nome" />
                 </div>
@@ -138,7 +193,9 @@
                   <option value="2">2x de R$ {{ (totalGeral / 2).toFixed(2) }} (sem juros)</option>
                   <option value="3">3x de R$ {{ (totalGeral / 3).toFixed(2) }} (sem juros)</option>
                   <option value="6">6x de R$ {{ (totalGeral / 6).toFixed(2) }} (sem juros)</option>
-                  <option value="12">12x de R$ {{ (totalGeral / 12).toFixed(2) }} (sem juros)</option>
+                  <option value="12">
+                    12x de R$ {{ (totalGeral / 12).toFixed(2) }} (sem juros)
+                  </option>
                 </select>
               </div>
             </div>
@@ -148,7 +205,7 @@
         <aside class="payment-summary">
           <div class="summary-card">
             <h3 class="summary-title">Resumo do Pedido</h3>
-            
+
             <div class="order-items">
               <div v-for="(item, index) in resumoItens" :key="index" class="order-item">
                 <span class="item-qty">{{ item.qtd }}x</span>
@@ -176,20 +233,37 @@
               </div>
               <div class="total-line main-total">
                 <span>Total</span>
-                <span class="gold-text">R$ {{ (metodo === 'pix' ? totalGeral * 0.95 : totalGeral).toFixed(2) }}</span>
+                <span class="gold-text"
+                  >R$ {{ (metodo === 'pix' ? totalGeral * 0.95 : totalGeral).toFixed(2) }}</span
+                >
               </div>
             </div>
 
             <button class="btn-pay" :disabled="!metodo" @click="confirmarPagamento">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
               <span>{{ metodo === 'pix' ? 'Gerar QR Code Pix' : 'Confirmar Pagamento' }}</span>
             </button>
-            
+
             <p class="security-note">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
               <span>Pagamento processado com segurança pela Arena Hub</span>
             </p>
@@ -212,8 +286,8 @@ const metodo = ref('')
 const cartao = ref({ numero: '', validade: '', cvv: '', nome: '' })
 
 const resumoItens = [
-  { qtd: 2, nome: 'Cadeira Superior - Rock Nacional', total: 320.00 },
-  { qtd: 1, nome: 'Estacionamento E1', total: 45.00 }
+  { qtd: 2, nome: 'Cadeira Superior - Rock Nacional', total: 320.0 },
+  { qtd: 1, nome: 'Estacionamento E1', total: 45.0 },
 ]
 
 const subtotal = computed(() => resumoItens.reduce((acc, item) => acc + item.total, 0))
@@ -227,22 +301,22 @@ function confirmarPagamento() {
 </script>
 
 <style scoped>
-.page { 
-  background: #0a0e17; 
-  min-height: 100vh; 
-  display: flex; 
-  flex-direction: column; 
+.page {
+  background: #0a0e17;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.main-payment { 
-  flex: 1; 
-  padding: 40px 20px 60px; 
+.main-payment {
+  flex: 1;
+  padding: 40px 20px 60px;
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
-.payment-container { 
+.payment-container {
   width: 100%;
   max-width: 1100px;
   display: flex;
@@ -289,14 +363,14 @@ function confirmarPagamento() {
     gap: 40px;
     align-items: start;
   }
-  
+
   .breadcrumb-wrapper {
     grid-column: 1 / -1;
   }
 }
 
-.section-header { 
-  margin-bottom: 32px; 
+.section-header {
+  margin-bottom: 32px;
 }
 
 .title-wrapper {
@@ -306,10 +380,10 @@ function confirmarPagamento() {
   margin-bottom: 8px;
 }
 
-.page-title { 
-  font-size: 2rem; 
-  font-weight: 900; 
-  color: #fff; 
+.page-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #fff;
   margin: 0;
   background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
   -webkit-background-clip: text;
@@ -324,55 +398,55 @@ function confirmarPagamento() {
   border-radius: 1px;
 }
 
-.page-subtitle { 
-  color: #8e9aaf; 
-  font-size: 0.95rem; 
+.page-subtitle {
+  color: #8e9aaf;
+  font-size: 0.95rem;
   margin-left: 4px;
 }
 
-.methods-grid { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 14px; 
+.methods-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .method-card {
-  background: #121826; 
+  background: #121826;
   border: 1.5px solid rgba(255, 255, 255, 0.06);
-  border-radius: 18px; 
-  padding: 22px 24px; 
-  display: flex; 
+  border-radius: 18px;
+  padding: 22px 24px;
+  display: flex;
   align-items: center;
-  gap: 18px; 
-  cursor: pointer; 
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+  gap: 18px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
-.method-card:hover { 
-  border-color: rgba(201, 168, 76, 0.3); 
+.method-card:hover {
+  border-color: rgba(201, 168, 76, 0.3);
   background: #161d2b;
   transform: translateX(4px);
 }
 
-.method-card.active { 
-  border-color: #c9a84c; 
+.method-card.active {
+  border-color: #c9a84c;
   background: linear-gradient(135deg, rgba(201, 168, 76, 0.08), rgba(201, 168, 76, 0.02));
   box-shadow: 0 4px 12px rgba(201, 168, 76, 0.1);
 }
 
-.method-card input { 
-  display: none; 
+.method-card input {
+  display: none;
 }
 
 .method-icon {
-  width: 52px; 
-  height: 52px; 
+  width: 52px;
+  height: 52px;
   background: linear-gradient(135deg, #1a2233, #151c2a);
   border-radius: 14px;
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #c9a84c;
   border: 1px solid rgba(201, 168, 76, 0.15);
 }
@@ -383,21 +457,21 @@ function confirmarPagamento() {
   border-color: #c9a84c;
 }
 
-.method-info { 
-  display: flex; 
-  flex-direction: column; 
-  flex: 1; 
+.method-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-.method-name { 
-  font-weight: 800; 
-  font-size: 1.15rem; 
-  color: #fff; 
+.method-name {
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: #fff;
   margin-bottom: 2px;
 }
 
-.method-desc { 
-  font-size: 0.85rem; 
+.method-desc {
+  font-size: 0.85rem;
   color: #8e9aaf;
 }
 
@@ -418,38 +492,38 @@ function confirmarPagamento() {
 }
 
 .check-mark {
-  width: 24px; 
-  height: 24px; 
-  border: 2px solid rgba(255, 255, 255, 0.15); 
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
-  position: relative; 
+  position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.active .check-mark { 
-  background: #c9a84c; 
-  border-color: #c9a84c; 
+.active .check-mark {
+  background: #c9a84c;
+  border-color: #c9a84c;
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
 }
 
 .active .check-mark::after {
-  content: "✓"; 
-  position: absolute; 
-  top: 50%; 
-  left: 50%; 
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  color: #0a0e17; 
-  font-size: 14px; 
+  color: #0a0e17;
+  font-size: 14px;
   font-weight: 900;
 }
 
 .card-details-form {
-  margin-top: 20px; 
-  padding: 28px; 
+  margin-top: 20px;
+  padding: 28px;
   background: linear-gradient(135deg, #121826, #0f131e);
   border-radius: 18px;
-  display: grid; 
-  gap: 20px; 
+  display: grid;
+  gap: 20px;
   border: 1px solid rgba(201, 168, 76, 0.15);
 }
 
@@ -465,27 +539,27 @@ function confirmarPagamento() {
   margin-bottom: 8px;
 }
 
-.form-row { 
-  display: grid; 
-  grid-template-columns: 1fr 1fr; 
-  gap: 20px; 
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-.form-group { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 8px; 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .form-group.full {
   grid-column: 1 / -1;
 }
 
-.form-group label { 
-  font-size: 0.7rem; 
-  font-weight: 800; 
-  color: #c9a84c; 
-  text-transform: uppercase; 
+.form-group label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #c9a84c;
+  text-transform: uppercase;
   letter-spacing: 0.8px;
   margin-left: 4px;
 }
@@ -510,9 +584,9 @@ function confirmarPagamento() {
   border: 1.5px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   padding: 12px 14px;
-  color: white; 
-  font-size: 0.95rem; 
-  outline: none; 
+  color: white;
+  font-size: 0.95rem;
+  outline: none;
   transition: all 0.3s ease;
   width: 100%;
 }
@@ -548,25 +622,25 @@ function confirmarPagamento() {
   padding: 8px;
 }
 
-.payment-summary { 
-  position: sticky; 
-  top: 100px; 
+.payment-summary {
+  position: sticky;
+  top: 100px;
 }
 
 .summary-card {
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border: 1px solid rgba(201, 168, 76, 0.15);
-  border-radius: 24px; 
-  padding: 32px; 
+  border-radius: 24px;
+  padding: 32px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-.summary-title { 
-  font-size: 1.4rem; 
-  font-weight: 800; 
-  margin-bottom: 24px; 
+.summary-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 24px;
   border-bottom: 2px solid rgba(201, 168, 76, 0.2);
-  padding-bottom: 20px; 
+  padding-bottom: 20px;
   color: #fff;
 }
 
@@ -585,28 +659,28 @@ function confirmarPagamento() {
   border-radius: 2px;
 }
 
-.order-item { 
-  display: grid; 
-  grid-template-columns: 35px 1fr auto; 
-  font-size: 0.95rem; 
-  gap: 10px; 
-  margin-bottom: 16px; 
+.order-item {
+  display: grid;
+  grid-template-columns: 35px 1fr auto;
+  font-size: 0.95rem;
+  gap: 10px;
+  margin-bottom: 16px;
   align-items: start;
 }
 
-.item-qty { 
-  color: #c9a84c; 
-  font-weight: 800; 
+.item-qty {
+  color: #c9a84c;
+  font-weight: 800;
 }
 
-.item-name { 
-  color: #b0b8c5; 
+.item-name {
+  color: #b0b8c5;
   line-height: 1.4;
 }
 
-.item-price { 
-  color: #fff; 
-  font-weight: 600; 
+.item-price {
+  color: #fff;
+  font-weight: 600;
 }
 
 .summary-divider {
@@ -615,17 +689,17 @@ function confirmarPagamento() {
   margin: 20px 0;
 }
 
-.summary-totals { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 12px; 
-  margin-top: 20px; 
+.summary-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
 }
 
-.total-line { 
-  display: flex; 
-  justify-content: space-between; 
-  color: #8e9aaf; 
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  color: #8e9aaf;
   font-size: 0.95rem;
 }
 
@@ -638,33 +712,33 @@ function confirmarPagamento() {
   font-weight: 700;
 }
 
-.main-total { 
-  font-size: 1.6rem; 
-  font-weight: 900; 
-  color: white; 
-  padding-top: 20px; 
+.main-total {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: white;
+  padding-top: 20px;
   margin-top: 8px;
   border-top: 2px dashed rgba(201, 168, 76, 0.3);
 }
 
-.gold-text { 
-  color: #c9a84c; 
+.gold-text {
+  color: #c9a84c;
 }
 
 .btn-pay {
-  width: 100%; 
+  width: 100%;
   background: linear-gradient(135deg, #c9a84c, #d4af37);
-  color: #0a0e17; 
-  border: none; 
+  color: #0a0e17;
+  border: none;
   padding: 18px;
-  border-radius: 14px; 
-  font-weight: 800; 
-  font-size: 1rem; 
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1rem;
   cursor: pointer;
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 10px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 24px;
   text-transform: uppercase;
@@ -672,8 +746,8 @@ function confirmarPagamento() {
   box-shadow: 0 4px 15px rgba(201, 168, 76, 0.2);
 }
 
-.btn-pay:hover:not(:disabled) { 
-  transform: translateY(-3px); 
+.btn-pay:hover:not(:disabled) {
+  transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(201, 168, 76, 0.3);
 }
 
@@ -692,13 +766,13 @@ function confirmarPagamento() {
 }
 
 .security-note {
-  text-align: center; 
-  font-size: 0.75rem; 
-  color: #6b7280; 
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6b7280;
   margin-top: 20px;
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
   padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -708,27 +782,27 @@ function confirmarPagamento() {
   color: #4cc98e;
 }
 
-.slide-down-enter-active, 
-.slide-down-leave-active { 
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.slide-down-enter-from, 
-.slide-down-leave-to { 
-  opacity: 0; 
-  transform: translateY(-20px); 
+.slide-down-enter-from,
+.slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 
 @media (max-width: 950px) {
-  .payment-summary { 
-    position: static; 
-    order: -1; 
+  .payment-summary {
+    position: static;
+    order: -1;
   }
-  
-  .main-payment { 
-    padding: 30px 16px; 
+
+  .main-payment {
+    padding: 30px 16px;
   }
-  
+
   .page-title {
     font-size: 1.6rem;
   }
@@ -739,33 +813,33 @@ function confirmarPagamento() {
     padding: 18px;
     gap: 12px;
   }
-  
+
   .method-icon {
     width: 44px;
     height: 44px;
   }
-  
+
   .method-name {
     font-size: 1rem;
   }
-  
+
   .method-desc {
     font-size: 0.75rem;
   }
-  
+
   .card-details-form {
     padding: 20px;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .summary-card {
     padding: 24px 20px;
   }
-  
+
   .main-total {
     font-size: 1.4rem;
   }

@@ -14,6 +14,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
   path: '/login',
+  name: 'Login',
   component: () => import('../views/Login.vue'),
   },
   {
@@ -39,14 +40,29 @@ const routes: Array<RouteRecordRaw> = [
     props: true
   },
   { 
-    path: '/solicitar-evento', 
-    name: 'SolicitarEvento',
-    component: () => import('@/views/FormsEventos.vue') 
+    path: '/produtor', 
+    name: 'ProdutorInfo',
+    component: () => import('@/views/ProdutorInfo.vue') 
+  },
+  { 
+    path: '/produtor/cadastro', 
+    name: 'ProdutorCadastro',
+    component: () => import('@/views/ProdutorCadastro.vue') 
+  },
+  { 
+    path: '/produtor/dashboard', 
+    name: 'ProdutorDashboard',
+    component: () => import('@/views/ProdutorDashboard.vue') 
   },
   { 
     path: '/meus-ingressos', 
     name: 'MeusIngressos',
     component: () => import('@/views/MeusIngressos.vue') 
+  },
+  { 
+    path: '/perfil', 
+    name: 'Perfil',
+    component: () => import('@/views/Perfil.vue') 
   },
   { 
     path: '/admin', 
@@ -64,14 +80,29 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/AdminSolicitacoes.vue') 
   },
   { 
+    path: '/admin/precos', 
+    name: 'AdminPrecos',
+    component: () => import('@/views/AdminPrecos.vue') 
+  },
+  { 
+    path: '/admin/perfil', 
+    name: 'AdminPerfil',
+    component: () => import('@/views/AdminPerfil.vue') 
+  },
+  { 
+    path: '/admin/eventos', 
+    name: 'AdminEventosAprovados',
+    component: () => import('@/views/AdminEventosAprovados.vue') 
+  },
+  { 
+    path: '/admin/evento/:id', 
+    name: 'AdminEventosDetalhes',
+    component: () => import('@/views/AdminEventoDetalhado.vue') 
+  },
+  { 
     path: '/pagamento', 
     name: 'Pagamento',
     component: () => import('@/views/Pagamento.vue') 
-  },
-  {
-    path: '/loja',
-    name: 'Loja',
-    component: () => import('@/views/Loja.vue'),
   },
   {
   path: '/:pathMatch(.*)*',

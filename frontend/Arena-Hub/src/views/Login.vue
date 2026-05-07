@@ -1,15 +1,21 @@
 <template>
   <div class="page">
     <AppNavbar />
-    
+
     <main class="main-auth">
       <div class="auth-container">
         <div class="auth-card">
-          
           <header class="auth-header">
             <div class="header-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3" />
               </svg>
             </div>
             <h2 class="auth-title">Bem-vindo de volta</h2>
@@ -20,15 +26,24 @@
             <div class="form-group">
               <label>E-mail</label>
               <div class="input-with-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  />
+                  <polyline points="22,6 12,13 2,6" />
                 </svg>
-                <input 
-                  v-model="form.email" 
-                  type="email" 
-                  placeholder="nome@email.com" 
-                  required 
+                <input
+                  v-model="form.email"
+                  type="email"
+                  placeholder="nome@email.com"
+                  required
                   autocomplete="email"
                 />
               </div>
@@ -37,18 +52,27 @@
             <div class="form-group">
               <div class="label-wrapper">
                 <label>Senha</label>
-                <a href="#" class="forgot-link" @click.prevent="$router.push('/esqueceu-senha')">Esqueceu?</a>
+                <a href="#" class="forgot-link" @click.prevent="$router.push('/esqueceu-senha')"
+                  >Esqueceu?</a
+                >
               </div>
               <div class="input-with-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-                <input 
-                  v-model="form.senha" 
-                  type="password" 
-                  placeholder="••••••••" 
-                  required 
+                <input
+                  v-model="form.senha"
+                  type="password"
+                  placeholder="••••••••"
+                  required
                   autocomplete="current-password"
                 />
               </div>
@@ -56,9 +80,16 @@
 
             <button type="submit" class="btn-submit">
               <span>Entrar</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
               </svg>
             </button>
           </form>
@@ -84,7 +115,7 @@ const router = useRouter()
 
 const form = reactive({
   email: '',
-  senha: ''
+  senha: '',
 })
 
 function login() {
@@ -98,12 +129,11 @@ function login() {
 }
 </script>
 
-
 <style scoped>
-.page { 
-  min-height: 100vh; 
-  display: flex; 
-  flex-direction: column; 
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #0a0e17;
 }
 
@@ -126,19 +156,23 @@ function login() {
   border: 1px solid rgba(201, 168, 76, 0.12);
   border-radius: 24px;
   padding: 44px 40px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 
-              0 0 0 1px rgba(201, 168, 76, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(201, 168, 76, 0.05);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .auth-card:hover {
-  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.6), 
-              0 0 0 1px rgba(201, 168, 76, 0.1);
+  box-shadow:
+    0 35px 70px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(201, 168, 76, 0.1);
 }
 
-.auth-header { 
-  text-align: center; 
-  margin-bottom: 32px; 
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
 }
 
 .header-icon {
@@ -154,29 +188,29 @@ function login() {
   border: 1px solid rgba(201, 168, 76, 0.2);
 }
 
-.auth-title { 
-  font-size: 1.8rem; 
-  font-weight: 800; 
-  color: #fff; 
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
   margin-bottom: 8px;
 }
 
-.auth-subtitle { 
-  color: #8e9aaf; 
-  font-size: 0.95rem; 
+.auth-subtitle {
+  color: #8e9aaf;
+  font-size: 0.95rem;
   font-weight: 400;
 }
 
-.auth-form { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 22px; 
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
-.form-group { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 8px; 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .label-wrapper {
@@ -233,8 +267,8 @@ function login() {
   font-weight: 300;
 }
 
-.input-with-icon { 
-  position: relative; 
+.input-with-icon {
+  position: relative;
 }
 
 .input-with-icon svg {
@@ -253,8 +287,8 @@ function login() {
   opacity: 1;
 }
 
-.input-with-icon input { 
-  padding-left: 46px; 
+.input-with-icon input {
+  padding-left: 46px;
 }
 
 .btn-submit {
@@ -300,15 +334,15 @@ function login() {
   text-align: center;
 }
 
-.auth-footer p { 
-  color: #8e9aaf; 
+.auth-footer p {
+  color: #8e9aaf;
   font-size: 0.9rem;
   margin: 0;
 }
 
-.auth-footer a { 
-  color: #c9a84c; 
-  font-weight: 700; 
+.auth-footer a {
+  color: #c9a84c;
+  font-weight: 700;
   text-decoration: none;
   transition: all 0.2s ease;
   position: relative;
@@ -333,13 +367,13 @@ function login() {
 }
 
 @keyframes fadeInUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px); 
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -347,16 +381,16 @@ function login() {
   .auth-card {
     padding: 32px 24px;
   }
-  
+
   .auth-title {
     font-size: 1.5rem;
   }
-  
+
   .header-icon {
     width: 56px;
     height: 56px;
   }
-  
+
   .btn-submit {
     padding: 14px;
     font-size: 0.9rem;

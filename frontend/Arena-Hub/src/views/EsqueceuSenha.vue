@@ -1,14 +1,20 @@
 <template>
   <div class="page">
     <AppNavbar />
-    
+
     <main class="main-auth">
       <div class="auth-container">
         <div class="auth-card">
-          
           <header class="auth-header">
             <div class="header-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
                 <path d="M13.73 21a2 2 0 0 1-3.46 0" />
               </svg>
@@ -21,15 +27,24 @@
             <div class="form-group">
               <label>E-mail</label>
               <div class="input-with-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  />
+                  <polyline points="22,6 12,13 2,6" />
                 </svg>
-                <input 
-                  v-model="email" 
-                  type="email" 
-                  placeholder="nome@email.com" 
-                  required 
+                <input
+                  v-model="email"
+                  type="email"
+                  placeholder="nome@email.com"
+                  required
                   autocomplete="email"
                 />
               </div>
@@ -37,9 +52,16 @@
 
             <button type="submit" class="btn-submit" :disabled="loading">
               <span>{{ loading ? 'Enviando...' : 'Enviar código' }}</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
               </svg>
             </button>
           </form>
@@ -72,7 +94,7 @@ function enviarCodigo() {
   }
 
   loading.value = true
-  
+
   setTimeout(() => {
     loading.value = false
     sessionStorage.setItem('resetEmail', email.value)
@@ -82,10 +104,10 @@ function enviarCodigo() {
 </script>
 
 <style scoped>
-.page { 
-  min-height: 100vh; 
-  display: flex; 
-  flex-direction: column; 
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #0a0e17;
 }
 
@@ -113,13 +135,14 @@ function enviarCodigo() {
 }
 
 .auth-card:hover {
-  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.6), 
-              0 0 0 1px rgba(201, 168, 76, 0.1);
+  box-shadow:
+    0 35px 70px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(201, 168, 76, 0.1);
 }
 
-.auth-header { 
-  text-align: center; 
-  margin-bottom: 32px; 
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
 }
 
 .header-icon {
@@ -135,29 +158,29 @@ function enviarCodigo() {
   border: 1px solid rgba(201, 168, 76, 0.2);
 }
 
-.auth-title { 
-  font-size: 1.8rem; 
-  font-weight: 800; 
-  color: #fff; 
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
   margin-bottom: 8px;
 }
 
-.auth-subtitle { 
-  color: #8e9aaf; 
-  font-size: 0.95rem; 
+.auth-subtitle {
+  color: #8e9aaf;
+  font-size: 0.95rem;
   font-weight: 400;
 }
 
-.auth-form { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 22px; 
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
-.form-group { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 8px; 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .form-group label {
@@ -191,8 +214,8 @@ function enviarCodigo() {
   background: #1e2638;
 }
 
-.input-with-icon { 
-  position: relative; 
+.input-with-icon {
+  position: relative;
 }
 
 .input-with-icon svg {
@@ -209,8 +232,8 @@ function enviarCodigo() {
   opacity: 1;
 }
 
-.input-with-icon input { 
-  padding-left: 46px; 
+.input-with-icon input {
+  padding-left: 46px;
 }
 
 .btn-submit {
@@ -257,14 +280,14 @@ function enviarCodigo() {
   text-align: center;
 }
 
-.auth-footer p { 
-  color: #8e9aaf; 
+.auth-footer p {
+  color: #8e9aaf;
   font-size: 0.9rem;
 }
 
-.auth-footer a { 
-  color: #c9a84c; 
-  font-weight: 700; 
+.auth-footer a {
+  color: #c9a84c;
+  font-weight: 700;
   text-decoration: none;
   transition: all 0.2s ease;
 }
@@ -274,13 +297,13 @@ function enviarCodigo() {
 }
 
 @keyframes fadeInUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px); 
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -288,7 +311,7 @@ function enviarCodigo() {
   .auth-card {
     padding: 32px 24px;
   }
-  
+
   .auth-title {
     font-size: 1.5rem;
   }

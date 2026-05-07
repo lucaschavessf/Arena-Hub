@@ -26,32 +26,90 @@
             <h1 class="event-title">{{ evento.title }}</h1>
             <div class="event-meta">
               <div class="meta-item">
-                <div class="meta-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-                  </svg>
-                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
                 <span>{{ evento.date }}</span>
               </div>
               <div class="meta-item">
-                <div class="meta-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                  </svg>
-                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                </svg>
                 <span>{{ evento.time }}</span>
               </div>
               <div class="meta-item">
-                <div class="meta-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                  </svg>
-                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
                 <span>{{ evento.venue }}</span>
               </div>
             </div>
-            
             <p class="event-description" v-if="evento.description">{{ evento.description }}</p>
+          </div>
+        </section>
+
+        <section class="points-card" v-if="usuarioLogado">
+          <div class="points-header">
+            <div class="points-header-left">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <div>
+                <h3>Seus Pontos</h3>
+                <p>Acumule e troque por descontos!</p>
+              </div>
+            </div>
+            <div class="points-value-large">
+              <span class="points-number">{{ usuarioPontos }}</span>
+              <span class="points-label">pontos</span>
+            </div>
+          </div>
+
+          <div class="points-conversion" v-if="usuarioPontos >= 100 && totalGeral > 0">
+            <div class="conversion-info">
+              <span class="conversion-rate">💰 100 pontos = R$ 10,00 de desconto</span>
+              <span class="conversion-max">🔒 Máximo: 50% do valor do pedido</span>
+            </div>
+            
+            <div class="slider-container">
+              <input 
+                type="range" 
+                v-model.number="pontosUsar" 
+                :min="0" 
+                :max="pontosMaximos" 
+                :step="100"
+                class="points-slider"
+              />
+              <div class="slider-values">
+                <span>0</span>
+                <span>{{ pontosMaximos }}</span>
+              </div>
+            </div>
+
+            <div class="conversion-control">
+              <button class="control-btn-small" @click="diminuirPontos" :disabled="pontosUsar < 100">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+              <div class="pontos-selecionados">
+                <span class="pontos-quantidade">{{ pontosUsar }}</span>
+                <span class="pontos-equivalente">pontos = R$ {{ (pontosUsar / 10).toFixed(2) }}</span>
+              </div>
+              <button class="control-btn-small" @click="aumentarPontos" :disabled="pontosUsar >= pontosMaximos">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div v-else-if="usuarioPontos < 100 && totalGeral > 0" class="pontos-insuficientes">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v4M12 16h.01" />
+            </svg>
+            <span>💡 Acumule mais {{ 100 - usuarioPontos }} pontos para começar a usar descontos!</span>
           </div>
         </section>
 
@@ -74,7 +132,7 @@
 
             <div v-for="(ing, idx) in evento.ingressos" :key="idx" 
                  class="ticket-item" 
-                 :class="{ 'is-selected': (cart.ingressos[idx] > 0) }">
+                 :class="{ 'is-selected': (quantidades[idx] > 0) }">
               
               <div class="ticket-info">
                 <span class="ticket-name">{{ ing.tipo }}</span>
@@ -83,12 +141,12 @@
               </div>
 
               <div class="ticket-qty-control">
-                <button class="control-btn" @click="alterarQuantidade(idx, -1)" :disabled="!cart.ingressos[idx]">
+                <button class="control-btn" @click="alterarQuantidade(idx, -1)" :disabled="!quantidades[idx]">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <line x1="5" y1="12" x2="19" y2="12"/>
                   </svg>
                 </button>
-                <span class="qty-display">{{ cart.ingressos[idx] || 0 }}</span>
+                <span class="qty-display">{{ quantidades[idx] || 0 }}</span>
                 <button class="control-btn" @click="alterarQuantidade(idx, 1)">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -109,26 +167,34 @@
           </div>
 
           <footer class="checkout-footer">
-            <div class="checkout-summary-details" v-if="cart.totalItens > 0">
+            <div class="checkout-summary-details" v-if="totalItens > 0">
               <div class="summary-line">
-                <span>Ingressos ({{ cart.totalItens }}x):</span>
+                <span>Ingressos ({{ totalItens }}x):</span>
                 <span class="white-text">R$ {{ totalNominal.toFixed(2) }}</span>
               </div>
               <div class="summary-line">
                 <span>Taxas de conveniência:</span>
                 <span class="white-text">R$ {{ totalTaxas.toFixed(2) }}</span>
               </div>
+              <div class="summary-line discount-line" v-if="descontoPontos > 0">
+                <span>🎁 Desconto por pontos:</span>
+                <span class="discount-value">- R$ {{ descontoPontos.toFixed(2) }}</span>
+              </div>
               <div class="summary-line highlight">
                 <span>Total do Pedido:</span>
-                <span class="gold-text">R$ {{ totalGeral.toFixed(2) }}</span>
+                <span class="gold-text">R$ {{ totalComDesconto.toFixed(2) }}</span>
+              </div>
+              <div class="summary-line points-saved-line" v-if="descontoPontos > 0">
+                <span>✨ Você economizou {{ (descontoPontos * 10).toFixed(0) }} pontos!</span>
               </div>
             </div>
 
             <div class="checkout-actions">
               <div class="total-display" v-if="totalGeral > 0">
                 <span class="label">VALOR TOTAL</span>
-                <span class="val">R$ {{ totalGeral.toFixed(2) }}</span>
+                <span class="val">R$ {{ totalComDesconto.toFixed(2) }}</span>
                 <span class="installment-info">em até 12x sem juros</span>
+                <span v-if="descontoPontos > 0" class="original-price">Original: R$ {{ totalGeral.toFixed(2) }}</span>
               </div>
               <div class="empty-msg" v-else>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -154,80 +220,130 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '../services/api'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
-import { useCartStore } from '../stores/cart'
 
 const route = useRoute()
 const router = useRouter()
-const cart = useCartStore()
 
 const eventoId = computed(() => Number(route.params.id))
 const evento = ref<any>(null)
 
-onMounted(async () => {
-  window.scrollTo(0, 0)
-  try {
-    const response = await api.get(`/eventos/${eventoId.value}`)
-    const data = response.data
-    
-    evento.value = {
-      id: data.id,
-      title: data.nome,
-      category: data.categoria || 'Show',
-      date: data.dataInicio ? new Date(data.dataInicio).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : 'Data a definir',
-      time: data.dataInicio ? new Date(data.dataInicio).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '20:00',
-      venue: 'Arena Hub',
-      image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&q=80',
-      description: data.descricao,
-      // Ingressos fixos (mock) para manter o checkout funcionando
-      ingressos: [
-        { tipo: 'PISTA', subtipo: null, preco: 85.00, taxa: 8.50 },
-        { tipo: 'PISTA PREMIUM', subtipo: 'Acesso VIP', preco: 150.00, taxa: 15.00 }
-      ]
-    }
-    cart.eventoSelecionado = evento.value
-  } catch (error) {
-    console.error('Erro ao carregar evento:', error)
-  }
+const quantidades = ref<Record<number, number>>({})
+
+const usuarioLogado = ref(true)
+const usuarioPontos = ref(1250)
+
+const pontosUsar = ref(0)
+const pontosMaximos = ref(0)
+const descontoPontos = ref(0)
+
+const calcularPontosMaximos = () => {
+  const maxDescontoPercentual = 50
+  const maxDescontoValor = totalGeral.value * (maxDescontoPercentual / 100)
+  const maxDescontoPontos = Math.floor(maxDescontoValor * 10)
+  return Math.min(usuarioPontos.value, maxDescontoPontos)
+}
+
+const atualizarDesconto = () => {
+  descontoPontos.value = pontosUsar.value / 10
+}
+
+const totalItens = computed(() => {
+  return Object.values(quantidades.value).reduce((acc, qty) => acc + qty, 0)
 })
-
-const alterarQuantidade = (idx: number, delta: number) => {
-  const atual = cart.ingressos[idx] || 0
-  cart.setQuantidade(idx, Math.max(0, atual + delta))
-}
-
-const calcularSubtotalLocal = (idx: number): number => {
-  if (!evento.value) return 0
-  const ing = evento.value.ingressos[idx]
-  const qty = cart.ingressos[idx] || 0
-  return qty * (ing.preco + ing.taxa)
-}
 
 const totalNominal = computed(() => {
   if (!evento.value) return 0
   return evento.value.ingressos.reduce((sum: number, ing: any, idx: number) => {
-    return sum + ((cart.ingressos[idx] || 0) * ing.preco)
+    return sum + ((quantidades.value[idx] || 0) * ing.preco)
   }, 0)
 })
 
 const totalTaxas = computed(() => {
   if (!evento.value) return 0
   return evento.value.ingressos.reduce((sum: number, ing: any, idx: number) => {
-    return sum + ((cart.ingressos[idx] || 0) * ing.taxa)
+    return sum + ((quantidades.value[idx] || 0) * ing.taxa)
   }, 0)
 })
 
 const totalGeral = computed(() => totalNominal.value + totalTaxas.value)
 
-const irParaPagamento = () => {
-  if (totalGeral.value > 0) {
-    router.push({ name: 'Pagamento' }).catch(err => console.error(err))
+const totalComDesconto = computed(() => {
+  const comDesconto = totalGeral.value - descontoPontos.value
+  return comDesconto > 0 ? comDesconto : 0
+})
+
+watch([totalGeral, () => usuarioPontos.value], () => {
+  pontosMaximos.value = calcularPontosMaximos()
+  if (pontosUsar.value > pontosMaximos.value) {
+    pontosUsar.value = pontosMaximos.value
+    atualizarDesconto()
+  }
+  if (totalGeral.value === 0 && pontosUsar.value > 0) {
+    pontosUsar.value = 0
+    atualizarDesconto()
+  }
+})
+
+const aumentarPontos = () => {
+  const incremento = 100
+  const novoValor = pontosUsar.value + incremento
+  if (novoValor <= pontosMaximos.value && novoValor <= usuarioPontos.value) {
+    pontosUsar.value = novoValor
+    atualizarDesconto()
   }
 }
+
+const diminuirPontos = () => {
+  const decremento = 100
+  const novoValor = pontosUsar.value - decremento
+  if (novoValor >= 0) {
+    pontosUsar.value = novoValor
+    atualizarDesconto()
+  }
+}
+
+const alterarQuantidade = (idx: number, delta: number) => {
+  const atual = quantidades.value[idx] || 0
+  const nova = Math.max(0, atual + delta)
+  quantidades.value[idx] = nova
+}
+
+const calcularSubtotalLocal = (idx: number): number => {
+  if (!evento.value) return 0
+  const ing = evento.value.ingressos[idx]
+  const qty = quantidades.value[idx] || 0
+  return qty * (ing.preco + ing.taxa)
+}
+
+const irParaPagamento = () => {
+  if (totalComDesconto.value > 0) {
+    router.push('/pagamento')
+  }
+}
+
+onMounted(async () => {
+  window.scrollTo(0, 0)
+  
+  evento.value = {
+    id: 1,
+    title: 'Rock Nacional 2026',
+    category: 'Show',
+    date: '15 de Agosto de 2026',
+    time: '20:00',
+    venue: 'Arena Pernambuco',
+    image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&q=80',
+    description: 'O maior festival de rock do Nordeste com as melhores bandas nacionais.',
+    ingressos: [
+      { tipo: 'PISTA', subtipo: null, preco: 85.00, taxa: 8.50 },
+      { tipo: 'PISTA PREMIUM', subtipo: 'Acesso VIP', preco: 150.00, taxa: 15.00 },
+      { tipo: 'ARQUIBANCADA', subtipo: 'Cadeira Numerada', preco: 60.00, taxa: 6.00 }
+    ]
+  }
+})
 </script>
 
 <style scoped>
@@ -278,107 +394,19 @@ const irParaPagamento = () => {
   font-weight: 600;
 }
 
-.breadcrumb svg {
-  color: #4a5568;
-}
-
 .event-summary-card {
   display: grid; 
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 300px 1fr;
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border-radius: 24px; 
   overflow: hidden;
   border: 1px solid rgba(201, 168, 76, 0.12);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.event-summary-card:hover {
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
 }
 
 .event-image { 
   position: relative; 
   height: 100%;
   min-height: 280px;
-}
-
-.event-image img { 
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover; 
-  transition: transform 0.6s ease;
-}
-
-.event-summary-card:hover .event-image img {
-  transform: scale(1.05);
-}
-
-.image-overlay { 
-  position: absolute; 
-  inset: 0; 
-  background: linear-gradient(to right, 
-    transparent 0%, 
-    rgba(18, 24, 38, 0.3) 50%,
-    #121826 100%
-  ); 
-}
-
-.event-details { 
-  padding: 40px; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
-  position: relative;
-}
-
-.category-badge { 
-  background: linear-gradient(135deg, #c9a84c, #d4af37);
-  color: #0a0e17; 
-  padding: 6px 14px; 
-  border-radius: 30px; 
-  font-size: 0.75rem; 
-  font-weight: 800; 
-  text-transform: uppercase; 
-  margin-bottom: 16px; 
-  width: fit-content; 
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(201, 168, 76, 0.2);
-}
-
-.event-title { 
-  font-size: 2rem; 
-  font-weight: 800; 
-  margin-bottom: 24px; 
-  color: #fff; 
-  line-height: 1.2;
-  background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.event-meta { 
-  display: flex; 
-  flex-wrap: wrap; 
-  gap: 20px; 
-  color: #b0b8c5; 
-  font-size: 0.95rem; 
-}
-
-.meta-item { 
-  display: flex; 
-  align-items: center; 
-  gap: 10px; 
-  background: rgba(28, 36, 51, 0.5);
-  padding: 8px 16px;
-  border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.event-image { 
-  position: relative;
-  height: 100%; 
 }
 
 .event-image img { 
@@ -394,18 +422,18 @@ const irParaPagamento = () => {
 }
 
 .event-details { 
-  padding: 40px; 
+  padding: 32px; 
   display: flex; 
   flex-direction: column; 
   justify-content: center; 
 }
 
 .category-badge { 
-  background: #c9a84c; 
+  background: linear-gradient(135deg, #c9a84c, #d4af37);
   color: #0a0e17; 
   padding: 4px 12px; 
   border-radius: 20px; 
-  font-size: 0.75rem; 
+  font-size: 0.7rem; 
   font-weight: 800; 
   text-transform: uppercase; 
   margin-bottom: 16px; 
@@ -413,59 +441,235 @@ const irParaPagamento = () => {
 }
 
 .event-title { 
-  font-size: 2rem; 
+  font-size: 1.6rem; 
   font-weight: 800;
-  margin-bottom: 20px; 
+  margin-bottom: 16px; 
   color: #fff; 
 }
 
 .event-meta { 
   display: flex; 
   flex-wrap: wrap; 
-  gap: 24px; 
+  gap: 16px; 
   color: #8e9aaf; 
-  font-size: 0.95rem; 
+  font-size: 0.85rem; 
+  margin-bottom: 16px;
 }
 
-.meta-item { 
-  display: flex; 
-  align-items: 
-  center; 
-  gap: 8px; 
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.meta-item svg { 
+.meta-item svg {
   color: #c9a84c;
+  width: 16px;
+  height: 16px;
 }
 
 .event-description { 
-  margin-top: 24px;
-  color: #d1d5db;
-  font-size: 1.05rem;
-  line-height: 1.6;
+  color: #b0b8c5;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.points-card {
+  background: linear-gradient(135deg, #1a2538 0%, #121826 100%);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.points-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.points-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.points-header-left svg {
+  color: #c9a84c;
+  width: 32px;
+  height: 32px;
+}
+
+.points-header-left h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #c9a84c;
+  margin-bottom: 4px;
+}
+
+.points-header-left p {
+  font-size: 0.75rem;
+  color: #8e9aaf;
+  margin: 0;
+}
+
+.points-value-large {
+  text-align: center;
+  background: rgba(201, 168, 76, 0.1);
+  padding: 8px 20px;
+  border-radius: 20px;
+}
+
+.points-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #c9a84c;
+}
+
+.points-label {
+  font-size: 0.75rem;
+  color: #8e9aaf;
+  margin-left: 6px;
+}
+
+.points-conversion {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.conversion-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.conversion-rate {
+  color: #c9a84c;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.conversion-max {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.slider-container {
+  margin-bottom: 20px;
+}
+
+.points-slider {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  background: #1a2233;
+  border-radius: 2px;
+  outline: none;
+}
+
+.points-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #c9a84c;
+  cursor: pointer;
+}
+
+.slider-values {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.conversion-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.control-btn-small {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 2px solid rgba(201, 168, 76, 0.5);
+  background: transparent;
+  color: #c9a84c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.control-btn-small:hover:not(:disabled) {
+  background: #c9a84c;
+  color: #0a0e17;
+}
+
+.control-btn-small:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pontos-selecionados {
+  text-align: center;
+  min-width: 120px;
+}
+
+.pontos-quantidade {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #c9a84c;
+}
+
+.pontos-equivalente {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.pontos-insuficientes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 12px;
+  color: #f59e0b;
+  font-size: 0.85rem;
 }
 
 .ticket-selection-area { 
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border-radius: 24px; 
-  padding: 40px; 
+  padding: 32px; 
   border: 1px solid rgba(201, 168, 76, 0.12);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .section-header { 
-  margin-bottom: 36px; 
+  margin-bottom: 28px; 
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
+  gap: 12px;
+  margin-bottom: 6px;
 }
 
 .section-title { 
-  font-size: 1.6rem; 
+  font-size: 1.3rem; 
   font-weight: 700; 
   color: #fff; 
   margin: 0;
@@ -475,35 +679,33 @@ const irParaPagamento = () => {
   flex: 1;
   height: 2px;
   background: linear-gradient(90deg, #c9a84c, transparent);
-  border-radius: 1px;
 }
 
 .section-subtitle { 
   color: #8e9aaf; 
-  font-size: 0.95rem; 
+  font-size: 0.85rem; 
   margin-left: 8px;
 }
 
 .table-header-desktop {
   display: grid; 
-  grid-template-columns: 1fr 160px 140px 160px;
-  padding: 0 20px 16px; 
+  grid-template-columns: 1fr 140px 120px 140px;
+  padding: 0 20px 12px; 
   border-bottom: 2px solid rgba(201, 168, 76, 0.2);
   color: #c9a84c; 
-  font-size: 0.8rem; 
+  font-size: 0.7rem; 
   font-weight: 700; 
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .ticket-item {
   display: grid; 
-  grid-template-columns: 1fr 160px 140px 160px;
+  grid-template-columns: 1fr 140px 120px 140px;
   align-items: center; 
-  padding: 24px 20px; 
+  padding: 20px; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.3s ease;
-  border-radius: 8px;
+  transition: all 0.3s;
+  border-radius: 12px;
 }
 
 .ticket-item:hover {
@@ -517,45 +719,28 @@ const irParaPagamento = () => {
 
 .ticket-name { 
   display: block; 
-  font-size: 1.2rem; 
+  font-size: 1rem; 
   font-weight: 700; 
   color: #fff; 
   margin-bottom: 4px;
 }
 
 .ticket-subtext { 
-  font-size: 0.85rem; 
+  font-size: 0.75rem; 
   color: #8e9aaf; 
-}
-
-.price-unit {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.price-value {
-  color: #fff; 
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.tax-info {
-  font-size: 0.7rem;
-  color: #8e9aaf;
 }
 
 .ticket-qty-control { 
   display: flex; 
   align-items: center; 
-  gap: 16px; 
+  gap: 12px; 
   justify-content: center; 
 }
 
 .control-btn {
-  width: 36px; 
-  height: 36px; 
-  border-radius: 12px; 
+  width: 32px; 
+  height: 32px; 
+  border-radius: 10px; 
   border: 2px solid rgba(201, 168, 76, 0.5);
   background: transparent; 
   color: #c9a84c; 
@@ -563,14 +748,12 @@ const irParaPagamento = () => {
   align-items: center; 
   justify-content: center;
   cursor: pointer; 
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s;
 }
 
 .control-btn:hover:not(:disabled) { 
   background: #c9a84c; 
   color: #121826; 
-  border-color: #c9a84c;
-  transform: scale(1.05);
 }
 
 .control-btn:disabled {
@@ -579,61 +762,80 @@ const irParaPagamento = () => {
 }
 
 .qty-display { 
-  font-size: 1.3rem; 
+  font-size: 1.1rem; 
   font-weight: 800; 
   min-width: 30px; 
   text-align: center; 
   color: #fff; 
 }
 
+.price-unit {
+  text-align: center;
+}
+
+.price-value {
+  color: #fff; 
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.tax-info {
+  font-size: 0.65rem;
+  color: #8e9aaf;
+  display: block;
+}
+
 .ticket-subtotal {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  text-align: right;
 }
 
 .subtotal-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #8e9aaf;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  display: block;
 }
 
 .subtotal-value {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #c9a84c;
+  display: block;
 }
 
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.desktop-only { display: block; }
+.mobile-price-tag { display: none; }
+
 .checkout-footer {
-  margin-top: 40px; 
+  margin-top: 32px; 
   background: linear-gradient(135deg, #1a2233 0%, #151c2a 100%);
   border-radius: 20px;
-  padding: 36px; 
+  padding: 28px; 
   border: 1px solid rgba(201, 168, 76, 0.15);
 }
 
 .checkout-summary-details {
   display: flex; 
   flex-direction: column; 
-  gap: 14px;
-  padding-bottom: 28px; 
-  margin-bottom: 28px; 
+  gap: 12px;
+  padding-bottom: 24px; 
+  margin-bottom: 24px; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .summary-line { 
   display: flex; 
   justify-content: space-between; 
-  font-size: 1rem; 
+  font-size: 0.9rem; 
   color: #8e9aaf; 
 }
 
 .summary-line.highlight { 
-  font-size: 1.4rem; 
+  font-size: 1.2rem; 
   font-weight: 800; 
   margin-top: 12px; 
-  padding-top: 20px; 
+  padding-top: 16px; 
   border-top: 2px dashed rgba(201, 168, 76, 0.3);
 }
 
@@ -644,23 +846,38 @@ const irParaPagamento = () => {
 
 .gold-text { 
   color: #c9a84c; 
-  font-size: 1.6rem;
+  font-size: 1.3rem;
+}
+
+.discount-line {
+  color: #10b981;
+}
+
+.discount-value {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.points-saved-line {
+  font-size: 0.75rem;
+  color: #10b981;
+  justify-content: flex-end;
 }
 
 .checkout-actions { 
   display: flex; 
   justify-content: space-between; 
   align-items: center; 
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .total-display {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  text-align: left;
 }
 
 .total-display .label { 
-  font-size: 0.85rem; 
+  font-size: 0.7rem; 
   color: #8e9aaf; 
   font-weight: 700; 
   display: block; 
@@ -668,76 +885,69 @@ const irParaPagamento = () => {
 }
 
 .total-display .val { 
-  font-size: 2.5rem; 
+  font-size: 2rem; 
   font-weight: 900; 
   color: #c9a84c; 
   line-height: 1.2;
 }
 
 .installment-info {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #8e9aaf;
+  display: block;
+}
+
+.original-price {
+  display: block;
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-decoration: line-through;
   margin-top: 4px;
 }
 
 .empty-msg {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   color: #8e9aaf;
-  font-size: 0.95rem;
-  padding: 12px 20px;
+  font-size: 0.85rem;
+  padding: 10px 16px;
   background: rgba(255, 94, 94, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 94, 94, 0.2);
+  border-radius: 10px;
 }
 
 .empty-msg svg {
   color: #ff5e5e;
-  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
 }
 
 .btn-checkout {
   background: linear-gradient(135deg, #c9a84c, #d4af37);
   color: #0a0e17; 
   border: none; 
-  padding: 20px 48px;
-  border-radius: 16px; 
+  padding: 16px 40px;
+  border-radius: 14px; 
   font-weight: 800; 
-  font-size: 1.1rem; 
+  font-size: 1rem; 
   cursor: pointer;
   display: flex; 
   align-items: center; 
-  gap: 12px; 
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 20px rgba(201, 168, 76, 0.2);
+  gap: 10px; 
+  transition: all 0.3s;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .btn-checkout:hover:not(:disabled) { 
-  transform: translateY(-3px); 
-  box-shadow: 0 15px 30px rgba(201, 168, 76, 0.3);
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 20px rgba(201, 168, 76, 0.3);
 }
 
 .btn-checkout:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-  box-shadow: none;
 }
-
-.btn-checkout svg {
-  transition: transform 0.3s ease;
-}
-
-.btn-checkout:hover:not(:disabled) svg {
-  transform: translateX(4px);
-}
-
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.desktop-only { display: block; }
-.mobile-price-tag { display: none; }
 
 @media (max-width: 900px) {
   .event-summary-card { 
@@ -745,11 +955,7 @@ const irParaPagamento = () => {
   }
   
   .image-overlay {
-    background: linear-gradient(to bottom, 
-      transparent 0%, 
-      rgba(18, 24, 38, 0.5) 50%,
-      #121826 100%
-    );
+    background: linear-gradient(to bottom, transparent, #121826);
   }
   
   .table-header-desktop { 
@@ -758,7 +964,7 @@ const irParaPagamento = () => {
   
   .ticket-item { 
     grid-template-columns: 1fr auto; 
-    gap: 16px;
+    gap: 12px;
   }
   
   .desktop-only { 
@@ -769,12 +975,28 @@ const irParaPagamento = () => {
     display: block;
     color: #c9a84c;
     font-weight: 700;
-    margin-top: 8px;
+    font-size: 0.85rem;
+    margin-top: 6px;
+  }
+  
+  .ticket-subtotal {
+    grid-column: span 2;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .subtotal-label, .subtotal-value {
+    display: inline-block;
+  }
+  
+  .subtotal-value {
+    font-size: 1rem;
   }
   
   .checkout-actions { 
     flex-direction: column; 
-    gap: 24px; 
     text-align: center; 
   }
   
@@ -786,11 +1008,6 @@ const irParaPagamento = () => {
   .total-display {
     text-align: center;
   }
-  
-  .empty-msg {
-    width: 100%;
-    justify-content: center;
-  }
 }
 
 @media (max-width: 600px) {
@@ -799,28 +1016,46 @@ const irParaPagamento = () => {
   }
   
   .event-details {
-    padding: 28px;
+    padding: 24px;
   }
   
   .event-title {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
   }
   
   .ticket-selection-area {
-    padding: 28px 20px;
+    padding: 24px 16px;
   }
   
   .checkout-footer {
-    padding: 24px 20px;
+    padding: 20px;
+  }
+  
+  .ticket-item {
+    padding: 16px;
+  }
+  
+  .points-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .points-header-left {
+    flex-direction: column;
+  }
+  
+  .conversion-info {
+    flex-direction: column;
+    text-align: center;
   }
   
   .total-display .val {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
   
   .btn-checkout {
-    padding: 16px 32px;
-    font-size: 1rem;
+    padding: 14px 24px;
+    font-size: 0.9rem;
   }
 }
 </style>

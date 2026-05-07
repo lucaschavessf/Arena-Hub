@@ -3,7 +3,16 @@
     <div class="navbar__inner">
       <router-link to="/" class="navbar__logo">
         <div class="logo-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4"></path>
             <path d="M2 15v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4"></path>
             <path d="M2 9a3 3 0 0 1 0 6"></path>
@@ -17,53 +26,80 @@
       </router-link>
 
       <div class="navbar__links" v-if="!isAdmin">
-        <a href="#" class="nav-link" @click.prevent="$router.push('/solicitar-evento')">Produtor de eventos</a>
-        <router-link to="/meus-ingressos" class="nav-link">Meus ingressos</router-link>
+        <a href="#" class="nav-link" @click.prevent="$router.push('/produtor')"
+          >Produtor de eventos</a
+        >
       </div>
 
       <div class="navbar__actions">
         <div class="profile-dropdown">
-          <button 
-            class="icon-btn profile-btn" 
+          <button
+            class="icon-btn profile-btn"
             :class="{ 'profile-btn--active': dropdownOpen }"
-            title="Perfil" 
-            aria-label="Perfil" 
+            title="Perfil"
+            aria-label="Perfil"
             @click="toggleDropdown"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
             </svg>
           </button>
 
           <Transition name="dropdown-fade">
             <div class="dropdown-menu" v-if="dropdownOpen">
-              <!-- Usuário logado -->
               <div v-if="userStore.isLoggedIn" class="dropdown-header">
                 <div class="user-avatar">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <circle cx="12" cy="8" r="4"/>
-                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                   </svg>
                 </div>
                 <div class="user-info">
                   <span class="user-name">{{ userStore.user.name }}</span>
                   <span class="user-points">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10"/>
-                      <path d="M12 6v6l4 2"/>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 6v6l4 2" />
                     </svg>
                     {{ userStore.user.points }} pontos
                   </span>
                 </div>
               </div>
 
-              <!-- Visitante -->
               <div v-else class="dropdown-header">
                 <div class="user-avatar">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <circle cx="12" cy="8" r="4"/>
-                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                   </svg>
                 </div>
                 <div class="user-info">
@@ -71,59 +107,106 @@
                   <span class="user-email">faça login para acessar</span>
                 </div>
               </div>
-              
+
               <div class="dropdown-divider"></div>
-              
-              <!-- Loja (nova) -->
-              <router-link to="/loja" class="dropdown-item" @click="closeDropdown">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="7" width="18" height="14" rx="2"/>
-                  <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                </svg>
-                <span>Loja de Pontos</span>
-              </router-link>
-              
-              <!-- Meus ingressos -->
+
               <router-link to="/meus-ingressos" class="dropdown-item" @click="closeDropdown">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <line x1="12" y1="18" x2="12" y2="12"/>
-                  <line x1="9" y1="15" x2="15" y2="15"/>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="12" y1="18" x2="12" y2="12" />
+                  <line x1="9" y1="15" x2="15" y2="15" />
                 </svg>
                 <span>Meus ingressos</span>
               </router-link>
-              
-              <!-- Área Admin (se for admin) -->
+
+              <router-link to="/perfil" class="dropdown-item" @click="closeDropdown">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+                <span>Meu Perfil</span>
+              </router-link>
+
               <router-link to="/admin" class="dropdown-item" @click="closeDropdown">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="7" height="7"/>
-                  <rect x="14" y="3" width="7" height="7"/>
-                  <rect x="3" y="14" width="7" height="7"/>
-                  <rect x="14" y="14" width="7" height="7"/>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
                 </svg>
                 <span>Área Admin</span>
               </router-link>
-              
-              <!-- Sair (apenas se logado) -->
+
+              <router-link to="/produtor/dashboard" class="dropdown-item" @click="closeDropdown">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                </svg>
+                <span>Área Produtor</span>
+              </router-link>
+
               <div v-if="userStore.isLoggedIn">
                 <div class="dropdown-divider"></div>
                 <button class="dropdown-item logout-item" @click="handleLogout">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
                   </svg>
                   <span>Sair</span>
                 </button>
               </div>
-              
-              <!-- Entrar (apenas se não logado) -->
+
               <router-link v-else to="/login" class="dropdown-item" @click="closeDropdown">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                  <polyline points="10 17 15 12 10 7"/>
-                  <line x1="15" y1="12" x2="3" y2="12"/>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                  <polyline points="10 17 15 12 10 7" />
+                  <line x1="15" y1="12" x2="3" y2="12" />
                 </svg>
                 <span>Entrar / Cadastrar</span>
               </router-link>
@@ -131,21 +214,37 @@
           </Transition>
         </div>
 
-        <button 
-          class="icon-btn mobile-menu-btn" 
+        <button
+          class="icon-btn mobile-menu-btn"
           @click="mobileMenuOpen = !mobileMenuOpen"
           aria-label="Menu"
           :aria-expanded="mobileMenuOpen"
           v-if="!isAdmin"
         >
-          <svg v-if="!mobileMenuOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
+          <svg
+            v-if="!mobileMenuOpen"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
-          <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
+          <svg
+            v-else
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
@@ -154,22 +253,38 @@
     <Transition name="slide-fade">
       <div class="navbar__mobile-menu" v-if="mobileMenuOpen && !isAdmin">
         <a href="#" class="mobile-link" @click="mobileMenuOpen = false">Produtor de eventos</a>
-        <router-link to="/meus-ingressos" class="mobile-link" @click="mobileMenuOpen = false">Meus ingressos</router-link>
+        <router-link to="/meus-ingressos" class="mobile-link" @click="mobileMenuOpen = false"
+          >Meus ingressos</router-link
+        >
         <div class="mobile-divider"></div>
         <router-link to="/login" class="mobile-link" @click="mobileMenuOpen = false">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-            <polyline points="10 17 15 12 10 7"/>
-            <line x1="15" y1="12" x2="3" y2="12"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" y1="12" x2="3" y2="12" />
           </svg>
           Entrar / Cadastrar
         </router-link>
         <router-link to="/admin" class="mobile-link" @click="mobileMenuOpen = false">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7"/>
-            <rect x="14" y="3" width="7" height="7"/>
-            <rect x="3" y="14" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
           </svg>
           Área Admin
         </router-link>
@@ -220,48 +335,48 @@ const handleLogout = () => {
   height: 64px;
 }
 
-.navbar__logo { 
-  display: flex; 
-  align-items: center; 
-  gap: 10px; 
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   text-decoration: none;
   flex-shrink: 0;
 }
 
 .logo-icon {
-  width: 34px; 
+  width: 34px;
   height: 34px;
   background: var(--gold, #c9a84c);
   border-radius: 8px;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: center;
   color: var(--navy, #0a0e1a);
 }
 
-.logo-text { 
-  display: flex; 
-  flex-direction: column; 
-  line-height: 1; 
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
 }
 
-.logo-arena { 
-  font-family: var(--font-display, serif); 
-  font-size: 1.1rem; 
-  color: #fff; 
+.logo-arena {
+  font-family: var(--font-display, serif);
+  font-size: 1.1rem;
+  color: #fff;
 }
 
-.logo-hub { 
-  font-size: 0.7rem; 
-  color: var(--gold, #c9a84c); 
-  font-weight: 700; 
-  text-transform: uppercase; 
+.logo-hub {
+  font-size: 0.7rem;
+  color: var(--gold, #c9a84c);
+  font-weight: 700;
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.navbar__links { 
+.navbar__links {
   display: none;
-  gap: 32px; 
+  gap: 32px;
   margin: 0 auto 0 48px;
 }
 
@@ -269,23 +384,23 @@ const handleLogout = () => {
   .navbar {
     padding: 0 2rem;
   }
-  
-  .navbar__links { 
-    display: flex; 
+
+  .navbar__links {
+    display: flex;
   }
 }
 
-.nav-link { 
-  font-size: 0.85rem; 
-  color: var(--muted, #8a8f9e); 
-  font-weight: 500; 
-  transition: color 0.2s; 
+.nav-link {
+  font-size: 0.85rem;
+  color: var(--muted, #8a8f9e);
+  font-weight: 500;
+  transition: color 0.2s;
   text-decoration: none;
   white-space: nowrap;
 }
 
-.nav-link:hover { 
-  color: var(--gold, #c9a84c); 
+.nav-link:hover {
+  color: var(--gold, #c9a84c);
 }
 
 .nav-link:focus-visible {
@@ -294,30 +409,32 @@ const handleLogout = () => {
   border-radius: 2px;
 }
 
-.navbar__actions { 
-  display: flex; 
+.navbar__actions {
+  display: flex;
   gap: 4px;
   flex-shrink: 0;
   position: relative;
 }
 
 .icon-btn {
-  width: 36px; 
-  height: 36px; 
-  background: transparent; 
+  width: 36px;
+  height: 36px;
+  background: transparent;
   color: var(--muted, #8a8f9e);
   border: none;
-  border-radius: 50%; 
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
-.icon-btn:hover { 
-  background: rgba(255, 255, 255, 0.05); 
-  color: #fff; 
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
 }
 
 .icon-btn:focus-visible {
@@ -333,7 +450,6 @@ const handleLogout = () => {
   background: rgba(201, 168, 76, 0.15);
   color: var(--gold, #c9a84c);
 }
-
 
 .profile-dropdown {
   position: relative;
@@ -461,7 +577,6 @@ const handleLogout = () => {
 .logout-item:hover svg {
   color: #ef4444 !important;
 }
-
 
 @media (min-width: 768px) {
   .mobile-menu-btn {

@@ -6,11 +6,18 @@
       <div class="sidebar-header">
         <router-link to="/" class="brand">
           <div class="logo-box">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4"/>
-              <path d="M2 15v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4"/>
-              <path d="M2 9a3 3 0 0 1 0 6"/>
-              <path d="M22 9a3 3 0 0 0 0 6"/>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4" />
+              <path d="M2 15v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4" />
+              <path d="M2 9a3 3 0 0 1 0 6" />
+              <path d="M22 9a3 3 0 0 0 0 6" />
             </svg>
           </div>
           <span>Arena<span class="highlight">Hub</span></span>
@@ -19,34 +26,114 @@
 
       <nav class="sidebar-nav">
         <router-link to="/admin" class="nav-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
           </svg>
           <span>Dashboard</span>
         </router-link>
-        
+
         <router-link to="/admin/agenda" class="nav-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M16 2v4M8 2v4M3 10h18" />
           </svg>
           <span>Agenda</span>
         </router-link>
 
         <router-link to="/admin/solicitacoes" class="nav-item active">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <path d="M9 15l2 2 4-4"/>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <path d="M9 15l2 2 4-4" />
           </svg>
           <span>Solicitações</span>
         </router-link>
 
+        <router-link to="/admin/eventos" class="nav-item">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <span>Eventos</span>
+        </router-link>
+
+        <router-link to="/admin/precos" class="nav-item">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
+          </svg>
+          <span>Preços</span>
+        </router-link>
+
         <div class="nav-spacer"></div>
 
+        <router-link to="/admin/perfil" class="nav-item">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+          </svg>
+          <span>Perfil</span>
+        </router-link>
+
         <button @click="$router.push('/')" class="nav-item logout">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
           </svg>
           <span>Sair do Admin</span>
         </button>
@@ -55,12 +142,19 @@
 
     <div class="main-wrapper">
       <AppNavbar :isAdmin="true" />
-      
+
       <main class="content-container">
         <div class="breadcrumb">
           <router-link to="/admin" class="breadcrumb-link">Admin</router-link>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="9 18 15 12 9 6"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <polyline points="9 18 15 12 9 6" />
           </svg>
           <span class="breadcrumb-current">Solicitações</span>
         </div>
@@ -72,8 +166,8 @@
           </div>
           <div class="header-actions">
             <div class="filter-tabs">
-              <button 
-                v-for="tab in tabs" 
+              <button
+                v-for="tab in tabs"
                 :key="tab.value"
                 class="filter-tab"
                 :class="{ active: filtroAtivo === tab.value }"
@@ -88,9 +182,17 @@
 
         <section class="stats-grid">
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1);">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1)">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#f59e0b"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
               </svg>
             </div>
             <div class="stat-info">
@@ -98,11 +200,20 @@
               <div class="stat-value">{{ solicitacoesPendentes.length }}</div>
             </div>
           </div>
-          
+
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1);">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1)">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#8b5cf6"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
             </div>
             <div class="stat-info">
@@ -110,11 +221,18 @@
               <div class="stat-value">{{ solicitacoesEmAnalise.length }}</div>
             </div>
           </div>
-          
+
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1);">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5">
-                <polyline points="20 6 9 17 4 12"/>
+            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1)">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#10b981"
+                stroke-width="2.5"
+              >
+                <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
             <div class="stat-info">
@@ -122,11 +240,19 @@
               <div class="stat-value">{{ solicitacoesAprovadas.length }}</div>
             </div>
           </div>
-          
+
           <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1);">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1)">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ef4444"
+                stroke-width="2.5"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </div>
             <div class="stat-info">
@@ -138,16 +264,24 @@
 
         <div class="search-bar-container">
           <div class="search-wrapper">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <input 
-              v-model="termoBusca" 
-              type="text" 
-              placeholder="Buscar por solicitante, evento ou e-mail..." 
+            <input
+              v-model="termoBusca"
+              type="text"
+              placeholder="Buscar por solicitante, evento ou e-mail..."
             />
           </div>
-          
+
           <select v-model="filtroCategoria" class="filter-select">
             <option value="">Todas as categorias</option>
             <option value="Show">Show</option>
@@ -201,29 +335,62 @@
                   </td>
                   <td>
                     <div class="acoes-cell">
-                      <button class="acao-btn visualizar" @click="visualizarSolicitacao(solicitacao)" title="Visualizar">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <circle cx="12" cy="12" r="3"/><path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7z"/>
+                      <button
+                        class="acao-btn visualizar"
+                        @click="visualizarSolicitacao(solicitacao)"
+                        title="Visualizar"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <circle cx="12" cy="12" r="3" />
+                          <path
+                            d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7z"
+                          />
                         </svg>
                       </button>
-                      <button 
-                        v-if="solicitacao.status === 'Pendente' || solicitacao.status === 'Em Análise'"
-                        class="acao-btn aprovar" 
-                        @click="aprovarSolicitacao(solicitacao)" 
+                      <button
+                        v-if="
+                          solicitacao.status === 'Pendente' || solicitacao.status === 'Em Análise'
+                        "
+                        class="acao-btn aprovar"
+                        @click="aprovarSolicitacao(solicitacao)"
                         title="Aprovar"
                       >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                          <polyline points="20 6 9 17 4 12"/>
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </button>
-                      <button 
-                        v-if="solicitacao.status === 'Pendente' || solicitacao.status === 'Em Análise'"
-                        class="acao-btn rejeitar" 
-                        @click="rejeitarSolicitacao(solicitacao)" 
+                      <button
+                        v-if="
+                          solicitacao.status === 'Pendente' || solicitacao.status === 'Em Análise'
+                        "
+                        class="acao-btn rejeitar"
+                        @click="rejeitarSolicitacao(solicitacao)"
                         title="Rejeitar"
                       >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <line x1="18" y1="6" x2="6" y2="18" />
+                          <line x1="6" y1="6" x2="18" y2="18" />
                         </svg>
                       </button>
                     </div>
@@ -234,10 +401,17 @@
           </div>
 
           <div v-if="solicitacoesFiltradas.length === 0" class="empty-state">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <path d="M9 15h6M9 11h4"/>
+            <svg
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="M9 15h6M9 11h4" />
             </svg>
             <h3>Nenhuma solicitação encontrada</h3>
             <p>Tente ajustar os filtros ou termo de busca.</p>
@@ -250,15 +424,32 @@
       <div v-if="solicitacaoSelecionada" class="modal-overlay" @click.self="fecharModal">
         <div class="modal-card">
           <button class="modal-close" @click="fecharModal">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-          
+
           <div class="modal-header">
             <div class="modal-icon" :class="getCategoriaClass(solicitacaoSelecionada.categoria)">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.5L9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.5L9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"
+                />
               </svg>
             </div>
             <div class="modal-title-wrapper">
@@ -323,7 +514,12 @@
               <h4 class="section-title">Configurações</h4>
               <div class="config-item">
                 <span>Menores Acompanhados</span>
-                <span class="config-badge" :class="solicitacaoSelecionada.menoresAcompanhados ? 'permitido' : 'nao-permitido'">
+                <span
+                  class="config-badge"
+                  :class="
+                    solicitacaoSelecionada.menoresAcompanhados ? 'permitido' : 'nao-permitido'
+                  "
+                >
                   {{ solicitacaoSelecionada.menoresAcompanhados ? 'Permitido' : 'Não permitido' }}
                 </span>
               </div>
@@ -331,8 +527,8 @@
 
             <div class="modal-section" v-if="solicitacaoSelecionada.observacoes">
               <h4 class="section-title">Observações Internas</h4>
-              <textarea 
-                v-model="solicitacaoSelecionada.observacoes" 
+              <textarea
+                v-model="solicitacaoSelecionada.observacoes"
                 placeholder="Adicione observações internas..."
                 rows="3"
                 class="observacoes-input"
@@ -341,24 +537,48 @@
           </div>
 
           <div class="modal-footer">
-            <template v-if="solicitacaoSelecionada.status === 'Pendente' || solicitacaoSelecionada.status === 'Em Análise'">
-              <button class="btn-modal btn-rejeitar" @click="rejeitarSolicitacao(solicitacaoSelecionada)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            <template
+              v-if="
+                solicitacaoSelecionada.status === 'Pendente' ||
+                solicitacaoSelecionada.status === 'Em Análise'
+              "
+            >
+              <button
+                class="btn-modal btn-rejeitar"
+                @click="rejeitarSolicitacao(solicitacaoSelecionada)"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
                 Rejeitar
               </button>
-              <button class="btn-modal btn-aprovar" @click="aprovarSolicitacao(solicitacaoSelecionada)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="20 6 9 17 4 12"/>
+              <button
+                class="btn-modal btn-aprovar"
+                @click="aprovarSolicitacao(solicitacaoSelecionada)"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
                 Aprovar
               </button>
             </template>
             <template v-else>
-              <button class="btn-modal btn-fechar" @click="fecharModal">
-                Fechar
-              </button>
+              <button class="btn-modal btn-fechar" @click="fecharModal">Fechar</button>
             </template>
           </div>
         </div>
@@ -366,8 +586,17 @@
     </transition>
 
     <button class="menu-toggle" @click="isSidebarOpen = !isSidebarOpen">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="18" x2="21" y2="18" />
       </svg>
     </button>
   </div>
@@ -388,10 +617,9 @@ const tabs = [
   { label: 'Pendentes', value: 'Pendente' },
   { label: 'Em Análise', value: 'Em Análise' },
   { label: 'Aprovadas', value: 'Aprovado' },
-  { label: 'Rejeitadas', value: 'Rejeitado' }
+  { label: 'Rejeitadas', value: 'Rejeitado' },
 ]
 
-// Dados mockados
 const solicitacoes = ref([
   {
     id: 1,
@@ -404,11 +632,12 @@ const solicitacoes = ref([
     cidade: 'Recife',
     estado: 'PE',
     instagram: '@festivaljazzpe',
-    descricao: 'Festival de jazz com artistas nacionais e internacionais, food park e área kids. Expectativa de público: 5.000 pessoas.',
+    descricao:
+      'Festival de jazz com artistas nacionais e internacionais, food park e área kids. Expectativa de público: 5.000 pessoas.',
     menoresAcompanhados: true,
     status: 'Pendente',
     dataSolicitacao: '2026-04-01',
-    observacoes: ''
+    observacoes: '',
   },
   {
     id: 2,
@@ -421,11 +650,12 @@ const solicitacoes = ref([
     cidade: 'Recife',
     estado: 'PE',
     instagram: '@copavoleinordeste',
-    descricao: 'Competição regional de vôlei com equipes de todo o Nordeste. Estrutura necessária: quadra, arquibancadas e placar eletrônico.',
+    descricao:
+      'Competição regional de vôlei com equipes de todo o Nordeste. Estrutura necessária: quadra, arquibancadas e placar eletrônico.',
     menoresAcompanhados: true,
     status: 'Em Análise',
     dataSolicitacao: '2026-04-02',
-    observacoes: 'Verificar disponibilidade de datas alternativas.'
+    observacoes: 'Verificar disponibilidade de datas alternativas.',
   },
   {
     id: 3,
@@ -438,11 +668,12 @@ const solicitacoes = ref([
     cidade: 'Recife',
     estado: 'PE',
     instagram: '@recifetechsummit',
-    descricao: 'Maior evento de tecnologia e inovação do Nordeste, com palestrantes internacionais e feira de startups.',
+    descricao:
+      'Maior evento de tecnologia e inovação do Nordeste, com palestrantes internacionais e feira de startups.',
     menoresAcompanhados: false,
     status: 'Aprovado',
     dataSolicitacao: '2026-03-28',
-    observacoes: 'Aprovado. Enviar contrato para assinatura.'
+    observacoes: 'Aprovado. Enviar contrato para assinatura.',
   },
   {
     id: 4,
@@ -459,7 +690,7 @@ const solicitacoes = ref([
     menoresAcompanhados: false,
     status: 'Rejeitado',
     dataSolicitacao: '2026-03-15',
-    observacoes: 'Data indisponível. Sugerir nova data.'
+    observacoes: 'Data indisponível. Sugerir nova data.',
   },
   {
     id: 5,
@@ -476,25 +707,34 @@ const solicitacoes = ref([
     menoresAcompanhados: true,
     status: 'Pendente',
     dataSolicitacao: '2026-04-05',
-    observacoes: ''
-  }
+    observacoes: '',
+  },
 ])
 
-const solicitacoesPendentes = computed(() => solicitacoes.value.filter(s => s.status === 'Pendente'))
-const solicitacoesEmAnalise = computed(() => solicitacoes.value.filter(s => s.status === 'Em Análise'))
-const solicitacoesAprovadas = computed(() => solicitacoes.value.filter(s => s.status === 'Aprovado'))
-const solicitacoesRejeitadas = computed(() => solicitacoes.value.filter(s => s.status === 'Rejeitado'))
+const solicitacoesPendentes = computed(() =>
+  solicitacoes.value.filter((s) => s.status === 'Pendente'),
+)
+const solicitacoesEmAnalise = computed(() =>
+  solicitacoes.value.filter((s) => s.status === 'Em Análise'),
+)
+const solicitacoesAprovadas = computed(() =>
+  solicitacoes.value.filter((s) => s.status === 'Aprovado'),
+)
+const solicitacoesRejeitadas = computed(() =>
+  solicitacoes.value.filter((s) => s.status === 'Rejeitado'),
+)
 
 const contarPorStatus = (status: string) => {
   if (status === 'todos') return solicitacoes.value.length
-  return solicitacoes.value.filter(s => s.status === status).length
+  return solicitacoes.value.filter((s) => s.status === status).length
 }
 
 const solicitacoesFiltradas = computed(() => {
-  return solicitacoes.value.filter(s => {
+  return solicitacoes.value.filter((s) => {
     const matchStatus = filtroAtivo.value === 'todos' || s.status === filtroAtivo.value
     const matchCategoria = !filtroCategoria.value || s.categoria === filtroCategoria.value
-    const matchBusca = !termoBusca.value || 
+    const matchBusca =
+      !termoBusca.value ||
       s.solicitante.toLowerCase().includes(termoBusca.value.toLowerCase()) ||
       s.nomeEvento.toLowerCase().includes(termoBusca.value.toLowerCase()) ||
       s.email.toLowerCase().includes(termoBusca.value.toLowerCase())
@@ -506,27 +746,27 @@ const formatarData = (data: string) => {
   return new Date(data).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: '2-digit',
-    year: 'numeric'
+    year: 'numeric',
   })
 }
 
 const getCategoriaClass = (categoria: string) => {
   const map: Record<string, string> = {
-    'Show': 'categoria-show',
-    'Esportes': 'categoria-esportes',
-    'Corporativo': 'categoria-corporativo',
-    'Teatro': 'categoria-teatro',
-    'Comédia': 'categoria-comedia'
+    Show: 'categoria-show',
+    Esportes: 'categoria-esportes',
+    Corporativo: 'categoria-corporativo',
+    Teatro: 'categoria-teatro',
+    Comédia: 'categoria-comedia',
   }
   return map[categoria] || ''
 }
 
 const getStatusClass = (status: string) => {
   const map: Record<string, string> = {
-    'Pendente': 'status-pendente',
+    Pendente: 'status-pendente',
     'Em Análise': 'status-analise',
-    'Aprovado': 'status-aprovado',
-    'Rejeitado': 'status-rejeitado'
+    Aprovado: 'status-aprovado',
+    Rejeitado: 'status-rejeitado',
   }
   return map[status] || ''
 }
@@ -540,7 +780,7 @@ const fecharModal = () => {
 }
 
 const aprovarSolicitacao = (solicitacao: any) => {
-  const index = solicitacoes.value.findIndex(s => s.id === solicitacao.id)
+  const index = solicitacoes.value.findIndex((s) => s.id === solicitacao.id)
   if (index !== -1) {
     solicitacoes.value[index].status = 'Aprovado'
   }
@@ -548,7 +788,7 @@ const aprovarSolicitacao = (solicitacao: any) => {
 }
 
 const rejeitarSolicitacao = (solicitacao: any) => {
-  const index = solicitacoes.value.findIndex(s => s.id === solicitacao.id)
+  const index = solicitacoes.value.findIndex((s) => s.id === solicitacao.id)
   if (index !== -1) {
     solicitacoes.value[index].status = 'Rejeitado'
   }
@@ -557,21 +797,21 @@ const rejeitarSolicitacao = (solicitacao: any) => {
 </script>
 
 <style scoped>
-.admin-layout { 
-  display: flex; 
-  min-height: 100vh; 
-  background: #0a0e17; 
-  color: #fff; 
-  font-family: 'Plus Jakarta Sans', sans-serif; 
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #0a0e17;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.sidebar { 
-  width: 260px; 
+.sidebar {
+  width: 260px;
   background: linear-gradient(180deg, #111827 0%, #0d121c 100%);
   border-right: 1px solid rgba(201, 168, 76, 0.1);
-  position: fixed; 
-  height: 100vh; 
-  z-index: 100; 
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
   display: flex;
   flex-direction: column;
 }
@@ -581,13 +821,13 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.brand { 
-  display: flex; 
-  align-items: center; 
-  gap: 10px; 
-  text-decoration: none; 
-  color: white; 
-  font-weight: 700; 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
   font-size: 1.2rem;
 }
 
@@ -610,36 +850,36 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   margin-left: 2px;
 }
 
-.sidebar-nav { 
-  padding: 24px 16px; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 6px; 
+.sidebar-nav {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   flex: 1;
 }
 
-.nav-item { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  padding: 12px 16px; 
-  border-radius: 12px; 
-  color: #8e9aaf; 
-  text-decoration: none; 
-  font-size: 0.9rem; 
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: #8e9aaf;
+  text-decoration: none;
+  font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
-.nav-item:hover { 
-  background: rgba(201, 168, 76, 0.08); 
-  color: #c9a84c; 
+.nav-item:hover {
+  background: rgba(201, 168, 76, 0.08);
+  color: #c9a84c;
   transform: translateX(4px);
 }
 
-.nav-item.active { 
+.nav-item.active {
   background: linear-gradient(90deg, rgba(201, 168, 76, 0.15), rgba(201, 168, 76, 0.05));
-  color: #c9a84c; 
+  color: #c9a84c;
   border-left: 3px solid #c9a84c;
 }
 
@@ -647,14 +887,14 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   flex: 1;
 }
 
-.logout { 
-  margin-top: auto; 
-  color: #ef4444; 
-  background: none; 
-  border: none; 
-  width: 100%; 
-  cursor: pointer; 
-  text-align: left; 
+.logout {
+  margin-top: auto;
+  color: #ef4444;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
 }
 
 .logout:hover {
@@ -662,19 +902,19 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   color: #ef4444;
 }
 
-.main-wrapper { 
-  flex: 1; 
-  margin-left: 260px; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  width: calc(100% - 260px); 
+.main-wrapper {
+  flex: 1;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(100% - 260px);
 }
 
-.content-container { 
-  width: 100%; 
-  max-width: 1200px; 
-  padding: 32px 40px; 
+.content-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 32px 40px;
 }
 
 .breadcrumb {
@@ -701,29 +941,29 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   font-weight: 600;
 }
 
-.content-header { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  margin-bottom: 28px; 
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
   flex-wrap: wrap;
   gap: 20px;
 }
 
-.header-titles h1 { 
-  font-family: 'Bebas Neue', sans-serif; 
-  font-size: 2rem; 
-  letter-spacing: 1px; 
-  margin-bottom: 4px; 
+.header-titles h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
   background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.header-titles p { 
-  color: #8e9aaf; 
-  font-size: 0.85rem; 
+.header-titles p {
+  color: #8e9aaf;
+  font-size: 0.85rem;
 }
 
 .header-actions {
@@ -776,20 +1016,20 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   background: rgba(10, 14, 23, 0.2);
 }
 
-.stats-grid { 
-  display: grid; 
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 20px; 
-  margin-bottom: 28px; 
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
 }
 
-.stat-card { 
+.stat-card {
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
-  padding: 20px; 
-  border-radius: 16px; 
+  padding: 20px;
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   gap: 14px;
   transition: all 0.3s ease;
 }
@@ -813,18 +1053,18 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   flex: 1;
 }
 
-.stat-label { 
-  color: #8e9aaf; 
-  font-size: 0.7rem; 
-  text-transform: uppercase; 
-  letter-spacing: 0.8px; 
+.stat-label {
+  color: #8e9aaf;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
   display: block;
   margin-bottom: 4px;
 }
 
-.stat-value { 
-  font-size: 1.8rem; 
-  font-weight: 800; 
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 800;
   line-height: 1.2;
 }
 
@@ -1077,7 +1317,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   background: rgba(239, 68, 68, 0.1);
 }
 
-
 .empty-state {
   text-align: center;
   padding: 60px 20px;
@@ -1096,7 +1335,6 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   color: #e0e0e0;
   margin-bottom: 8px;
 }
-
 
 .modal-overlay {
   position: fixed;
@@ -1382,41 +1620,41 @@ const rejeitarSolicitacao = (solicitacao: any) => {
 }
 
 @media (max-width: 1024px) {
-  .sidebar { 
-    transform: translateX(-100%); 
-    transition: transform 0.3s ease; 
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
-  
+
   .admin-layout.sidebar-open .sidebar {
     transform: translateX(0);
   }
-  
+
   .admin-layout.sidebar-open .sidebar-overlay {
     display: block;
   }
-  
-  .main-wrapper { 
-    margin-left: 0; 
-    width: 100%; 
+
+  .main-wrapper {
+    margin-left: 0;
+    width: 100%;
   }
-  
+
   .menu-toggle {
     display: flex;
   }
-  
+
   .content-container {
     padding: 24px 20px;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .content-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .filter-tabs {
     flex-wrap: wrap;
   }
@@ -1426,36 +1664,36 @@ const rejeitarSolicitacao = (solicitacao: any) => {
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .search-bar-container {
     flex-direction: column;
   }
-  
+
   .header-titles h1 {
     font-size: 1.6rem;
   }
-  
+
   .modal-card {
     max-width: 100%;
   }
-  
+
   .modal-header {
     padding: 20px 20px 16px;
   }
-  
+
   .modal-body {
     padding: 20px;
   }
-  
+
   .modal-footer {
     padding: 16px 20px 24px;
     flex-direction: column;
   }
-  
+
   .info-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .acoes-cell {
     flex-wrap: wrap;
   }

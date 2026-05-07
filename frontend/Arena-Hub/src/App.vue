@@ -8,16 +8,17 @@
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-*, *::before, *::after { 
-  box-sizing: border-box; 
-  margin: 0; 
-  padding: 0; 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -26,22 +27,22 @@
   --navy: #0a0e17;
   --navy-mid: #121826;
   --navy-light: #1c2433;
-  
+
   --gold: #c9a84c;
   --gold-light: #dfbc5e;
   --gold-dark: #a07830;
   --gold-glow: rgba(201, 168, 76, 0.15);
-  
+
   --white: #ffffff;
   --muted: #8e9aaf;
   --border: rgba(255, 255, 255, 0.08);
-  
+
   --red: #ff5e5e;
   --green: #4cc98e;
-  
+
   --font-display: 'Bebas Neue', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
-  
+
   --container-max: 1200px;
   --radius-sm: 8px;
   --radius: 12px;
@@ -51,9 +52,9 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html { 
-  scroll-behavior: smooth; 
-  font-size: 16px; 
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
   background: var(--navy);
 }
 
@@ -72,28 +73,32 @@ body {
   min-height: 100vh;
 }
 
-::-webkit-scrollbar { 
-  width: 10px; 
+::-webkit-scrollbar {
+  width: 10px;
   height: 10px;
 }
 
-::-webkit-scrollbar-track { 
-  background: var(--navy-mid); 
+::-webkit-scrollbar-track {
+  background: var(--navy-mid);
 }
 
-::-webkit-scrollbar-thumb { 
+::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--navy-light) 0%, #2a3446 100%);
-  border-radius: 10px; 
+  border-radius: 10px;
   border: 2px solid var(--navy);
 }
 
-::-webkit-scrollbar-thumb:hover { 
+::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, var(--gold-dark) 0%, var(--gold) 100%);
 }
 
-h1, h2, h3, h4, .text-display { 
-  font-family: var(--font-display); 
-  letter-spacing: 0.05em; 
+h1,
+h2,
+h3,
+h4,
+.text-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 600;
   line-height: 1.2;
@@ -117,16 +122,16 @@ h3 {
   color: var(--white);
 }
 
-p { 
-  margin-bottom: 1rem; 
+p {
+  margin-bottom: 1rem;
   color: var(--muted);
   font-weight: 400;
 }
 
-button { 
-  cursor: pointer; 
-  border: none; 
-  font-family: var(--font-body); 
+button {
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-body);
   transition: var(--transition);
   border-radius: var(--radius);
   font-weight: 600;
@@ -162,7 +167,7 @@ button:active {
   z-index: -1;
 }
 
-.btn-primary:hover { 
+.btn-primary:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 30px var(--gold-glow);
 }
@@ -180,8 +185,9 @@ button:active {
 
 .page-fade-enter-active,
 .page-fade-leave-active {
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .page-fade-enter-from {
@@ -194,8 +200,8 @@ button:active {
   transform: translateY(-12px);
 }
 
-input, 
-textarea, 
+input,
+textarea,
 select {
   background: var(--navy-light);
   border: 1.5px solid var(--border);
@@ -250,16 +256,17 @@ a:hover {
   color: var(--navy);
 }
 
-img { 
-  max-width: 100%; 
-  height: auto; 
-  display: block; 
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-img[loading="lazy"] {
-  background: linear-gradient(90deg, 
-    var(--navy-mid) 0%, 
-    var(--navy-light) 50%, 
+img[loading='lazy'] {
+  background: linear-gradient(
+    90deg,
+    var(--navy-mid) 0%,
+    var(--navy-light) 50%,
     var(--navy-mid) 100%
   );
   background-size: 200% 100%;
@@ -267,15 +274,19 @@ img[loading="lazy"] {
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 @media (max-width: 768px) {
   html {
     font-size: 14px;
   }
-  
+
   .btn-primary {
     padding: 12px 24px;
     font-size: 0.8rem;
@@ -297,7 +308,7 @@ img[loading="lazy"] {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   html {
     scroll-behavior: auto;
   }

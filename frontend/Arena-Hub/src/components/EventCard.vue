@@ -1,5 +1,5 @@
 <template>
-  <article 
+  <article
     class="event-card"
     :class="{ 'event-card--soldout': event.soldOut }"
     @click="handleCardClick"
@@ -11,8 +11,8 @@
   >
     <div class="card-image">
       <div class="card-image__placeholder" v-if="!imageLoaded"></div>
-      <img 
-        :src="event.image" 
+      <img
+        :src="event.image"
         :alt="`Imagem do evento ${event.title}`"
         loading="lazy"
         @load="imageLoaded = true"
@@ -21,86 +21,130 @@
       />
       <div class="card-overlay"></div>
       <div class="card-badges">
-        <span 
-          class="card-badge" 
-          :class="event.category.toLowerCase()"
-          role="status"
-        >
+        <span class="card-badge" :class="event.category.toLowerCase()" role="status">
           {{ event.category }}
         </span>
-        
-        <span 
-          v-if="event.soldOut" 
-          class="card-badge card-badge--soldout"
-          role="status"
-        >
+
+        <span v-if="event.soldOut" class="card-badge card-badge--soldout" role="status">
           Esgotado
         </span>
-        
-        <span 
-          v-if="isNew" 
-          class="card-badge card-badge--new"
-          role="status"
-        >
-          Novo
-        </span>
+
+        <span v-if="isNew" class="card-badge card-badge--new" role="status"> Novo </span>
       </div>
-      
-      <button 
+
+      <button
         class="card-favorite"
         :class="{ 'card-favorite--active': isFavorite }"
         @click.stop="toggleFavorite"
         :aria-label="isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
         :aria-pressed="isFavorite"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" :fill="isFavorite ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2.5">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          :fill="isFavorite ? 'currentColor' : 'none'"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path
+            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+          />
         </svg>
       </button>
     </div>
 
     <div class="card-body">
       <h3 class="card-title">{{ event.title }}</h3>
-      
+
       <div class="card-meta">
         <div class="meta-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M16 2v4M8 2v4M3 10h18" />
           </svg>
           <span>{{ formatDate(event.date) }}</span>
         </div>
-        
+
         <div class="meta-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
           </svg>
           <span>{{ event.venue }}</span>
         </div>
 
         <div class="meta-item meta-item--price" v-if="event.price">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/><path d="M15 9.5c0 .8-.7 1.5-1.5 1.5h-3c-.8 0-1.5-.7-1.5-1.5v-3c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5z"/><path d="M9 15.5c0 .8.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5v-3c0-.8-.7-1.5-1.5-1.5h-3c-.8 0-1.5.7-1.5 1.5z"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path
+              d="M15 9.5c0 .8-.7 1.5-1.5 1.5h-3c-.8 0-1.5-.7-1.5-1.5v-3c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5z"
+            />
+            <path
+              d="M9 15.5c0 .8.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5v-3c0-.8-.7-1.5-1.5-1.5h-3c-.8 0-1.5.7-1.5 1.5z"
+            />
           </svg>
           <span>A partir de R$ {{ formatPrice(event.price) }}</span>
         </div>
       </div>
 
-      <button 
-        class="btn-primary card-btn" 
+      <button
+        class="btn-primary card-btn"
         @click.stop="handleBuyClick"
         :disabled="event.soldOut"
         :aria-label="event.soldOut ? 'Ingressos esgotados' : 'Comprar ingressos'"
       >
         <template v-if="event.soldOut">
           ESGOTADO
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M15 9l-6 6M9 9l6 6" />
           </svg>
         </template>
         <template v-else>
           INGRESSOS
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </template>
       </button>
@@ -124,9 +168,9 @@ interface Event {
   createdAt?: string | Date
 }
 
-const props = defineProps<{ 
+const props = defineProps<{
   event: Event
-  fallbackImage?: string 
+  fallbackImage?: string
 }>()
 
 const emit = defineEmits<{
@@ -153,13 +197,13 @@ const isNew = computed(() => {
 // Função para parsear data em vários formatos
 const parseDate = (dateInput: string | Date): Date | null => {
   if (dateInput instanceof Date) return dateInput
-  
+
   if (typeof dateInput === 'string') {
     // Formato ISO: 2024-12-25 ou 2024-12-25T10:30:00
     if (dateInput.includes('-') && !dateInput.includes('/')) {
       return new Date(dateInput)
     }
-    
+
     // Formato brasileiro: DD/MM/YYYY
     if (dateInput.includes('/')) {
       const parts = dateInput.split('/')
@@ -170,14 +214,14 @@ const parseDate = (dateInput: string | Date): Date | null => {
         return new Date(year, month, day)
       }
     }
-    
+
     // Tentar parse automático
     const parsed = new Date(dateInput)
     if (!isNaN(parsed.getTime())) {
       return parsed
     }
   }
-  
+
   return null
 }
 
@@ -187,33 +231,33 @@ const handleImageError = () => {
 
 const formatDate = (date: string | Date): string => {
   const parsed = parseDate(date)
-  
+
   if (!parsed) {
     // Se não conseguir parsear, retorna a string original
     return typeof date === 'string' ? date : 'Data indisponível'
   }
-  
+
   // Verificar se a data é válida
   if (isNaN(parsed.getTime())) {
     return typeof date === 'string' ? date : 'Data indisponível'
   }
-  
+
   // Formatar para português
   const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
   const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-  
+
   const diaSemana = diasSemana[parsed.getDay()]
   const dia = parsed.getDate().toString().padStart(2, '0')
   const mes = meses[parsed.getMonth()]
   const ano = parsed.getFullYear()
-  
+
   return `${diaSemana}, ${dia} ${mes} ${ano}`
 }
 
 const formatPrice = (price: number): string => {
   return price.toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   })
 }
 
@@ -281,25 +325,32 @@ const toggleFavorite = () => {
 .card-image__placeholder {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, 
-    rgba(255,255,255,0.03) 25%, 
-    rgba(255,255,255,0.08) 50%, 
-    rgba(255,255,255,0.03) 75%
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease, opacity 0.3s ease;
+  transition:
+    transform 0.6s ease,
+    opacity 0.3s ease;
   opacity: 0;
 }
 
@@ -312,10 +363,7 @@ const toggleFavorite = () => {
 .card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, 
-    var(--navy-mid, #131a2a) 0%, 
-    transparent 60%
-  );
+  background: linear-gradient(to top, var(--navy-mid, #131a2a) 0%, transparent 60%);
   opacity: 0.8;
 }
 
@@ -342,14 +390,14 @@ const toggleFavorite = () => {
   align-self: flex-end;
 }
 
-.card-badge.esportes { 
-  background: #4cc98e; 
-  color: #0a0e17; 
+.card-badge.esportes {
+  background: #4cc98e;
+  color: #0a0e17;
 }
 
-.card-badge.show { 
-  background: var(--gold, #c9a84c); 
-  color: #0a0e17; 
+.card-badge.show {
+  background: var(--gold, #c9a84c);
+  color: #0a0e17;
 }
 
 .card-badge--soldout {
