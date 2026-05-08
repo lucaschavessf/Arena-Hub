@@ -9,7 +9,10 @@ export interface User {
   isLoggedIn: boolean
 }
 
+const STORAGE_KEY = 'arena_hub_auth'
+
 export const useUserStore = defineStore('user', () => {
+  const token = ref<string>('')
   const user = ref<User>({
     id: '',
     name: '',
@@ -21,17 +24,33 @@ export const useUserStore = defineStore('user', () => {
   const isLoggedIn = computed(() => user.value.isLoggedIn)
   const userPoints = computed(() => user.value.points)
 
-  function login(userData: Partial<User>) {
-    user.value = {
-      id: userData.id || '1',
-      name: userData.name || 'João Silva',
-      email: userData.email || 'joao@email.com',
-      points: userData.points || 1250,
-      isLoggedIn: true
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored) {
+    try {
+      const data = JSON.parse(stored)
+      if (data.token) {
+        token.value = data.token
+        user.value = { ...user.value, ...data.user, isLoggedIn: true }
+      }
+    } catch {
+      localStorage.removeItem(STORAGE_KEY)
     }
   }
 
+  function login(userData: { name: string; token: string; id?: string; email?: string }) {
+    token.value = userData.token
+    user.value = {
+      id: userData.id || '',
+      name: userData.name,
+      email: userData.email || '',
+      points: 0,
+      isLoggedIn: true
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: token.value, user: user.value }))
+  }
+
   function logout() {
+    token.value = ''
     user.value = {
       id: '',
       name: '',
@@ -39,6 +58,7 @@ export const useUserStore = defineStore('user', () => {
       points: 0,
       isLoggedIn: false
     }
+    localStorage.removeItem(STORAGE_KEY)
   }
 
   function addPoints(amount: number) {
@@ -55,6 +75,7 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     user,
+    token,
     isLoggedIn,
     userPoints,
     login,

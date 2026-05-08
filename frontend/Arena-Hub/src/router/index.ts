@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import LandingPage from '@/views/LandingPage.vue'
+import { useUserStore } from '@/stores/userStore'
 
 const routes: Array<RouteRecordRaw> = [
   { 
@@ -54,55 +55,65 @@ const routes: Array<RouteRecordRaw> = [
     name: 'ProdutorDashboard',
     component: () => import('@/views/ProdutorDashboard.vue') 
   },
-  { 
-    path: '/meus-ingressos', 
+  {
+    path: '/meus-ingressos',
     name: 'MeusIngressos',
-    component: () => import('@/views/MeusIngressos.vue') 
+    component: () => import('@/views/MeusIngressos.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/perfil', 
+  {
+    path: '/perfil',
     name: 'Perfil',
-    component: () => import('@/views/Perfil.vue') 
+    component: () => import('@/views/Perfil.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/admin', 
+  {
+    path: '/admin',
     name: 'AdminDashboard',
-    component: () => import('@/views/AdminDashboard.vue') 
+    component: () => import('@/views/AdminDashboard.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/admin/agenda', 
+  {
+    path: '/admin/agenda',
     name: 'AdminAgenda',
-    component: () => import('@/views/AdminAgenda.vue') 
+    component: () => import('@/views/AdminAgenda.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/admin/solicitacoes', 
+  {
+    path: '/admin/solicitacoes',
     name: 'AdminSolicitacoes',
-    component: () => import('@/views/AdminSolicitacoes.vue') 
+    component: () => import('@/views/AdminSolicitacoes.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/admin/precos', 
+  {
+    path: '/admin/precos',
     name: 'AdminPrecos',
-    component: () => import('@/views/AdminPrecos.vue') 
+    component: () => import('@/views/AdminPrecos.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/admin/perfil', 
+  {
+    path: '/admin/perfil',
     name: 'AdminPerfil',
-    component: () => import('@/views/AdminPerfil.vue') 
+    component: () => import('@/views/AdminPerfil.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/admin/eventos', 
+  {
+    path: '/admin/eventos',
     name: 'AdminEventosAprovados',
-    component: () => import('@/views/AdminEventosAprovados.vue') 
+    component: () => import('@/views/AdminEventosAprovados.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/admin/evento/:id', 
+  {
+    path: '/admin/evento/:id',
     name: 'AdminEventosDetalhes',
-    component: () => import('@/views/AdminEventoDetalhado.vue') 
+    component: () => import('@/views/AdminEventoDetalhado.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/pagamento', 
+  {
+    path: '/pagamento',
     name: 'Pagamento',
-    component: () => import('@/views/Pagamento.vue') 
+    component: () => import('@/views/Pagamento.vue'),
+    meta: { requiresAuth: true }
   },
   {
   path: '/:pathMatch(.*)*',
@@ -116,6 +127,15 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     return savedPosition || { top: 0, behavior: 'smooth' }
   },
+})
+
+router.beforeEach((to) => {
+  if (to.meta.requiresAuth) {
+    const userStore = useUserStore()
+    if (!userStore.isLoggedIn) {
+      return { name: 'Login' }
+    }
+  }
 })
 
 export default router

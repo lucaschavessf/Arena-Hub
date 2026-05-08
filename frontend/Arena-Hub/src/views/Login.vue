@@ -78,8 +78,10 @@
               </div>
             </div>
 
-            <button type="submit" class="btn-submit">
-              <span>Entrar</span>
+            <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+            <button type="submit" class="btn-submit" :disabled="loading">
+              <span>{{ loading ? 'Entrando...' : 'Entrar' }}</span>
               <svg
                 width="18"
                 height="18"
@@ -106,26 +108,45 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
+import api from '../services/api'
+import { useUserStore } from '../stores/userStore'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 const form = reactive({
   email: '',
   senha: '',
 })
 
-function login() {
+const loading = ref(false)
+const errorMessage = ref('')
+
+async function login() {
   if (!form.email || !form.senha) {
-    console.log('Preencha todos os campos')
+    errorMessage.value = 'Preencha todos os campos.'
     return
   }
 
-  console.log('Logando:', form.email, form.senha)
-  router.push('/')
+  loading.value = true
+  errorMessage.value = ''
+
+  try {
+    const response = await api.post('/auth/login', {
+      email: form.email,
+      password: form.senha,
+    })
+    userStore.login({ name: response.data.name, token: response.data.token })
+    router.push('/')
+  } catch {
+    errorMessage.value = 'E-mail ou senha incorretos.'
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -327,6 +348,19 @@ function login() {
 
 .btn-submit:active {
   transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  color: #e05c5c;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0;
 }
 
 .auth-footer {

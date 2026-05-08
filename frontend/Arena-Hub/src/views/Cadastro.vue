@@ -134,8 +134,10 @@
               </div>
             </div>
 
-            <button type="submit" class="btn-submit">
-              <span>Finalizar Cadastro</span>
+            <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+            <button type="submit" class="btn-submit" :disabled="loading">
+              <span>{{ loading ? 'Cadastrando...' : 'Finalizar Cadastro' }}</span>
               <svg
                 width="18"
                 height="18"
@@ -162,12 +164,16 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
+import api from '../services/api'
+import { useUserStore } from '../stores/userStore'
 
 const router = useRouter()
+const userStore = useUserStore()
+
 const form = reactive({
   nome: '',
   cpf: '',
@@ -175,6 +181,9 @@ const form = reactive({
   senha: '',
   confirmarSenha: '',
 })
+
+const loading = ref(false)
+const errorMessage = ref('')
 
 function formatarCPF(event: Event) {
   const input = event.target as HTMLInputElement
@@ -221,40 +230,50 @@ function validarCPF(cpf: string): boolean {
   return digito2 === parseInt(cpfLimpo.charAt(10))
 }
 
-function cadastrar() {
+async function cadastrar() {
+  errorMessage.value = ''
+
   if (!form.nome || !form.cpf || !form.email || !form.senha || !form.confirmarSenha) {
-    alert('Preencha todos os campos obrigatórios!')
+    errorMessage.value = 'Preencha todos os campos obrigatórios.'
     return
   }
 
   if (!validarCPF(form.cpf)) {
-    alert('CPF inválido!')
+    errorMessage.value = 'CPF inválido.'
     return
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(form.email)) {
-    alert('E-mail inválido!')
+    errorMessage.value = 'E-mail inválido.'
     return
   }
 
   if (form.senha !== form.confirmarSenha) {
-    alert('As senhas não coincidem!')
+    errorMessage.value = 'As senhas não coincidem.'
     return
   }
 
   if (form.senha.length < 6) {
-    alert('A senha deve ter pelo menos 6 caracteres!')
+    errorMessage.value = 'A senha deve ter pelo menos 6 caracteres.'
     return
   }
 
-  console.log('Cadastrando:', {
-    nome: form.nome,
-    cpf: form.cpf.replace(/\D/g, ''),
-    email: form.email,
-  })
+  loading.value = true
 
-  router.push('/')
+  try {
+    const response = await api.post('/auth/register', {
+      name: form.nome,
+      email: form.email,
+      password: form.senha,
+    })
+    userStore.login({ name: response.data.name, token: response.data.token })
+    router.push('/')
+  } catch {
+    errorMessage.value = 'Este e-mail já está cadastrado.'
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -443,6 +462,19 @@ function cadastrar() {
 
 .btn-submit:active {
   transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  color: #e05c5c;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0;
 }
 
 .auth-footer {
