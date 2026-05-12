@@ -9,7 +9,7 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="9 18 15 12 9 6"/>
           </svg>
-          <router-link :to="`/evento/${evento.id}`" class="breadcrumb-link">{{ evento.title }}</router-link>
+          <router-link :to="`/evento/${evento.id}`" class="breadcrumb-link">{{ evento.nome }}</router-link>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="9 18 15 12 9 6"/>
           </svg>
@@ -18,33 +18,27 @@
 
         <section class="event-summary-card">
           <div class="event-image">
-            <img :src="evento.image" :alt="evento.title" />
+            <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&q=80" :alt="evento.nome" />
             <div class="image-overlay"></div>
           </div>
           <div class="event-details">
-            <span class="category-badge">{{ evento.category }}</span>
-            <h1 class="event-title">{{ evento.title }}</h1>
+            <span class="category-badge">{{ evento.categoria || 'Sem categoria' }}</span>
+            <h1 class="event-title">{{ evento.nome }}</h1>
             <div class="event-meta">
               <div class="meta-item">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
                 </svg>
-                <span>{{ evento.date }}</span>
-              </div>
-              <div class="meta-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                </svg>
-                <span>{{ evento.time }}</span>
+                <span>{{ formatDate(evento.dataInicio) }}</span>
               </div>
               <div class="meta-item">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
-                <span>{{ evento.venue }}</span>
+                <span>{{ evento.espaco || 'Local não informado' }}</span>
               </div>
             </div>
-            <p class="event-description" v-if="evento.description">{{ evento.description }}</p>
+            <p class="event-description" v-if="evento.descricao">{{ evento.descricao }}</p>
           </div>
         </section>
 
@@ -122,7 +116,13 @@
             <p class="section-subtitle">Selecione a quantidade para cada setor disponível</p>
           </header>
 
-          <div class="tickets-list">
+          <div class="tickets-list" v-if="!lotes || lotes.length === 0">
+            <div class="empty-msg" style="justify-content: center; font-size: 1.1rem; padding: 30px;">
+              Nenhum Ingresso Disponível
+            </div>
+          </div>
+
+          <div class="tickets-list" v-else>
             <div class="table-header-desktop">
               <span>Setor / Tipo</span>
               <span class="text-center">Quantidade</span>
@@ -130,24 +130,23 @@
               <span class="text-right">Subtotal</span>
             </div>
 
-            <div v-for="(ing, idx) in evento.ingressos" :key="idx" 
+            <div v-for="lote in lotes" :key="lote.id" 
                  class="ticket-item" 
-                 :class="{ 'is-selected': (quantidades[idx] > 0) }">
+                 :class="{ 'is-selected': (quantidades[lote.id] > 0) }">
               
               <div class="ticket-info">
-                <span class="ticket-name">{{ ing.tipo }}</span>
-                <span v-if="ing.subtipo" class="ticket-subtext">{{ ing.subtipo }}</span>
-                <div class="mobile-price-tag">R$ {{ ing.preco.toFixed(2) }}</div>
+                <span class="ticket-name">{{ lote.categoria || 'Ingresso' }}</span>
+                <div class="mobile-price-tag">R$ {{ lote.preco.toFixed(2) }}</div>
               </div>
 
               <div class="ticket-qty-control">
-                <button class="control-btn" @click="alterarQuantidade(idx, -1)" :disabled="!quantidades[idx]">
+                <button class="control-btn" @click="alterarQuantidade(lote.id, -1)" :disabled="!quantidades[lote.id]">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <line x1="5" y1="12" x2="19" y2="12"/>
                   </svg>
                 </button>
-                <span class="qty-display">{{ quantidades[idx] || 0 }}</span>
-                <button class="control-btn" @click="alterarQuantidade(idx, 1)">
+                <span class="qty-display">{{ quantidades[lote.id] || 0 }}</span>
+                <button class="control-btn" @click="alterarQuantidade(lote.id, 1)" :disabled="quantidades[lote.id] >= lote.quantidadeDisponivel">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                   </svg>
@@ -155,13 +154,12 @@
               </div>
 
               <div class="desktop-only text-center price-unit">
-                <span class="price-value">R$ {{ ing.preco.toFixed(2) }}</span>
-                <span v-if="ing.taxa > 0" class="tax-info">+ R$ {{ ing.taxa.toFixed(2) }} taxa</span>
+                <span class="price-value">R$ {{ lote.preco.toFixed(2) }}</span>
               </div>
               
               <div class="ticket-subtotal text-right">
                 <span class="subtotal-label">Subtotal:</span>
-                <span class="subtotal-value">R$ {{ calcularSubtotalLocal(idx).toFixed(2) }}</span>
+                <span class="subtotal-value">R$ {{ calcularSubtotalLocal(lote).toFixed(2) }}</span>
               </div>
             </div>
           </div>
@@ -170,11 +168,7 @@
             <div class="checkout-summary-details" v-if="totalItens > 0">
               <div class="summary-line">
                 <span>Ingressos ({{ totalItens }}x):</span>
-                <span class="white-text">R$ {{ totalNominal.toFixed(2) }}</span>
-              </div>
-              <div class="summary-line">
-                <span>Taxas de conveniência:</span>
-                <span class="white-text">R$ {{ totalTaxas.toFixed(2) }}</span>
+                <span class="white-text">R$ {{ totalGeral.toFixed(2) }}</span>
               </div>
               <div class="summary-line discount-line" v-if="descontoPontos > 0">
                 <span>🎁 Desconto por pontos:</span>
@@ -214,6 +208,7 @@
           </footer>
         </section>
       </div>
+      <div v-else style="color: white; font-size: 1.2rem;">Carregando dados do evento...</div>
     </main>
     <AppFooter />
   </div>
@@ -224,12 +219,14 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
+import api from '@/services/api'
 
 const route = useRoute()
 const router = useRouter()
 
 const eventoId = computed(() => Number(route.params.id))
 const evento = ref<any>(null)
+const lotes = ref<any[]>([])
 
 const quantidades = ref<Record<number, number>>({})
 
@@ -239,6 +236,12 @@ const usuarioPontos = ref(1250)
 const pontosUsar = ref(0)
 const pontosMaximos = ref(0)
 const descontoPontos = ref(0)
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+}
 
 const calcularPontosMaximos = () => {
   const maxDescontoPercentual = 50
@@ -255,21 +258,12 @@ const totalItens = computed(() => {
   return Object.values(quantidades.value).reduce((acc, qty) => acc + qty, 0)
 })
 
-const totalNominal = computed(() => {
-  if (!evento.value) return 0
-  return evento.value.ingressos.reduce((sum: number, ing: any, idx: number) => {
-    return sum + ((quantidades.value[idx] || 0) * ing.preco)
+const totalGeral = computed(() => {
+  if (!lotes.value) return 0
+  return lotes.value.reduce((sum: number, lote: any) => {
+    return sum + ((quantidades.value[lote.id] || 0) * lote.preco)
   }, 0)
 })
-
-const totalTaxas = computed(() => {
-  if (!evento.value) return 0
-  return evento.value.ingressos.reduce((sum: number, ing: any, idx: number) => {
-    return sum + ((quantidades.value[idx] || 0) * ing.taxa)
-  }, 0)
-})
-
-const totalGeral = computed(() => totalNominal.value + totalTaxas.value)
 
 const totalComDesconto = computed(() => {
   const comDesconto = totalGeral.value - descontoPontos.value
@@ -306,17 +300,15 @@ const diminuirPontos = () => {
   }
 }
 
-const alterarQuantidade = (idx: number, delta: number) => {
-  const atual = quantidades.value[idx] || 0
+const alterarQuantidade = (loteId: number, delta: number) => {
+  const atual = quantidades.value[loteId] || 0
   const nova = Math.max(0, atual + delta)
-  quantidades.value[idx] = nova
+  quantidades.value[loteId] = nova
 }
 
-const calcularSubtotalLocal = (idx: number): number => {
-  if (!evento.value) return 0
-  const ing = evento.value.ingressos[idx]
-  const qty = quantidades.value[idx] || 0
-  return qty * (ing.preco + ing.taxa)
+const calcularSubtotalLocal = (lote: any): number => {
+  const qty = quantidades.value[lote.id] || 0
+  return qty * lote.preco
 }
 
 const irParaPagamento = () => {
@@ -325,24 +317,24 @@ const irParaPagamento = () => {
   }
 }
 
-onMounted(async () => {
-  window.scrollTo(0, 0)
-  
-  evento.value = {
-    id: 1,
-    title: 'Rock Nacional 2026',
-    category: 'Show',
-    date: '15 de Agosto de 2026',
-    time: '20:00',
-    venue: 'Arena Pernambuco',
-    image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&q=80',
-    description: 'O maior festival de rock do Nordeste com as melhores bandas nacionais.',
-    ingressos: [
-      { tipo: 'PISTA', subtipo: null, preco: 85.00, taxa: 8.50 },
-      { tipo: 'PISTA PREMIUM', subtipo: 'Acesso VIP', preco: 150.00, taxa: 15.00 },
-      { tipo: 'ARQUIBANCADA', subtipo: 'Cadeira Numerada', preco: 60.00, taxa: 6.00 }
-    ]
+const carregarEvento = async () => {
+  try {
+    const response = await api.get(`/eventos/${eventoId.value}`)
+    evento.value = response.data
+    lotes.value = response.data.lotes || []
+    
+    // Iniciar quantidades zeradas
+    lotes.value.forEach((lote: any) => {
+      quantidades.value[lote.id] = 0
+    })
+  } catch (error) {
+    console.error('Erro ao carregar dados do evento:', error)
   }
+}
+
+onMounted(() => {
+  window.scrollTo(0, 0)
+  carregarEvento()
 })
 </script>
 

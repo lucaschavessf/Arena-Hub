@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.arenahub.backend.dto.EventoDetalhesDTO;
+
 @RestController
 @RequestMapping("/eventos")
 @CrossOrigin(origins = "*")
@@ -33,8 +35,8 @@ public class EventoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Evento> getEventoById(@PathVariable Long id) {
-        Optional<Evento> evento = eventoService.listarEventoPorId(id);
+    public ResponseEntity<EventoDetalhesDTO> getEventoById(@PathVariable Long id) {
+        Optional<EventoDetalhesDTO> evento = eventoService.buscarDetalhesPorId(id);
         return evento.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

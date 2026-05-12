@@ -12,6 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Entity
@@ -38,6 +41,9 @@ public class Evento {
     @ManyToOne
     @JoinColumn(name = "espaco_id")
     private Espaco espaco;
+
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
+    private List<Lote> lotes;
 
     public Evento() {
     }
@@ -125,5 +131,13 @@ public class Evento {
 
     public void setEspaco(Espaco espaco) {
         this.espaco = espaco;
+    }
+
+    public List<Lote> getLotes() {
+        return lotes;
+    }
+
+    public void setLotes(List<Lote> lotes) {
+        this.lotes = lotes;
     }
 }
