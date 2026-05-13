@@ -1,24 +1,33 @@
 package com.arenahub.backend.dto;
 
 public class UsuarioResponseDTO {
-
     private String id;
-    private String nome;
+    private String name;
     private String email;
     private String tipo;
     private String setorDepartamento;
     private String cpf;
+    private String cnpj;
 
-    public UsuarioResponseDTO(String id, String nome, String email, String tipo, String setorDepartamento, String cpf) {
+    public UsuarioResponseDTO(String id, String name, String email, String tipo, String setorDepartamento, String cpf, String cnpj) {
         this.id = id;
-        this.nome = nome;
+        this.name = name;
         this.email = email;
         this.tipo = tipo;
         this.setorDepartamento = setorDepartamento;
         this.cpf = cpf;
+        this.cnpj = cnpj;
     }
 
     public UsuarioResponseDTO() {
+    }
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
     public String getId() {
@@ -62,10 +71,10 @@ public class UsuarioResponseDTO {
     }
 
     public String getNome() {
-        return nome;
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String name) {
+        this.name = name;
     }
 }

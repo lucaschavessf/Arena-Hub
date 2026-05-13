@@ -57,6 +57,14 @@
           <span>Agenda</span>
         </router-link>
 
+        <router-link to="/admin/produtores" class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+          <span>Produtores</span>
+        </router-link>
+
         <router-link to="/admin/solicitacoes" class="nav-item active">
           <svg
             width="18"

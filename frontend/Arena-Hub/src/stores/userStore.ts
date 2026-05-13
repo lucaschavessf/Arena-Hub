@@ -37,7 +37,7 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  function login(userData: { name: string; token: string; id?: string; email?: string }) {
+  function login(userData: { name: string; token: string; id?: string; email?: string; tipo?: string }) {
     token.value = userData.token
     user.value = {
       id: userData.id || '',
@@ -47,6 +47,9 @@ export const useUserStore = defineStore('user', () => {
       isLoggedIn: true
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: token.value, user: user.value }))
+    if (userData.tipo) {
+      localStorage.setItem('userRole', userData.tipo)
+    }
   }
 
   function logout() {
@@ -59,6 +62,7 @@ export const useUserStore = defineStore('user', () => {
       isLoggedIn: false
     }
     localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem('userRole')
   }
 
   function addPoints(amount: number) {

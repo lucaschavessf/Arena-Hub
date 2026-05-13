@@ -14,6 +14,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.stream.Collectors;
+import com.arenahub.backend.dto.EventoDetalhesDTO;
+import com.arenahub.backend.dto.LoteResponseDTO;
+
 @Service
 public class EventoService {
 
@@ -37,6 +41,31 @@ public class EventoService {
 
     public Optional<Evento> listarEventoPorId(Long id) {
         return eventoRepository.findById(id);
+    }
+
+    public Optional<EventoDetalhesDTO> buscarDetalhesPorId(Long id) {
+        return eventoRepository.findById(id).map(evento -> {
+            List<LoteResponseDTO> lotesDTO = (evento.getLotes() == null) ? List.of() : evento.getLotes().stream()
+                    .map(lote -> new LoteResponseDTO(
+                            lote.getId(),
+                            lote.getPreco(),
+                            lote.getQuantidadeDisponivel(),
+                            lote.getCategoria() != null ? lote.getCategoria().getNome() : null))
+                    .collect(Collectors.toList());
+
+            return new EventoDetalhesDTO(
+                    evento.getId(),
+                    evento.getNome(),
+                    evento.getDescricao(),
+                    evento.getDataInicio(),
+                    evento.getDataFim(),
+                    evento.getExpectativaPublico(),
+                    evento.getClassificacaoIndicativa(),
+                    evento.getCategoria() != null ? evento.getCategoria().getNome() : null,
+                    evento.getEspaco() != null ? evento.getEspaco().getNome() : null,
+                    lotesDTO
+            );
+        });
     }
 
     public Evento cadastrarEvento(EventoRequestDTO data) {

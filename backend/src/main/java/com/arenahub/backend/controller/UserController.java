@@ -33,6 +33,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/produtor")
+    public ResponseEntity<UsuarioResponseDTO> postProdutor(
+            @Valid @RequestBody ProdutorRequestDTO dto) {
+        UsuarioResponseDTO response = _usuarioService.cadastrarProdutor(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> getUsuario(
             @PathVariable String id) {

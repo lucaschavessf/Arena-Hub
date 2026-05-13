@@ -1,4 +1,4 @@
-package com.arenahub.backend.domain;
+package com.arenahub.backend.domain.solicitacao;
 
 import com.arenahub.backend.domain.categoria.CategoriaEvento;
 import com.arenahub.backend.domain.espaco.Espaco;
@@ -12,20 +12,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
-import java.util.List;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "eventos")
-public class Evento {
+@Table(name = "solicitacoes_evento")
+public class SolicitacaoEvento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String nomeEvento;
     private String descricao;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
@@ -33,6 +31,13 @@ public class Evento {
 
     @Enumerated(EnumType.STRING)
     private ClassificacaoIndicativa classificacaoIndicativa;
+
+    @Enumerated(EnumType.STRING)
+    private StatusSolicitacaoEvento status;
+
+    private String motivoRejeicao;
+    private LocalDateTime criadaEm;
+    private LocalDateTime analisadaEm;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
@@ -42,23 +47,10 @@ public class Evento {
     @JoinColumn(name = "espaco_id")
     private Espaco espaco;
 
-    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
-    private List<Lote> lotes;
+    private String nomeSolicitante;
+    private String emailSolicitante;
 
-    public Evento() {
-    }
-
-    public Evento(String nome, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim,
-            Integer expectativaPublico, ClassificacaoIndicativa classificacaoIndicativa, CategoriaEvento categoria,
-            Espaco espaco) {
-        this.nome = nome;
-        this.descricao = descricao;
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
-        this.expectativaPublico = expectativaPublico;
-        this.classificacaoIndicativa = classificacaoIndicativa;
-        this.categoria = categoria;
-        this.espaco = espaco;
+    public SolicitacaoEvento() {
     }
 
     public Long getId() {
@@ -69,12 +61,12 @@ public class Evento {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeEvento() {
+        return nomeEvento;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeEvento(String nomeEvento) {
+        this.nomeEvento = nomeEvento;
     }
 
     public String getDescricao() {
@@ -117,6 +109,38 @@ public class Evento {
         this.classificacaoIndicativa = classificacaoIndicativa;
     }
 
+    public StatusSolicitacaoEvento getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusSolicitacaoEvento status) {
+        this.status = status;
+    }
+
+    public String getMotivoRejeicao() {
+        return motivoRejeicao;
+    }
+
+    public void setMotivoRejeicao(String motivoRejeicao) {
+        this.motivoRejeicao = motivoRejeicao;
+    }
+
+    public LocalDateTime getCriadaEm() {
+        return criadaEm;
+    }
+
+    public void setCriadaEm(LocalDateTime criadaEm) {
+        this.criadaEm = criadaEm;
+    }
+
+    public LocalDateTime getAnalisadaEm() {
+        return analisadaEm;
+    }
+
+    public void setAnalisadaEm(LocalDateTime analisadaEm) {
+        this.analisadaEm = analisadaEm;
+    }
+
     public CategoriaEvento getCategoria() {
         return categoria;
     }
@@ -133,11 +157,19 @@ public class Evento {
         this.espaco = espaco;
     }
 
-    public List<Lote> getLotes() {
-        return lotes;
+    public String getNomeSolicitante() {
+        return nomeSolicitante;
     }
 
-    public void setLotes(List<Lote> lotes) {
-        this.lotes = lotes;
+    public void setNomeSolicitante(String nomeSolicitante) {
+        this.nomeSolicitante = nomeSolicitante;
+    }
+
+    public String getEmailSolicitante() {
+        return emailSolicitante;
+    }
+
+    public void setEmailSolicitante(String emailSolicitante) {
+        this.emailSolicitante = emailSolicitante;
     }
 }

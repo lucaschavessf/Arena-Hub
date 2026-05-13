@@ -24,23 +24,28 @@ O arena HUB é uma solução tecnológica desenvolvida para a disciplina de Prog
 <img width="1875" height="968" alt="image" src="https://github.com/user-attachments/assets/5d016056-8f03-45ce-8d68-4a8343a19439" />
 <img width="1860" height="968" alt="image" src="https://github.com/user-attachments/assets/d8f5849d-7caf-4764-b276-9744a4dbf37f" />
 
-- Issue/bug tracker
+- Issue/bug tracker - [Link](https://trello.com/b/aW6NGwj7/projeto-poo)
 - Screencast - [Link](https://youtu.be/W-_i4vvJgSI)
 
 ### Entrega 03
 
-- Implementação de 2 histórias 
-- Atualização do Issue/bug tracker
-- Novo screencast
+- Implementação de 2 histórias
+  *AREA ADMIN*
+  <img width="1860" height="946" alt="image" src="https://github.com/user-attachments/assets/75cfd7c8-53e5-4446-82b5-c8954ad31616" />
+  *AREA PRODUTOR*
+  <img width="1865" height="938" alt="image" src="https://github.com/user-attachments/assets/12b8a681-33ef-4827-b131-1c1bbc875cb6" />
+
+- Atualização do Issue/bug tracker - [Link](https://trello.com/b/aW6NGwj7/projeto-poo)
+- Novo screencast - [Link](https://youtu.be/AB-UhVwJnQg)
 
 ### Entrega 04
 
 - Implementação de no mínimo 2 histórias
-- Atualização do Issue/bug tracker
-- Novo screencast
+- Atualização do Issue/bug tracker - [Link](https://trello.com/b/aW6NGwj7/projeto-poo)
+- Novo screencast 
 - Documentação para configuração de ambiente
 
-## 👥 Membros da Equipe
+## 👥 Membros da Equipe,
 <table align="center">
   <tr>
     <td align="center">

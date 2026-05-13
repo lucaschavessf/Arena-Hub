@@ -21,8 +21,8 @@
       />
       <div class="card-overlay"></div>
       <div class="card-badges">
-        <span class="card-badge" :class="event.category.toLowerCase()" role="status">
-          {{ event.category }}
+        <span class="card-badge" :class="eventCategoryName.toLowerCase()" role="status">
+          {{ eventCategoryName }}
         </span>
 
         <span v-if="event.soldOut" class="card-badge card-badge--soldout" role="status">
@@ -160,7 +160,7 @@ interface Event {
   id: number | string
   title: string
   image: string
-  category: string
+  category: string | { nome?: string; [key: string]: any }
   date: string | Date
   venue: string
   price?: number
@@ -183,6 +183,15 @@ const router = useRouter()
 const imageLoaded = ref(false)
 const imageError = ref(false)
 const isFavorite = ref(false)
+
+// Computed para garantir que a categoria seja sempre uma string
+const eventCategoryName = computed(() => {
+  if (!props.event.category) return ''
+  if (typeof props.event.category === 'object' && 'nome' in props.event.category) {
+    return (props.event.category as any).nome || ''
+  }
+  return String(props.event.category)
+})
 
 // Verifica se o evento é novo (últimos 7 dias)
 const isNew = computed(() => {

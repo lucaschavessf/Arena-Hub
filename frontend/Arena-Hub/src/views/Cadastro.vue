@@ -21,8 +21,8 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </div>
-            <h2 class="auth-title">Crie sua conta</h2>
-            <p class="auth-subtitle">Junte-se à maior rede de eventos da região</p>
+            <h2 class="auth-title">{{ isProdutor ? 'Venha ser um produtor de Eventos da Arena' : 'Crie sua conta' }}</h2>
+            <p class="auth-subtitle">{{ isProdutor ? 'Comece a criar e gerenciar seus eventos' : 'Junte-se à maior rede de eventos da região' }}</p>
           </header>
 
           <form @submit.prevent="cadastrar" class="auth-form">
@@ -45,7 +45,7 @@
             </div>
 
             <div class="form-group">
-              <label>CPF</label>
+              <label>{{ isProdutor ? 'CNPJ' : 'CPF' }}</label>
               <div class="input-with-icon">
                 <svg
                   width="18"
@@ -61,12 +61,22 @@
                   <line x1="14" y1="15" x2="17" y2="15" />
                 </svg>
                 <input
+                  v-if="!isProdutor"
                   v-model="form.cpf"
                   type="text"
                   placeholder="000.000.000-00"
                   required
                   maxlength="14"
                   @input="formatarCPF"
+                />
+                <input
+                  v-else
+                  v-model="form.cnpj"
+                  type="text"
+                  placeholder="00.000.000/0000-00"
+                  required
+                  maxlength="18"
+                  @input="formatarCNPJ"
                 />
               </div>
             </div>
@@ -164,12 +174,19 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, defineProps } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
 import api from '../services/api'
 import { useUserStore } from '../stores/userStore'
+
+const props = defineProps({
+  isProdutor: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -177,6 +194,7 @@ const userStore = useUserStore()
 const form = reactive({
   nome: '',
   cpf: '',
+  cnpj: '',
   email: '',
   senha: '',
   confirmarSenha: '',
@@ -202,6 +220,27 @@ function formatarCPF(event: Event) {
   }
 
   form.cpf = value
+}
+
+function formatarCNPJ(event: Event) {
+  const input = event.target as HTMLInputElement
+  let value = input.value.replace(/\D/g, '')
+
+  if (value.length > 14) {
+    value = value.slice(0, 14)
+  }
+
+  if (value.length > 12) {
+    value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  } else if (value.length > 8) {
+    value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})/, '$1.$2.$3/$4')
+  } else if (value.length > 5) {
+    value = value.replace(/^(\d{2})(\d{3})(\d{3})/, '$1.$2.$3')
+  } else if (value.length > 2) {
+    value = value.replace(/^(\d{2})(\d{3})/, '$1.$2')
+  }
+
+  form.cnpj = value
 }
 
 function validarCPF(cpf: string): boolean {
@@ -230,17 +269,31 @@ function validarCPF(cpf: string): boolean {
   return digito2 === parseInt(cpfLimpo.charAt(10))
 }
 
+function validarCNPJ(cnpj: string): boolean {
+  const cnpjLimpo = cnpj.replace(/\D/g, '')
+  if (cnpjLimpo.length !== 14) return false
+  if (/^(\d)\1{13}$/.test(cnpjLimpo)) return false
+  return true // Validação simplificada
+}
+
 async function cadastrar() {
   errorMessage.value = ''
 
-  if (!form.nome || !form.cpf || !form.email || !form.senha || !form.confirmarSenha) {
+  if (!form.nome || !form.email || !form.senha || !form.confirmarSenha) {
     errorMessage.value = 'Preencha todos os campos obrigatórios.'
     return
   }
-
-  if (!validarCPF(form.cpf)) {
-    errorMessage.value = 'CPF inválido.'
-    return
+  
+  if (props.isProdutor) {
+    if (!form.cnpj || !validarCNPJ(form.cnpj)) {
+      errorMessage.value = 'CNPJ inválido.'
+      return
+    }
+  } else {
+    if (!form.cpf || !validarCPF(form.cpf)) {
+      errorMessage.value = 'CPF inválido.'
+      return
+    }
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -262,15 +315,31 @@ async function cadastrar() {
   loading.value = true
 
   try {
-    const response = await api.post('/auth/register', {
+    const endpoint = props.isProdutor ? '/user/produtor' : '/user/cliente'
+    const payload = {
       name: form.nome,
       email: form.email,
       password: form.senha,
+      ...(props.isProdutor ? { cnpj: form.cnpj.replace(/\D/g, '') } : { cpf: form.cpf.replace(/\D/g, '') })
+    }
+    
+    await api.post(endpoint, payload)
+    
+    // Após cadastrar, faz login automático para pegar o token
+    const loginResponse = await api.post('/auth/login', {
+      email: form.email,
+      password: form.senha
     })
-    userStore.login({ name: response.data.name, token: response.data.token })
-    router.push('/')
-  } catch {
-    errorMessage.value = 'Este e-mail já está cadastrado.'
+    
+    userStore.login({ 
+      name: loginResponse.data.name, 
+      token: loginResponse.data.token, 
+      tipo: loginResponse.data.tipo 
+    })
+    
+    router.push(props.isProdutor ? '/produtor/dashboard' : '/')
+  } catch (error: any) {
+    errorMessage.value = error.response?.data?.message || 'Ocorreu um erro no cadastro.'
   } finally {
     loading.value = false
   }
