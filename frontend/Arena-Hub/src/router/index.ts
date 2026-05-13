@@ -9,14 +9,14 @@ const routes: Array<RouteRecordRaw> = [
     component: LandingPage 
   },
   { 
-    path: '/cadastro', 
+    path: '/cadastro', //meta: { requiresAuth: true }
     name: 'Cadastro',
     component: () => import('@/views/Cadastro.vue') 
   },
   {
-  path: '/login',
-  name: 'Login',
-  component: () => import('../views/Login.vue'),
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/Login.vue'),
   },
   {
     path: '/esqueceu-senha',
@@ -43,17 +43,20 @@ const routes: Array<RouteRecordRaw> = [
   { 
     path: '/produtor', 
     name: 'ProdutorInfo',
-    component: () => import('@/views/ProdutorInfo.vue') 
+    component: () => import('@/views/ProdutorInfo.vue'),
+    meta: { requiresAuth: true }
   },
   { 
     path: '/produtor/cadastro', 
     name: 'ProdutorCadastro',
-    component: () => import('@/views/ProdutorCadastro.vue') 
+    component: () => import('@/views/ProdutorCadastro.vue'),
+    meta: { requiresAuth: true }
   },
   { 
     path: '/produtor/dashboard', 
     name: 'ProdutorDashboard',
-    component: () => import('@/views/ProdutorDashboard.vue') 
+    component: () => import('@/views/ProdutorDashboard.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/meus-ingressos',
@@ -77,6 +80,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/admin/agenda',
     name: 'AdminAgenda',
     component: () => import('@/views/AdminAgenda.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin/produtores',
+    name: 'AdminProdutores',
+    component: () => import('@/views/AdminProdutores.vue'),
     meta: { requiresAuth: true }
   },
   {
