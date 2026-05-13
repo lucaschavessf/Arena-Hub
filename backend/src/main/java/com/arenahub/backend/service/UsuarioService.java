@@ -4,6 +4,7 @@ import com.arenahub.backend.dto.*;
 import com.arenahub.backend.domain.User;
 import com.arenahub.backend.domain.Cliente;
 import com.arenahub.backend.domain.Administrador;
+import com.arenahub.backend.domain.Produtor;
 import com.arenahub.backend.repository.IUserRepository;
 
 import org.springframework.stereotype.Service;
@@ -43,6 +44,17 @@ public class UsuarioService {
         return toResponse(cliente);
     }
 
+    public UsuarioResponseDTO cadastrarProdutor(ProdutorRequestDTO dto){
+        Produtor produtor = new Produtor();
+        produtor.setName(dto.getName());
+        produtor.setEmail(dto.getEmail());
+        produtor.setPassword(passwordEncoder.encode(dto.getPassword()));
+        produtor.setCnpj(dto.getCnpj());
+
+        _usuarioRepository.inserir(produtor);
+        return toResponse(produtor);
+    }
+
     public UsuarioResponseDTO buscar(String id) {
         User usuario = _usuarioRepository.buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + id));
@@ -73,6 +85,7 @@ public class UsuarioService {
         String tipo = null;
         String setorDepartamento = null;
         String cpf = null;
+        String cnpj = null;
 
         if (u instanceof Administrador a) {
             tipo = "ADMIN";
@@ -80,6 +93,9 @@ public class UsuarioService {
         } else if (u instanceof Cliente c) {
             tipo = "CLIENTE";
             cpf = c.getCpf();
+        } else if (u instanceof Produtor p) {
+            tipo = "PRODUTOR";
+            cnpj = p.getCnpj();
         }
 
         return new UsuarioResponseDTO(
@@ -88,7 +104,8 @@ public class UsuarioService {
                 u.getEmail(),
                 tipo,
                 setorDepartamento,
-                cpf
+                cpf,
+                cnpj
         );
     }
 }

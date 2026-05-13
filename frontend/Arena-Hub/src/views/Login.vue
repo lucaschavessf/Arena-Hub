@@ -140,7 +140,7 @@ async function login() {
       email: form.email,
       password: form.senha,
     })
-    userStore.login({ name: response.data.name, token: response.data.token })
+    userStore.login({ name: response.data.name, token: response.data.token, tipo: response.data.tipo })
     router.push('/')
   } catch {
     errorMessage.value = 'E-mail ou senha incorretos.'

@@ -130,10 +130,20 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
+  const userStore = useUserStore()
+  
+  // Verificação genérica de rotas protegidas
   if (to.meta.requiresAuth) {
-    const userStore = useUserStore()
     if (!userStore.isLoggedIn) {
       return { name: 'Login' }
+    }
+  }
+  
+  // Verificação específica da rota de Produtor
+  if (to.path === '/produtor/dashboard') {
+    const userRole = localStorage.getItem('userRole')
+    if (userRole !== 'PRODUTOR') {
+      return { path: '/produtor/cadastro' }
     }
   }
 })

@@ -35,7 +35,15 @@ public class AuthController {
         User user = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
         if (passwordEncoder.matches(body.password(), user.getPassword())) {
             String token = this.tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDTO(user.getName(), token));
+            String tipo = "USER";
+            if (user instanceof com.arenahub.backend.domain.Administrador) {
+                tipo = "ADMIN";
+            } else if (user instanceof com.arenahub.backend.domain.Cliente) {
+                tipo = "CLIENTE";
+            } else if (user instanceof com.arenahub.backend.domain.Produtor) {
+                tipo = "PRODUTOR";
+            }
+            return ResponseEntity.ok(new ResponseDTO(user.getName(), token, tipo));
         }
         return ResponseEntity.badRequest().build();
     }
@@ -52,7 +60,7 @@ public class AuthController {
             this.repository.save(newUser);
 
             String token = this.tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token));
+            return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token, "USER"));
         }
         return ResponseEntity.badRequest().build();
     }
