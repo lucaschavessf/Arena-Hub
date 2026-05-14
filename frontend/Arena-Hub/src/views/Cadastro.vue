@@ -82,6 +82,36 @@
             </div>
 
             <div class="form-group">
+              <label>Data de Nascimento</label>
+              <div class="input-with-icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                
+                <input
+                  v-model="form.dataNascimento"
+                  type="text"
+                  placeholder="DD/MM/AAAA"
+                  required
+                  maxlength="10"
+                  @input="formatarData"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
               <label>E-mail</label>
               <div class="input-with-icon">
                 <svg
@@ -273,7 +303,7 @@ function validarCNPJ(cnpj: string): boolean {
   const cnpjLimpo = cnpj.replace(/\D/g, '')
   if (cnpjLimpo.length !== 14) return false
   if (/^(\d)\1{13}$/.test(cnpjLimpo)) return false
-  return true // Validação simplificada
+  return true 
 }
 
 async function cadastrar() {
@@ -325,7 +355,6 @@ async function cadastrar() {
     
     await api.post(endpoint, payload)
     
-    // Após cadastrar, faz login automático para pegar o token
     const loginResponse = await api.post('/auth/login', {
       email: form.email,
       password: form.senha

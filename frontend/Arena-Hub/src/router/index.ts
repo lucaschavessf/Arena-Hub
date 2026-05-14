@@ -9,7 +9,7 @@ const routes: Array<RouteRecordRaw> = [
     component: LandingPage 
   },
   { 
-    path: '/cadastro', //meta: { requiresAuth: true }
+    path: '/cadastro', 
     name: 'Cadastro',
     component: () => import('@/views/Cadastro.vue') 
   },
@@ -56,6 +56,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/produtor/dashboard', 
     name: 'ProdutorDashboard',
     component: () => import('@/views/ProdutorDashboard.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/produtor/evento/:id/ingressos',
+    name: 'ProdutorEventoIngressos',
+    component: () => import('@/views/ProdutorEventoIngressos.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -119,6 +125,11 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/admin/criar-conta',
+    name: 'AdminCriarConta',
+    component: () => import('@/views/AdminCriarConta.vue'),
+  },
+  {
     path: '/pagamento',
     name: 'Pagamento',
     component: () => import('@/views/Pagamento.vue'),
@@ -139,20 +150,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  const userStore = useUserStore()
-  
-  // Verificação genérica de rotas protegidas
   if (to.meta.requiresAuth) {
+    const userStore = useUserStore()
     if (!userStore.isLoggedIn) {
       return { name: 'Login' }
-    }
-  }
-  
-  // Verificação específica da rota de Produtor
-  if (to.path === '/produtor/dashboard') {
-    const userRole = localStorage.getItem('userRole')
-    if (userRole !== 'PRODUTOR') {
-      return { path: '/produtor/cadastro' }
     }
   }
 })

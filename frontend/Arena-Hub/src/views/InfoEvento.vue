@@ -261,15 +261,56 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import api from '../services/api'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
-import { eventos } from '../data/mock.js'
 
 const route = useRoute()
+const eventos = ref<any[]>([])
+const loading = ref(true)
+
 const eventoId = computed(() => Number(route.params.id))
-const evento = computed(() => eventos.find((e: any) => e.id === eventoId.value))
+
+const evento = computed(() => {
+  return eventos.value.find((e) => e.id === eventoId.value)
+})
+
+onMounted(async () => {
+  try {
+    const response = await api.get('/eventos')
+    const data = response.data
+    
+    eventos.value = data.map((ev: any) => ({
+      id: ev.id,
+      title: ev.nome,
+      description: ev.descricao,
+      category: ev.categoria?.nome || 'Geral',
+      
+      date: ev.dataInicio
+        ? new Date(ev.dataInicio).toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+          })
+        : 'Data a definir',
+      time: ev.dataInicio 
+        ? new Date(ev.dataInicio).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) 
+        : '--:--',
+      venue: ev.espaco?.nome || 'Arena Hub',
+      location: ev.espaco?.localizacao || 'Endereço não informado',
+      classificacao: ev.classificacaoIndicativa || 'Livre',
+      lineup: ev.lotes || [],
+      
+      image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&q=80',
+    }))
+  } catch (error) {
+    console.error('Erro ao carregar detalhes do evento:', error)
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <style scoped>

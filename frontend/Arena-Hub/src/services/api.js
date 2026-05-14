@@ -6,6 +6,8 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
 });
 
+console.log("Minha API URL carregada:", import.meta.env.VITE_API_URL);
+
 api.interceptors.request.use((config) => {
     config.headers['Content-Type'] = 'application/json';
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -14,7 +16,6 @@ api.interceptors.request.use((config) => {
             const { token } = JSON.parse(stored);
             if (token) config.headers['Authorization'] = `Bearer ${token}`;
         } catch {
-            // ignore malformed storage
         }
     }
     return config;

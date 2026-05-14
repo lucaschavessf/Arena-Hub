@@ -78,6 +78,16 @@
           <span>Perfil</span>
         </router-link>
 
+        <router-link to="/admin/criar-conta" class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/>
+            <line x1="22" y1="11" x2="16" y2="11"/>
+          </svg>
+          <span>Criar Admin</span>
+        </router-link>
+
         <button @click="$router.push('/')" class="nav-item logout">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
@@ -113,7 +123,6 @@
           </button>
         </header>
 
-        <!-- Stats Resumo -->
         <section class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon total">
@@ -163,7 +172,6 @@
           </div>
         </section>
 
-        <!-- Espaços Grid -->
         <div class="espacos-grid">
           <div v-for="espaco in espacos" :key="espaco.id" class="espaco-card">
             <div class="espaco-header">
@@ -249,7 +257,6 @@
       </main>
     </div>
 
-    <!-- Modal Novo Espaço -->
     <div v-if="modalNovoEspaco" class="modal-overlay" @click.self="fecharModalNovoEspaco">
       <div class="modal-container">
         <div class="modal-header">

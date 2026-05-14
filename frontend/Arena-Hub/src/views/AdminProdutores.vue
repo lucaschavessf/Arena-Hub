@@ -57,7 +57,7 @@
           <span>Agenda</span>
         </router-link>
 
-        <router-link to="/admin/produtores" class="nav-item">
+        <router-link to="/admin/produtores" class="nav-item active">
           <svg
             width="18"
             height="18"
@@ -135,6 +135,16 @@
             <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
           </svg>
           <span>Perfil</span>
+        </router-link>
+
+        <router-link to="/admin/criar-conta" class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/>
+            <line x1="22" y1="11" x2="16" y2="11"/>
+          </svg>
+          <span>Criar Admin</span>
         </router-link>
 
         <button @click="$router.push('/')" class="nav-item logout">
@@ -342,7 +352,7 @@
                 <p>{{ solicitacao.email }}</p>
               </div>
               <div class="solicitacao-data">
-                <span>📅 {{ formatarData(solicitacao.dataSolicitacao) }}</span>
+                <span>{{ formatarData(solicitacao.dataSolicitacao) }}</span>
               </div>
             </div>
 
@@ -501,12 +511,12 @@
                 <p>{{ solicitacao.email }}</p>
               </div>
               <div class="solicitacao-data">
-                <span>📅 {{ formatarData(solicitacao.dataSolicitacao) }}</span>
+                <span>{{ formatarData(solicitacao.dataSolicitacao) }}</span>
               </div>
             </div>
 
             <div class="motivo-reprovacao">
-              <span>⚠️ Motivo da reprovação:</span>
+              <span>Motivo da reprovação:</span>
               <p>{{ solicitacao.motivoReprovacao }}</p>
             </div>
 
@@ -592,19 +602,6 @@
                 <strong>Inscrição Estadual:</strong>
                 {{ solicitacaoSelecionada?.inscricaoEstadual || 'Não informada' }}
               </div>
-            </div>
-          </div>
-
-          <div class="info-section">
-            <h4>Endereço</h4>
-            <div class="info-grid">
-              <div><strong>Endereço:</strong> {{ solicitacaoSelecionada?.endereco }}</div>
-              <div>
-                <strong>Cidade/UF:</strong> {{ solicitacaoSelecionada?.cidade }}/{{
-                  solicitacaoSelecionada?.estado
-                }}
-              </div>
-              <div><strong>CEP:</strong> {{ solicitacaoSelecionada?.cep }}</div>
             </div>
           </div>
 
@@ -735,7 +732,6 @@ const stats = ref({
   publico: '125.5k',
 })
 
-// Dados mockados
 const solicitacoesPendentes = ref([
   {
     id: 1,
@@ -748,10 +744,6 @@ const solicitacoesPendentes = ref([
     razaoSocial: 'Recife Eventos e Produções LTDA',
     nomeFantasia: 'Recife Eventos',
     inscricaoEstadual: '123456789',
-    endereco: 'Rua da Aurora, 123',
-    cidade: 'Recife',
-    estado: 'PE',
-    cep: '50050-000',
     anosExperiencia: '5-10',
     tiposEvento: ['Show', 'Esportes', 'Corporativo'],
     portfolio: 'Festival de Jazz PE, Copa Nordeste de Vôlei',
@@ -769,10 +761,6 @@ const solicitacoesPendentes = ref([
     cnpj: '98.765.432/0001-11',
     razaoSocial: 'Festivais Nordeste Produções',
     nomeFantasia: 'Fest Nordeste',
-    endereco: 'Av. Boa Viagem, 500',
-    cidade: 'Recife',
-    estado: 'PE',
-    cep: '51020-000',
     anosExperiencia: '3-5',
     tiposEvento: ['Show', 'Comédia'],
     portfolio: 'Festival Nordestino de Música',
@@ -788,10 +776,6 @@ const solicitacoesPendentes = ref([
     empresa: 'Tech Conference Brasil',
     cnpj: '11.222.333/0001-44',
     razaoSocial: 'Tech Conference Eventos',
-    endereco: 'Rua do Futuro, 100',
-    cidade: 'Recife',
-    estado: 'PE',
-    cep: '50070-000',
     anosExperiencia: '1-3',
     tiposEvento: ['Corporativo'],
     portfolio: 'Recife Tech Summit 2025',

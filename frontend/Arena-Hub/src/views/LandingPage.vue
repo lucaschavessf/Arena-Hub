@@ -246,6 +246,7 @@ const resetFilters = () => {
 }
 </script>
 
+
 <style scoped>
 .page {
   background: #0a0e17;

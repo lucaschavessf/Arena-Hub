@@ -352,35 +352,10 @@
               </div>
 
               <div class="evento-actions">
-                <button class="btn-dashboard" @click="verDashboardEvento(evento)">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <circle cx="12" cy="12" r="3" />
-                    <path
-                      d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7z"
-                    />
-                  </svg>
-                  Dashboard
-                </button>
                 <button class="btn-ingressos" @click="gerenciarIngressos(evento)">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      d="M20 12V8H6a2 2 0 0 1-2-2c0-1.5 1.5-2 2-2h12M4 17v-2a2 2 0 0 1 2-2h14v-2"
-                    />
-                    <path d="M16 22h2a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-2" />
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.5 1.5-2 2-2h12M4 17v-2a2 2 0 0 1 2-2h14v-2"/>
+                    <path d="M16 22h2a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-2"/>
                   </svg>
                   Ingressos
                 </button>
@@ -479,11 +454,11 @@
         <div class="modal-body">
           <div class="form-row">
             <div class="form-field">
-              <label>Nome do Evento *</label>
+              <label>Nome do Evento</label>
               <input type="text" v-model="novoEvento.nome" class="input-field" />
             </div>
             <div class="form-field">
-              <label>Categoria *</label>
+              <label>Categoria</label>
               <select v-model="novoEvento.categoria" class="input-field">
                 <option value="">Selecione...</option>
                 <option value="Show">Show</option>
@@ -496,7 +471,7 @@
           </div>
 
           <div class="form-field">
-            <label>Descrição *</label>
+            <label>Descrição</label>
             <textarea
               v-model="novoEvento.descricao"
               rows="4"
@@ -505,83 +480,30 @@
             ></textarea>
           </div>
 
-          <div class="form-field">
-            <label>Imagem do Evento</label>
-            <div
-              class="image-upload-area"
-              @click="uploadImagem.click()"
-              v-if="!novoEvento.imagemPreview"
-            >
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <rect x="2" y="3" width="20" height="18" rx="2" ry="2" />
-                <circle cx="9" cy="9" r="2" />
-                <path d="M21 15l-5-4-3 3-4-4-5 5" />
-              </svg>
-              <span>Clique para adicionar imagem</span>
-              <small>Formatos: JPG, PNG (max 5MB)</small>
-            </div>
-            <div class="image-preview-area" v-else>
-              <img :src="novoEvento.imagemPreview" alt="Preview do evento" />
-              <button type="button" class="btn-remove-image" @click.stop="removerImagem">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-                Remover
-              </button>
-            </div>
-            <input
-              type="file"
-              ref="uploadImagem"
-              style="display: none"
-              accept="image/jpeg,image/png,image/jpg"
-              @change="handleImagemUpload"
-            />
-          </div>
-
           <div class="form-row">
             <div class="form-field">
-              <label>Data do Evento *</label>
+              <label>Data inicio do Evento</label>
               <input type="date" v-model="novoEvento.data" class="input-field" />
             </div>
+
             <div class="form-field">
-              <label>Horário *</label>
+              <label>Data fim do Evento</label>
+              <input type="date" v-model="novoEvento.data" class="input-field" />
+            </div>
+
+            <div class="form-field">
+              <label>Horário de Início</label>
               <input type="time" v-model="novoEvento.horario" class="input-field" />
             </div>
-          </div>
 
-          <div class="form-row">
             <div class="form-field">
               <label>Horário de Término</label>
               <input type="time" v-model="novoEvento.horarioTermino" class="input-field" />
             </div>
-            <div class="form-field">
-              <label>Público Estimado *</label>
-              <input
-                type="number"
-                v-model="novoEvento.publicoEstimado"
-                class="input-field"
-                placeholder="Número de pessoas"
-              />
-            </div>
           </div>
 
           <div class="form-field">
-            <label>Espaços Solicitados *</label>
+            <label>Espaços Disponíveis</label>
             <div class="espacos-grid-select">
               <div
                 v-for="espaco in espacosDisponiveis"
@@ -608,7 +530,7 @@
                     R$ {{ formatCurrencyNumber(espaco.precoDiaria) }} / diária
                   </span>
                   <span class="capacity-badge"
-                    >🎯 {{ espaco.capacidade.toLocaleString() }} pessoas</span
+                    >{{ espaco.capacidade.toLocaleString() }} pessoas</span
                   >
                 </div>
                 <button
@@ -635,7 +557,7 @@
           </div>
 
           <div v-if="novoEvento.espacos.length > 0" class="espacos-resumo">
-            <h4>📋 Resumo dos Espaços Selecionados</h4>
+            <h4>Resumo dos Espaços Selecionados</h4>
             <div class="resumo-list">
               <div v-for="espaco in novoEvento.espacos" :key="espaco.id" class="resumo-item">
                 <div class="resumo-info">
@@ -671,8 +593,20 @@
               </div>
             </div>
             <div class="resumo-total">
-              <span>💰 Valor Total Estimado:</span>
+              <span>Valor Total Estimado:</span>
               <strong>R$ {{ formatCurrencyNumber(calcularTotalEspacos) }}</strong>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>Público Estimado</label>
+              <input
+                type="number"
+                v-model="novoEvento.publicoEstimado"
+                class="input-field"
+                placeholder="Número de pessoas"
+              />
             </div>
           </div>
 
@@ -734,7 +668,7 @@
 
             <div class="info-detalhe">
               <div class="info-row">
-                <span>🎯 Capacidade:</span>
+                <span>Capacidade:</span>
                 <strong>{{ espacoSelecionado?.capacidade.toLocaleString() }} pessoas</strong>
               </div>
               <div class="info-row">
@@ -746,7 +680,7 @@
             </div>
 
             <div class="precos-detalhe">
-              <h4>💰 Valores</h4>
+              <h4>Valores</h4>
               <div v-if="espacoSelecionado?.tipoCobranca === 'evento'" class="preco-item">
                 <span>Preço por Evento:</span>
                 <strong>R$ {{ formatCurrencyNumber(espacoSelecionado?.precoEvento) }}</strong>
@@ -761,17 +695,7 @@
               </div>
             </div>
 
-            <div class="incluido-detalhe">
-              <h4>✅ O que está incluído</h4>
-              <ul>
-                <li>🧹 Limpeza e conservação</li>
-                <li>💡 Iluminação básica</li>
-                <li>🛡️ Segurança no local</li>
-                <li>🚛 Acesso para carga e descarga</li>
-                <li>🚻 Banheiros exclusivos</li>
-                <li>🔌 Pontos de energia</li>
-              </ul>
-            </div>
+           
           </div>
         </div>
         <div class="modal-footer">
@@ -1072,6 +996,8 @@ const espacosDisponiveis = ref([
     icon: '🍔',
   },
 ])
+
+
 
 function formatarData(data: string) {
   if (!data) return ''

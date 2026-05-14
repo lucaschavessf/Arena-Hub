@@ -120,7 +120,7 @@
                   >
                     <path d="M2 9V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4" />
                   </svg>
-                  <span class="label">SETOR:</span>
+                  <span class="label">LOTE:</span>
                   <span class="val">{{ ing.tipo }}</span>
                 </div>
                 <div class="detail-pill">

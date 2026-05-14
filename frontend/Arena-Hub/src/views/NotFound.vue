@@ -105,19 +105,6 @@
                 </svg>
                 <span>Verifique a URL digitada</span>
               </div>
-              <div class="suggestion-item">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M2 12h20M12 2v20" />
-                </svg>
-                <span>Use a busca para encontrar eventos</span>
-              </div>
             </div>
 
             <div class="actions">

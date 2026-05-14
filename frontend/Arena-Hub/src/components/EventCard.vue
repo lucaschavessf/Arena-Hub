@@ -31,27 +31,6 @@
 
         <span v-if="isNew" class="card-badge card-badge--new" role="status"> Novo </span>
       </div>
-
-      <button
-        class="card-favorite"
-        :class="{ 'card-favorite--active': isFavorite }"
-        @click.stop="toggleFavorite"
-        :aria-label="isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
-        :aria-pressed="isFavorite"
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          :fill="isFavorite ? 'currentColor' : 'none'"
-          stroke="currentColor"
-          stroke-width="2.5"
-        >
-          <path
-            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-          />
-        </svg>
-      </button>
     </div>
 
     <div class="card-body">
@@ -71,7 +50,7 @@
             <rect x="3" y="4" width="18" height="18" rx="2" />
             <path d="M16 2v4M8 2v4M3 10h18" />
           </svg>
-          <span>{{ formatDate(event.date) }}</span>
+          <span>{{ event.date }}</span>
         </div>
 
         <div class="meta-item">
@@ -87,10 +66,10 @@
             <circle cx="12" cy="12" r="10" />
             <path d="M12 6v6l4 2" />
           </svg>
-          <span>{{ event.venue }}</span>
+          <span>{{ event.time || '20:00' }}</span>
         </div>
 
-        <div class="meta-item meta-item--price" v-if="event.price">
+        <div class="meta-item">
           <svg
             width="14"
             height="14"
@@ -100,15 +79,10 @@
             stroke-width="2.5"
             aria-hidden="true"
           >
-            <circle cx="12" cy="12" r="10" />
-            <path
-              d="M15 9.5c0 .8-.7 1.5-1.5 1.5h-3c-.8 0-1.5-.7-1.5-1.5v-3c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5z"
-            />
-            <path
-              d="M9 15.5c0 .8.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5v-3c0-.8-.7-1.5-1.5-1.5h-3c-.8 0-1.5.7-1.5 1.5z"
-            />
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
           </svg>
-          <span>A partir de R$ {{ formatPrice(event.price) }}</span>
+          <span>{{ event.venue }}</span>
         </div>
       </div>
 
@@ -134,7 +108,7 @@
           </svg>
         </template>
         <template v-else>
-          INGRESSOS
+          COMPRAR
           <svg
             width="14"
             height="14"
@@ -156,16 +130,24 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
+interface Ingresso {
+  tipo: string
+  subtipo: string | null
+  preco: number
+  taxa: number
+}
+
 interface Event {
   id: number | string
   title: string
   image: string
   category: string | { nome?: string; [key: string]: any }
   date: string | Date
+  time?: string
   venue: string
-  price?: number
   soldOut?: boolean
   createdAt?: string | Date
+  ingressos?: Ingresso[]
 }
 
 const props = defineProps<{
@@ -184,7 +166,6 @@ const imageLoaded = ref(false)
 const imageError = ref(false)
 const isFavorite = ref(false)
 
-// Computed para garantir que a categoria seja sempre uma string
 const eventCategoryName = computed(() => {
   if (!props.event.category) return ''
   if (typeof props.event.category === 'object' && 'nome' in props.event.category) {
@@ -193,81 +174,29 @@ const eventCategoryName = computed(() => {
   return String(props.event.category)
 })
 
-// Verifica se o evento é novo (últimos 7 dias)
 const isNew = computed(() => {
   if (!props.event.createdAt) return false
-  const created = parseDate(props.event.createdAt)
-  if (!created) return false
+  const created = new Date(props.event.createdAt)
   const now = new Date()
   const diffDays = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)
   return diffDays <= 7
 })
 
-// Função para parsear data em vários formatos
-const parseDate = (dateInput: string | Date): Date | null => {
-  if (dateInput instanceof Date) return dateInput
-
-  if (typeof dateInput === 'string') {
-    // Formato ISO: 2024-12-25 ou 2024-12-25T10:30:00
-    if (dateInput.includes('-') && !dateInput.includes('/')) {
-      return new Date(dateInput)
-    }
-
-    // Formato brasileiro: DD/MM/YYYY
-    if (dateInput.includes('/')) {
-      const parts = dateInput.split('/')
-      if (parts.length === 3) {
-        const day = parseInt(parts[0], 10)
-        const month = parseInt(parts[1], 10) - 1
-        const year = parseInt(parts[2], 10)
-        return new Date(year, month, day)
-      }
-    }
-
-    // Tentar parse automático
-    const parsed = new Date(dateInput)
-    if (!isNaN(parsed.getTime())) {
-      return parsed
-    }
-  }
-
-  return null
-}
+const lowestPrice = computed(() => {
+  if (!props.event.ingressos || props.event.ingressos.length === 0) return null
+  const prices = props.event.ingressos.map(i => i.preco)
+  return Math.min(...prices)
+})
 
 const handleImageError = () => {
   imageError.value = true
 }
 
-const formatDate = (date: string | Date): string => {
-  const parsed = parseDate(date)
-
-  if (!parsed) {
-    // Se não conseguir parsear, retorna a string original
-    return typeof date === 'string' ? date : 'Data indisponível'
-  }
-
-  // Verificar se a data é válida
-  if (isNaN(parsed.getTime())) {
-    return typeof date === 'string' ? date : 'Data indisponível'
-  }
-
-  // Formatar para português
-  const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
-  const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-
-  const diaSemana = diasSemana[parsed.getDay()]
-  const dia = parsed.getDate().toString().padStart(2, '0')
-  const mes = meses[parsed.getMonth()]
-  const ano = parsed.getFullYear()
-
-  return `${diaSemana}, ${dia} ${mes} ${ano}`
-}
-
-const formatPrice = (price: number): string => {
-  return price.toLocaleString('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value)
 }
 
 const handleCardClick = () => {
@@ -278,7 +207,7 @@ const handleCardClick = () => {
 const handleBuyClick = () => {
   if (!props.event.soldOut) {
     emit('buy', props.event.id)
-    router.push(`/comprar/${props.event.id}`)
+    router.push(`/checkout/${props.event.id}`)
   }
 }
 
@@ -357,9 +286,7 @@ const toggleFavorite = () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition:
-    transform 0.6s ease,
-    opacity 0.3s ease;
+  transition: transform 0.6s ease, opacity 0.3s ease;
   opacity: 0;
 }
 
@@ -419,41 +346,6 @@ const toggleFavorite = () => {
   color: white;
 }
 
-.card-favorite {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s;
-  z-index: 2;
-}
-
-.card-favorite:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: #ef4444;
-}
-
-.card-favorite--active {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.15);
-  border-color: #ef4444;
-}
-
-.card-favorite:focus-visible {
-  outline: 2px solid white;
-  outline-offset: 2px;
-}
-
 .card-body {
   padding: 20px;
 }
@@ -475,7 +367,7 @@ const toggleFavorite = () => {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .meta-item {
@@ -492,9 +384,25 @@ const toggleFavorite = () => {
   flex-shrink: 0;
 }
 
-.meta-item--price {
+.card-price-from {
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.price-label {
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-value {
+  font-size: 1.2rem;
+  font-weight: 800;
   color: var(--gold, #c9a84c);
-  font-weight: 600;
 }
 
 .card-btn {

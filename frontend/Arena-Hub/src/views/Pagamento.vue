@@ -17,7 +17,7 @@
             >
               <polyline points="9 18 15 12 9 6" />
             </svg>
-            <router-link to="/" class="breadcrumb-link">Eventos</router-link>
+            <router-link to="/eventos" class="breadcrumb-link">Eventos</router-link>
             <svg
               width="14"
               height="14"
@@ -29,6 +29,38 @@
               <polyline points="9 18 15 12 9 6" />
             </svg>
             <span class="breadcrumb-current">Pagamento</span>
+          </div>
+        </div>
+
+        <div class="event-summary">
+          <div class="event-image">
+            <img :src="eventoInfo.imagem" :alt="eventoInfo.nome" />
+          </div>
+          <div class="event-info">
+            <h2 class="event-name">{{ eventoInfo.nome }}</h2>
+            <div class="event-meta">
+              <div class="meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+                <span>{{ eventoInfo.data }}</span>
+              </div>
+              <div class="meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+                <span>{{ eventoInfo.horario }}</span>
+              </div>
+              <div class="meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>{{ eventoInfo.local }}</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -188,14 +220,12 @@
 
               <div class="form-group full">
                 <label>Parcelas</label>
-                <select class="select-installments">
-                  <option value="1">1x de R$ {{ totalGeral.toFixed(2) }} (sem juros)</option>
-                  <option value="2">2x de R$ {{ (totalGeral / 2).toFixed(2) }} (sem juros)</option>
-                  <option value="3">3x de R$ {{ (totalGeral / 3).toFixed(2) }} (sem juros)</option>
-                  <option value="6">6x de R$ {{ (totalGeral / 6).toFixed(2) }} (sem juros)</option>
-                  <option value="12">
-                    12x de R$ {{ (totalGeral / 12).toFixed(2) }} (sem juros)
-                  </option>
+                <select v-model="parcelas" class="select-installments">
+                  <option value="1">1x de R$ {{ totalComDesconto.toFixed(2) }} (sem juros)</option>
+                  <option value="2">2x de R$ {{ (totalComDesconto / 2).toFixed(2) }} (sem juros)</option>
+                  <option value="3">3x de R$ {{ (totalComDesconto / 3).toFixed(2) }} (sem juros)</option>
+                  <option value="6">6x de R$ {{ (totalComDesconto / 6).toFixed(2) }} (sem juros)</option>
+                  <option value="12">12x de R$ {{ (totalComDesconto / 12).toFixed(2) }} (sem juros)</option>
                 </select>
               </div>
             </div>
@@ -207,12 +237,21 @@
             <h3 class="summary-title">Resumo do Pedido</h3>
 
             <div class="order-items">
+              <div class="order-items-header">
+                <span>Item</span>
+                <span>Qtd</span>
+                <span>Preço</span>
+                <span>Subtotal</span>
+              </div>
+              
               <div v-for="(item, index) in resumoItens" :key="index" class="order-item">
-                <span class="item-qty">{{ item.qtd }}x</span>
-                <div class="item-details">
+                <div class="item-info">
                   <span class="item-name">{{ item.nome }}</span>
+                  <span class="item-setor" v-if="item.setor">{{ item.setor }}</span>
                 </div>
-                <span class="item-price">R$ {{ item.total.toFixed(2) }}</span>
+                <span class="item-qty">{{ item.qtd }}x</span>
+                <span class="item-price">R$ {{ item.precoUnitario.toFixed(2) }}</span>
+                <span class="item-total">R$ {{ item.total.toFixed(2) }}</span>
               </div>
             </div>
 
@@ -224,7 +263,7 @@
                 <span>R$ {{ subtotal.toFixed(2) }}</span>
               </div>
               <div class="total-line">
-                <span>Taxas</span>
+                <span>Taxas de conveniência (10%)</span>
                 <span>R$ {{ taxas.toFixed(2) }}</span>
               </div>
               <div v-if="metodo === 'pix'" class="total-line discount-line">
@@ -233,9 +272,7 @@
               </div>
               <div class="total-line main-total">
                 <span>Total</span>
-                <span class="gold-text"
-                  >R$ {{ (metodo === 'pix' ? totalGeral * 0.95 : totalGeral).toFixed(2) }}</span
-                >
+                <span class="gold-text">R$ {{ totalComDesconto.toFixed(2) }}</span>
               </div>
             </div>
 
@@ -255,14 +292,14 @@
 
             <p class="security-note">
               <svg
-                width="14"
-                height="14"
+                width="15"
+                height="15"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
               >
-                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <rect x="3" y="11" width="18" height="13" rx="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
               <span>Pagamento processado com segurança pela Arena Hub</span>
@@ -276,26 +313,105 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
+import { useCartStore } from '../stores/cart'
 
 const router = useRouter()
+const cart = useCartStore()
 const metodo = ref('')
+const parcelas = ref('1')
 const cartao = ref({ numero: '', validade: '', cvv: '', nome: '' })
 
-const resumoItens = [
-  { qtd: 2, nome: 'Cadeira Superior - Rock Nacional', total: 320.0 },
-  { qtd: 1, nome: 'Estacionamento E1', total: 45.0 },
-]
+const eventoInfo = ref({
+  nome: 'Rock Nacional 2026',
+  data: '15 de Agosto de 2026',
+  horario: '20:00',
+  local: 'Arena Pernambuco',
+  imagem: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=100&h=100&fit=crop'
+})
 
-const subtotal = computed(() => resumoItens.reduce((acc, item) => acc + item.total, 0))
+const resumoItens = ref([
+  { 
+    id: 1,
+    nome: 'Pista', 
+    setor: 'Área principal',
+    qtd: 2, 
+    precoUnitario: 85.00, 
+    total: 170.00 
+  },
+  { 
+    id: 2,
+    nome: 'Pista Premium', 
+    setor: 'Acesso VIP',
+    qtd: 1, 
+    precoUnitario: 150.00, 
+    total: 150.00 
+  },
+  { 
+    id: 3,
+    nome: 'Estacionamento', 
+    setor: 'E1 - Coberto',
+    qtd: 1, 
+    precoUnitario: 45.00, 
+    total: 45.00 
+  }
+])
+
+const subtotal = computed(() => resumoItens.value.reduce((acc, item) => acc + item.total, 0))
 const taxas = computed(() => subtotal.value * 0.1)
 const totalGeral = computed(() => subtotal.value + taxas.value)
+const totalComDesconto = computed(() => metodo.value === 'pix' ? totalGeral.value * 0.95 : totalGeral.value)
+
+onMounted(() => {
+  if (cart.totalItens > 0 && cart.eventoSelecionado) {
+    eventoInfo.value = {
+      nome: cart.eventoSelecionado.title || 'Evento',
+      data: cart.eventoSelecionado.date || 'Data a definir',
+      horario: cart.eventoSelecionado.time || '20:00',
+      local: cart.eventoSelecionado.venue || 'Arena Pernambuco',
+      imagem: cart.eventoSelecionado.image || 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=100&h=100&fit=crop'
+    }
+    
+    if (cart.eventoSelecionado.ingressos && cart.ingressos) {
+      const itens: any[] = []
+      for (const [idx, qtd] of Object.entries(cart.ingressos)) {
+        if (qtd > 0 && cart.eventoSelecionado.ingressos[Number(idx)]) {
+          const ingresso = cart.eventoSelecionado.ingressos[Number(idx)]
+          itens.push({
+            id: Number(idx),
+            nome: ingresso.tipo,
+            setor: ingresso.subtipo || 'Setor único',
+            qtd: qtd,
+            precoUnitario: ingresso.preco,
+            total: ingresso.preco * Number(qtd)
+          })
+        }
+      }
+      if (itens.length > 0) {
+        resumoItens.value = itens
+      }
+    }
+  }
+})
 
 function confirmarPagamento() {
-  alert('Pagamento processado com sucesso!')
+  if (!metodo.value) {
+    alert('Selecione uma forma de pagamento')
+    return
+  }
+  
+  if (metodo.value === 'cartao') {
+    if (!cartao.value.numero || !cartao.value.validade || !cartao.value.cvv || !cartao.value.nome) {
+      alert('Preencha todos os dados do cartão')
+      return
+    }
+  }
+  
+  alert(`Pagamento processado com sucesso!${metodo.value === 'pix' ? ' QR Code enviado por e-mail.' : ''}`)
+  cart.limparCarrinho()
   router.push('/meus-ingressos')
 }
 </script>
@@ -364,9 +480,62 @@ function confirmarPagamento() {
     align-items: start;
   }
 
-  .breadcrumb-wrapper {
+  .breadcrumb-wrapper,
+  .event-summary {
     grid-column: 1 / -1;
   }
+}
+
+.event-summary {
+  background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  border-radius: 20px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 8px;
+}
+
+.event-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #8e9aaf;
+}
+
+.meta-item svg {
+  color: #c9a84c;
+  width: 12px;
+  height: 12px;
 }
 
 .section-header {
@@ -489,6 +658,10 @@ function confirmarPagamento() {
 .card-flags {
   font-size: 1.5rem;
   opacity: 0.7;
+}
+
+.check-container {
+  margin-left: auto;
 }
 
 .check-mark {
@@ -659,28 +832,58 @@ function confirmarPagamento() {
   border-radius: 2px;
 }
 
+.order-items-header {
+  display: grid;
+  grid-template-columns: 1fr 50px 70px 80px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
 .order-item {
   display: grid;
-  grid-template-columns: 35px 1fr auto;
-  font-size: 0.95rem;
-  gap: 10px;
+  grid-template-columns: 1fr 50px 70px 80px;
+  align-items: center;
+  font-size: 0.85rem;
   margin-bottom: 16px;
-  align-items: start;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-name {
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+.item-setor {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-top: 2px;
 }
 
 .item-qty {
   color: #c9a84c;
-  font-weight: 800;
-}
-
-.item-name {
-  color: #b0b8c5;
-  line-height: 1.4;
+  font-weight: 700;
+  text-align: center;
 }
 
 .item-price {
+  color: #b0b8c5;
+  text-align: center;
+}
+
+.item-total {
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
+  text-align: right;
 }
 
 .summary-divider {
@@ -723,6 +926,26 @@ function confirmarPagamento() {
 
 .gold-text {
   color: #c9a84c;
+}
+
+.order-info {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.info-line svg {
+  color: #c9a84c;
+  flex-shrink: 0;
 }
 
 .btn-pay {
@@ -806,6 +1029,15 @@ function confirmarPagamento() {
   .page-title {
     font-size: 1.6rem;
   }
+  
+  .event-summary {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .event-meta {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 600px) {
@@ -842,6 +1074,42 @@ function confirmarPagamento() {
 
   .main-total {
     font-size: 1.4rem;
+  }
+  
+  .order-items-header {
+    display: none;
+  }
+  
+  .order-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .item-qty, .item-price, .item-total {
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .item-qty::before {
+    content: "Quantidade:";
+    color: #6b7280;
+    font-weight: normal;
+  }
+  
+  .item-price::before {
+    content: "Preço unitário:";
+    color: #6b7280;
+    font-weight: normal;
+  }
+  
+  .item-total::before {
+    content: "Subtotal:";
+    color: #6b7280;
+    font-weight: normal;
   }
 }
 </style>
