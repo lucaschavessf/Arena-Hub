@@ -207,7 +207,7 @@ const handleCardClick = () => {
 const handleBuyClick = () => {
   if (!props.event.soldOut) {
     emit('buy', props.event.id)
-    router.push(`/checkout/${props.event.id}`)
+    router.push(`/comprar/${props.event.id}`)
   }
 }
 
