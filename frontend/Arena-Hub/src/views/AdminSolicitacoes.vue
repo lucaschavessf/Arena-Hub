@@ -630,7 +630,6 @@ import { ref, computed, onMounted } from 'vue'
 import AppNavbar from '../components/AppNavbar.vue'
 import api from '../services/api'
 
-// Estado
 const isSidebarOpen = ref(false)
 const carregando = ref(false)
 const filtroStatus = ref('todos')
@@ -643,10 +642,8 @@ const solicitacaoParaRejeitar = ref<any>(null)
 const motivoRejeicao = ref('')
 const observacoesRejeicao = ref('')
 
-// Dados
 const solicitacoes = ref<any[]>([])
 
-// Tabs
 const tabs = [
   { label: 'Todas', value: 'todos' },
   { label: 'Pendentes', value: 'PENDENTE' },
@@ -654,7 +651,6 @@ const tabs = [
   { label: 'Rejeitadas', value: 'REJEITADO' },
 ]
 
-// Computed
 const stats = computed(() => ({
   pendentes: solicitacoes.value.filter((s) => s.status === 'PENDENTE').length,
   aprovadas: solicitacoes.value.filter((s) => s.status === 'APROVADO').length,
@@ -679,7 +675,6 @@ const solicitacoesFiltradas = computed(() => {
   })
 })
 
-// Funções auxiliares
 function formatarData(data: string): string {
   if (!data) return 'Não definida'
   return new Date(data).toLocaleDateString('pt-BR', {
@@ -720,7 +715,6 @@ function contarPorStatus(status: string): number {
   return solicitacoes.value.filter((s) => s.status === status).length
 }
 
-// API Calls
 async function carregarSolicitacoes() {
   carregando.value = true
   try {
@@ -738,7 +732,6 @@ async function carregarSolicitacoes() {
   }
 }
 
-// Ações
 function abrirDetalhes(solicitacao: any) {
   solicitacaoAtual.value = solicitacao
   modalDetalhes.value = true
@@ -793,7 +786,6 @@ async function confirmarRejeicao() {
   }
 }
 
-// Lifecycle
 onMounted(() => {
   carregarSolicitacoes()
 })
@@ -1180,10 +1172,6 @@ onMounted(() => {
   color: #6b7280;
 }
 
-/* ==========================================================================
-   ESTILIZAÇÃO DO NOVO GRID EM FORMATO DE LINHAS DE SOLICITAÇÃO (STRIPS)
-   ========================================================================== */
-
 .solicitacoes-list-strip {
   display: flex;
   flex-direction: column;
@@ -1195,7 +1183,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #0d121f; /* Fundo escuro idêntico à imagem enviada */
+  background: #0d121f;
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   padding: 16px 24px;
@@ -1209,7 +1197,6 @@ onMounted(() => {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Esquerda: Agrupamento de Título e Ícone */
 .strip-left {
   display: flex;
   align-items: center;
@@ -1254,7 +1241,6 @@ onMounted(() => {
   margin: 0;
 }
 
-/* Centro: Metadados Horizontais */
 .strip-metadata {
   display: flex;
   align-items: center;
@@ -1275,13 +1261,12 @@ onMounted(() => {
   color: #5a6375;
 }
 
-/* Direita: Botões e Posicionamento do Status */
 .strip-actions {
   display: flex;
   align-items: center;
   gap: 14px;
   position: relative;
-  padding-right: 120px; /* Alocação estruturada para o badge dinâmico à direita */
+  padding-right: 120px;
 }
 
 .btn-view-strip {
@@ -1307,7 +1292,6 @@ onMounted(() => {
   gap: 6px;
 }
 
-/* Ações Rápidas em formato de ícone compacto */
 .btn-icon-reject,
 .btn-icon-approve {
   width: 34px;
@@ -1337,7 +1321,6 @@ onMounted(() => {
   background: rgba(16, 185, 129, 0.25);
 }
 
-/* Badge de Status fixo na lateral direita */
 .card-status-strip {
   position: absolute;
   right: 0;
@@ -1366,10 +1349,6 @@ onMounted(() => {
   color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
-
-/* ==========================================================================
-   MODAIS E COMPONENTES GERAIS
-   ========================================================================== */
 
 .modal-overlay {
   position: fixed;
@@ -1572,10 +1551,6 @@ onMounted(() => {
   z-index: 90;
 }
 
-/* ==========================================================================
-   REGRAS DE RESPONSIVIDADE (MEDIA QUERIES)
-   ========================================================================== */
-
 @media (max-width: 1200px) {
   .strip-metadata {
     gap: 16px;
@@ -1607,7 +1582,6 @@ onMounted(() => {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Conversão de linha para bloco em tablets */
   .solicitacao-strip-card {
     flex-direction: column;
     align-items: flex-start;
