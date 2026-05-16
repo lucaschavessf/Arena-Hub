@@ -459,13 +459,9 @@
             </div>
             <div class="form-field">
               <label>Categoria</label>
-              <select v-model="novoEvento.categoria" class="input-field">
+              <select v-model="novoEvento.categoriaId" class="input-field">
                 <option value="">Selecione...</option>
-                <option value="Show">Show</option>
-                <option value="Esportes">Esportes</option>
-                <option value="Corporativo">Corporativo</option>
-                <option value="Teatro">Teatro</option>
-                <option value="Comédia">Comédia</option>
+                <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.nome }}</option>
               </select>
             </div>
           </div>
@@ -482,23 +478,23 @@
 
           <div class="form-row">
             <div class="form-field">
-              <label>Data inicio do Evento</label>
-              <input type="date" v-model="novoEvento.data" class="input-field" />
+              <label>Data início do Evento</label>
+              <input type="date" v-model="novoEvento.dataInicio" class="input-field" />
             </div>
 
             <div class="form-field">
               <label>Data fim do Evento</label>
-              <input type="date" v-model="novoEvento.data" class="input-field" />
+              <input type="date" v-model="novoEvento.dataFim" class="input-field" />
             </div>
 
             <div class="form-field">
               <label>Horário de Início</label>
-              <input type="time" v-model="novoEvento.horario" class="input-field" />
+              <input type="time" v-model="novoEvento.horarioInicio" class="input-field" />
             </div>
 
             <div class="form-field">
               <label>Horário de Término</label>
-              <input type="time" v-model="novoEvento.horarioTermino" class="input-field" />
+              <input type="time" v-model="novoEvento.horarioFim" class="input-field" />
             </div>
           </div>
 
@@ -513,21 +509,15 @@
                 @click="toggleEspaco(espaco)"
               >
                 <div class="espaco-select-header">
-                  <span class="espaco-icon">{{ espaco.icon }}</span>
+                  <span class="espaco-icon">🏟️</span>
                   <div class="espaco-info">
                     <h4>{{ espaco.nome }}</h4>
-                    <small>{{ espaco.descricao }}</small>
+                    <small>{{ espaco.localizacao }}</small>
                   </div>
                 </div>
                 <div class="espaco-pricing">
-                  <span class="price-badge" v-if="espaco.tipoCobranca === 'evento'">
-                    R$ {{ formatCurrencyNumber(espaco.precoEvento) }} / evento
-                  </span>
-                  <span class="price-badge" v-else-if="espaco.tipoCobranca === 'hora'">
-                    R$ {{ formatCurrencyNumber(espaco.precoHora) }} / hora
-                  </span>
-                  <span class="price-badge" v-else>
-                    R$ {{ formatCurrencyNumber(espaco.precoDiaria) }} / diária
+                  <span class="price-badge">
+                    R$ {{ formatCurrencyNumber(Number(espaco.preco || 0)) }} / {{ formatarTipoCobranca(espaco.tipoCobranca) }}
                   </span>
                   <span class="capacity-badge"
                     >{{ espaco.capacidade.toLocaleString() }} pessoas</span
@@ -561,10 +551,10 @@
             <div class="resumo-list">
               <div v-for="espaco in novoEvento.espacos" :key="espaco.id" class="resumo-item">
                 <div class="resumo-info">
-                  <span class="resumo-icon">{{ espaco.icon }}</span>
+                  <span class="resumo-icon">🏟️</span>
                   <div>
                     <strong>{{ espaco.nome }}</strong>
-                    <small>{{ espaco.descricao }}</small>
+                    <small>{{ espaco.localizacao }}</small>
                   </div>
                 </div>
                 <div class="resumo-valores">
@@ -613,13 +603,13 @@
           <div class="form-row">
             <div class="form-field">
               <label>Classificação Indicativa</label>
-              <select v-model="novoEvento.classificacao" class="input-field">
-                <option value="Livre">Livre</option>
-                <option value="10">10 anos</option>
-                <option value="12">12 anos</option>
-                <option value="14">14 anos</option>
-                <option value="16">16 anos</option>
-                <option value="18">18 anos</option>
+              <select v-model="novoEvento.classificacaoIndicativa" class="input-field">
+                <option value="LIVRE">Livre</option>
+                <option value="DEZ">10 anos</option>
+                <option value="DOZE">12 anos</option>
+                <option value="QUATORZE">14 anos</option>
+                <option value="DEZESSEIS">16 anos</option>
+                <option value="DEZOITO">18 anos</option>
               </select>
             </div>
             <div class="form-field">
@@ -631,9 +621,12 @@
             </div>
           </div>
         </div>
+        <p v-if="erroSolicitacao" class="error-message" style="padding: 0 24px; margin: 0;">{{ erroSolicitacao }}</p>
         <div class="modal-footer">
           <button class="btn-modal-cancelar" @click="fecharModalNovoEvento">Cancelar</button>
-          <button class="btn-modal-confirmar" @click="enviarSolicitacao">Enviar Solicitação</button>
+          <button class="btn-modal-confirmar" @click="enviarSolicitacao" :disabled="enviandoSolicitacao">
+            {{ enviandoSolicitacao ? 'Enviando...' : 'Enviar Solicitação' }}
+          </button>
         </div>
       </div>
     </div>
@@ -659,17 +652,17 @@
         <div class="modal-body">
           <div class="espaco-detalhes">
             <div class="detalhe-header">
-              <span class="espaco-icon-large">{{ espacoSelecionado?.icon }}</span>
+              <span class="espaco-icon-large">🏟️</span>
               <div>
                 <h4>{{ espacoSelecionado?.nome }}</h4>
-                <p class="descricao">{{ espacoSelecionado?.descricao }}</p>
+                <p class="descricao">{{ espacoSelecionado?.localizacao }}</p>
               </div>
             </div>
 
             <div class="info-detalhe">
               <div class="info-row">
                 <span>Capacidade:</span>
-                <strong>{{ espacoSelecionado?.capacidade.toLocaleString() }} pessoas</strong>
+                <strong>{{ espacoSelecionado?.capacidade?.toLocaleString() }} pessoas</strong>
               </div>
               <div class="info-row">
                 <span>📋 Tipo de Cobrança:</span>
@@ -681,17 +674,9 @@
 
             <div class="precos-detalhe">
               <h4>Valores</h4>
-              <div v-if="espacoSelecionado?.tipoCobranca === 'evento'" class="preco-item">
-                <span>Preço por Evento:</span>
-                <strong>R$ {{ formatCurrencyNumber(espacoSelecionado?.precoEvento) }}</strong>
-              </div>
-              <div v-else-if="espacoSelecionado?.tipoCobranca === 'hora'" class="preco-item">
-                <span>Preço por Hora:</span>
-                <strong>R$ {{ formatCurrencyNumber(espacoSelecionado?.precoHora) }}</strong>
-              </div>
-              <div v-else class="preco-item">
-                <span>Preço por Diária:</span>
-                <strong>R$ {{ formatCurrencyNumber(espacoSelecionado?.precoDiaria) }}</strong>
+              <div class="preco-item">
+                <span>Preço ({{ formatarTipoCobranca(espacoSelecionado?.tipoCobranca) }}):</span>
+                <strong>R$ {{ formatCurrencyNumber(Number(espacoSelecionado?.preco || 0)) }}</strong>
               </div>
             </div>
 
@@ -794,8 +779,11 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
+import api from '../services/api'
+import { useUserStore } from '../stores/userStore'
 
 const router = useRouter()
+const userStore = useUserStore()
 const tabAtivo = ref('solicitacoes')
 const modalNovoEvento = ref(false)
 const modalSolicitacao = ref(false)
@@ -803,6 +791,10 @@ const solicitacaoSelecionada = ref<any>(null)
 const uploadImagem = ref<HTMLInputElement>()
 const modalEspacoDetalhes = ref(false)
 const espacoSelecionado = ref<any>(null)
+const enviandoSolicitacao = ref(false)
+const erroSolicitacao = ref('')
+const categorias = ref<any[]>([])
+const carregandoDados = ref(false)
 
 const produtor = ref({
   nome: 'João Produtor',
@@ -893,109 +885,21 @@ const eventos = ref([
 
 const novoEvento = ref({
   nome: '',
-  categoria: '',
+  categoriaId: '' as string | number,
   descricao: '',
-  data: '',
-  horario: '',
-  horarioTermino: '',
+  dataInicio: '',
+  dataFim: '',
+  horarioInicio: '',
+  horarioFim: '',
   publicoEstimado: '',
   espacos: [] as any[],
-  classificacao: 'Livre',
+  classificacaoIndicativa: 'LIVRE',
   menoresAcompanhados: true,
   imagem: null as File | null,
   imagemPreview: ''
 })
 
-const espacosDisponiveis = ref([
-  {
-    id: 1,
-    nome: 'Campo',
-    descricao: 'Área principal para shows e eventos de grande porte',
-    capacidade: 25000,
-    tipoCobranca: 'evento',
-    precoEvento: 50000,
-    precoHora: 0,
-    precoDiaria: 0,
-    icon: '🏟️',
-  },
-  {
-    id: 2,
-    nome: 'Anel Inferior',
-    descricao: 'Arquibancada coberta com excelente visibilidade',
-    capacidade: 8000,
-    tipoCobranca: 'evento',
-    precoEvento: 30000,
-    precoHora: 0,
-    precoDiaria: 0,
-    icon: '🪑',
-  },
-  {
-    id: 3,
-    nome: 'Anel Superior',
-    descricao: 'Arquibancada superior com visão panorâmica',
-    capacidade: 5000,
-    tipoCobranca: 'evento',
-    precoEvento: 20000,
-    precoHora: 0,
-    precoDiaria: 0,
-    icon: '👆',
-  },
-  {
-    id: 4,
-    nome: 'Camarote',
-    descricao: 'Espaço exclusivo com serviço diferenciado',
-    capacidade: 500,
-    tipoCobranca: 'evento',
-    precoEvento: 15000,
-    precoHora: 0,
-    precoDiaria: 0,
-    icon: '✨',
-  },
-  {
-    id: 5,
-    nome: 'Estacionamento',
-    descricao: 'Área de estacionamento com 2000 vagas',
-    capacidade: 2000,
-    tipoCobranca: 'evento',
-    precoEvento: 10000,
-    precoHora: 0,
-    precoDiaria: 0,
-    icon: '🅿️',
-  },
-  {
-    id: 6,
-    nome: 'Sala de Imprensa',
-    descricao: 'Espaço para coletivas e entrevistas',
-    capacidade: 100,
-    tipoCobranca: 'hora',
-    precoEvento: 0,
-    precoHora: 500,
-    precoDiaria: 3000,
-    icon: '📸',
-  },
-  {
-    id: 7,
-    nome: 'Sala VIP',
-    descricao: 'Área premium para convidados especiais',
-    capacidade: 200,
-    tipoCobranca: 'evento',
-    precoEvento: 8000,
-    precoHora: 0,
-    precoDiaria: 0,
-    icon: '👑',
-  },
-  {
-    id: 8,
-    nome: 'Área de Alimentação',
-    descricao: 'Espaço para food trucks e praça de alimentação',
-    capacidade: 1000,
-    tipoCobranca: 'diaria',
-    precoEvento: 0,
-    precoHora: 0,
-    precoDiaria: 5000,
-    icon: '🍔',
-  },
-])
+const espacosDisponiveis = ref<any[]>([])
 
 
 
@@ -1054,18 +958,20 @@ function removerImagem() {
 function abrirModalNovoEvento() {
   novoEvento.value = {
     nome: '',
-    categoria: '',
+    categoriaId: '',
     descricao: '',
-    data: '',
-    horario: '',
-    horarioTermino: '',
+    dataInicio: '',
+    dataFim: '',
+    horarioInicio: '',
+    horarioFim: '',
     publicoEstimado: '',
     espacos: [],
-    classificacao: 'Livre',
+    classificacaoIndicativa: 'LIVRE',
     menoresAcompanhados: true,
     imagem: null,
     imagemPreview: '',
   }
+  erroSolicitacao.value = ''
   modalNovoEvento.value = true
 }
 
@@ -1073,45 +979,80 @@ function fecharModalNovoEvento() {
   modalNovoEvento.value = false
 }
 
-function enviarSolicitacao() {
-  if (!novoEvento.value.nome || !novoEvento.value.categoria || !novoEvento.value.data) {
-    alert('Preencha os campos obrigatórios')
+async function enviarSolicitacao() {
+  erroSolicitacao.value = ''
+
+  if (!novoEvento.value.nome || !novoEvento.value.categoriaId) {
+    erroSolicitacao.value = 'Preencha o nome e selecione uma categoria.'
+    return
+  }
+
+  if (!novoEvento.value.descricao || novoEvento.value.descricao.length < 10) {
+    erroSolicitacao.value = 'A descrição deve ter pelo menos 10 caracteres.'
+    return
+  }
+
+  if (!novoEvento.value.dataInicio || !novoEvento.value.horarioInicio) {
+    erroSolicitacao.value = 'Preencha a data e horário de início.'
+    return
+  }
+
+  if (!novoEvento.value.dataFim || !novoEvento.value.horarioFim) {
+    erroSolicitacao.value = 'Preencha a data e horário de término.'
     return
   }
 
   if (novoEvento.value.espacos.length === 0) {
-    alert('Selecione pelo menos um espaço')
+    erroSolicitacao.value = 'Selecione pelo menos um espaço.'
     return
   }
 
-  let imagemUrl = ''
-  if (novoEvento.value.imagemPreview) {
-    imagemUrl = novoEvento.value.imagemPreview
+  if (!novoEvento.value.publicoEstimado || Number(novoEvento.value.publicoEstimado) <= 0) {
+    erroSolicitacao.value = 'Informe a expectativa de público (maior que zero).'
+    return
   }
 
-  solicitacoes.value.unshift({
-    id: Date.now(),
-    nomeEvento: novoEvento.value.nome,
-    categoria: novoEvento.value.categoria,
-    dataEvento: novoEvento.value.data,
-    dataEnvio: new Date().toISOString().split('T')[0],
-    horario: novoEvento.value.horario,
-    horarioTermino: novoEvento.value.horarioTermino,
-    publicoEstimado: Number(novoEvento.value.publicoEstimado),
-    espacos: novoEvento.value.espacos.map((e) => e.nome),
-    descricao: novoEvento.value.descricao,
-    classificacao: novoEvento.value.classificacao,
-    menoresAcompanhados: novoEvento.value.menoresAcompanhados,
-    valorTotalEspacos: calcularTotalEspacos.value,
-    imagem: imagemUrl,
-    status: 'pendente',
-    motivo: null,
-  })
+  const dataInicio = `${novoEvento.value.dataInicio}T${novoEvento.value.horarioInicio}:00`
+  const dataFim = `${novoEvento.value.dataFim}T${novoEvento.value.horarioFim}:00`
 
-  fecharModalNovoEvento()
-  alert(
-    `Solicitação enviada com sucesso!\n\nValor total estimado: R$ ${formatCurrencyNumber(calcularTotalEspacos.value)}\n\nAguarde a análise do administrador.`,
-  )
+  if (new Date(dataFim) <= new Date(dataInicio)) {
+    erroSolicitacao.value = 'A data/hora de término deve ser posterior à de início.'
+    return
+  }
+
+  const payload = {
+    nomeEvento: novoEvento.value.nome,
+    descricao: novoEvento.value.descricao,
+    dataInicio: dataInicio,
+    dataFim: dataFim,
+    expectativaPublico: Number(novoEvento.value.publicoEstimado),
+    classificacaoIndicativa: novoEvento.value.classificacaoIndicativa,
+    categoriaId: Number(novoEvento.value.categoriaId),
+    espacoId: novoEvento.value.espacos[0].id,
+    nomeSolicitante: userStore.user.name || produtor.value.nome,
+    emailSolicitante: userStore.user.email || produtor.value.email,
+  }
+
+  enviandoSolicitacao.value = true
+
+  try {
+    await api.post('/solicitacoes-evento', payload)
+
+    await carregarSolicitacoes()
+
+    fecharModalNovoEvento()
+    alert('Solicitação enviada com sucesso!\n\nAguarde a análise do administrador.')
+  } catch (error: any) {
+    const data = error.response?.data
+    const msg = data?.message
+      || data?.reason
+      || data?.error
+      || data?.errors?.map((e: any) => e.defaultMessage).join(', ')
+      || 'Erro ao enviar solicitação. Tente novamente.'
+    erroSolicitacao.value = msg
+  } finally {
+    enviandoSolicitacao.value = false
+  }
 }
 
 function verSolicitacao(solicitacao: any) {
@@ -1156,13 +1097,14 @@ function removerEspaco(espacoId: number) {
 }
 
 function obterPrecoEspaco(espaco: any): number {
-  if (espaco.tipoCobranca === 'evento') return espaco.precoEvento
-  if (espaco.tipoCobranca === 'hora') return espaco.precoHora * (espaco.horas || 4)
-  return espaco.precoDiaria * (espaco.diarias || 1)
+  return Number(espaco.preco || 0)
 }
 
 function formatarTipoCobranca(tipo: string): string {
   const map: Record<string, string> = {
+    EVENTO: 'Por Evento',
+    HORA: 'Por Hora',
+    DIARIA: 'Por Diária',
     evento: 'Por Evento',
     hora: 'Por Hora',
     diaria: 'Por Diária',
@@ -1171,6 +1113,7 @@ function formatarTipoCobranca(tipo: string): string {
 }
 
 function formatCurrencyNumber(value: number): string {
+  if (value == null || isNaN(value)) return '0,00'
   return value.toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -1203,11 +1146,7 @@ function selecionarEspaco() {
 
 const calcularTotalEspacos = computed(() => {
   return novoEvento.value.espacos.reduce((total, espaco) => {
-    let preco = 0
-    if (espaco.tipoCobranca === 'evento') preco = espaco.precoEvento
-    else if (espaco.tipoCobranca === 'hora') preco = espaco.precoHora * (espaco.horas || 4)
-    else preco = espaco.precoDiaria * (espaco.diarias || 1)
-    return total + preco
+    return total + Number(espaco.preco || 0)
   }, 0)
 })
 
@@ -1215,8 +1154,46 @@ function salvarPerfil() {
   alert('Perfil atualizado com sucesso!')
 }
 
-onMounted(() => {
+async function carregarSolicitacoes() {
+  try {
+    const response = await api.get('/solicitacoes-evento')
+    solicitacoes.value = response.data.map((s: any) => ({
+      id: s.id,
+      nomeEvento: s.nomeEvento,
+      categoria: s.categoriaNome,
+      dataEvento: s.dataInicio,
+      dataEnvio: s.criadaEm,
+      horario: s.dataInicio ? new Date(s.dataInicio).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '',
+      publicoEstimado: s.expectativaPublico,
+      espacos: [s.espacoNome],
+      descricao: s.descricao,
+      imagem: null,
+      status: s.status === 'PENDENTE' ? 'pendente' : s.status === 'APROVADA' ? 'aprovado' : 'reprovado',
+      motivo: s.motivoRejeicao,
+    }))
+  } catch (error) {
+    console.error('Erro ao carregar solicitações:', error)
+  }
+}
+
+onMounted(async () => {
   window.scrollTo(0, 0)
+  carregandoDados.value = true
+
+  try {
+    const [categoriasRes, espacosRes] = await Promise.all([
+      api.get('/api/categoria-evento'),
+      api.get('/api/espaco'),
+    ])
+    categorias.value = categoriasRes.data
+    espacosDisponiveis.value = espacosRes.data
+  } catch (error) {
+    console.error('Erro ao carregar dados iniciais:', error)
+  }
+
+  await carregarSolicitacoes()
+
+  carregandoDados.value = false
 })
 </script>
 

@@ -302,11 +302,7 @@
 
           <select v-model="filtroCategoria" class="filter-select">
             <option value="">Todas as categorias</option>
-            <option value="Show">Show</option>
-            <option value="Esportes">Esportes</option>
-            <option value="Corporativo">Corporativo</option>
-            <option value="Teatro">Teatro</option>
-            <option value="Comédia">Comédia</option>
+            <option v-for="cat in categoriasUnicas" :key="cat" :value="cat">{{ cat }}</option>
           </select>
         </div>
 
@@ -621,14 +617,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AppNavbar from '../components/AppNavbar.vue'
+import api from '../services/api'
 
 const isSidebarOpen = ref(false)
 const filtroAtivo = ref('todos')
 const filtroCategoria = ref('')
 const termoBusca = ref('')
 const solicitacaoSelecionada = ref<any>(null)
+const carregando = ref(false)
 
 const tabs = [
   { label: 'Todas', value: 'todos' },
@@ -638,96 +636,52 @@ const tabs = [
   { label: 'Rejeitadas', value: 'Rejeitado' },
 ]
 
-const solicitacoes = ref([
-  {
-    id: 1,
-    solicitante: 'Carlos Mendes',
-    email: 'carlos@produtora.com',
-    whatsapp: '(81) 99999-1111',
-    nomeEvento: 'Festival de Jazz PE',
-    categoria: 'Show',
-    dataEvento: '2026-08-15',
-    cidade: 'Recife',
-    estado: 'PE',
-    instagram: '@festivaljazzpe',
-    descricao:
-      'Festival de jazz com artistas nacionais e internacionais, food park e área kids. Expectativa de público: 5.000 pessoas.',
-    menoresAcompanhados: true,
-    status: 'Pendente',
-    dataSolicitacao: '2026-04-01',
-    observacoes: '',
-  },
-  {
-    id: 2,
-    solicitante: 'Ana Oliveira',
-    email: 'ana@eventosesportivos.com',
-    whatsapp: '(81) 98888-2222',
-    nomeEvento: 'Copa Nordeste de Vôlei',
-    categoria: 'Esportes',
-    dataEvento: '2026-07-20',
-    cidade: 'Recife',
-    estado: 'PE',
-    instagram: '@copavoleinordeste',
-    descricao:
-      'Competição regional de vôlei com equipes de todo o Nordeste. Estrutura necessária: quadra, arquibancadas e placar eletrônico.',
-    menoresAcompanhados: true,
-    status: 'Em Análise',
-    dataSolicitacao: '2026-04-02',
-    observacoes: 'Verificar disponibilidade de datas alternativas.',
-  },
-  {
-    id: 3,
-    solicitante: 'Tech Conference LTDA',
-    email: 'contato@techconf.com',
-    whatsapp: '(81) 97777-3333',
-    nomeEvento: 'Recife Tech Summit 2026',
-    categoria: 'Corporativo',
-    dataEvento: '2026-09-10',
-    cidade: 'Recife',
-    estado: 'PE',
-    instagram: '@recifetechsummit',
-    descricao:
-      'Maior evento de tecnologia e inovação do Nordeste, com palestrantes internacionais e feira de startups.',
-    menoresAcompanhados: false,
-    status: 'Aprovado',
-    dataSolicitacao: '2026-03-28',
-    observacoes: 'Aprovado. Enviar contrato para assinatura.',
-  },
-  {
-    id: 4,
-    solicitante: 'Comédia Produções',
-    email: 'contato@comediar.com',
-    whatsapp: '(81) 96666-4444',
-    nomeEvento: 'Noite do Riso',
-    categoria: 'Comédia',
-    dataEvento: '2026-06-05',
-    cidade: 'Recife',
-    estado: 'PE',
-    instagram: '@noitedoriso',
-    descricao: 'Show de stand-up comedy com 4 comediantes nacionais.',
-    menoresAcompanhados: false,
-    status: 'Rejeitado',
-    dataSolicitacao: '2026-03-15',
-    observacoes: 'Data indisponível. Sugerir nova data.',
-  },
-  {
-    id: 5,
-    solicitante: 'Festival Cultura Viva',
-    email: 'cultura@viva.com',
-    whatsapp: '(81) 95555-7777',
-    nomeEvento: 'Festival Cultura Viva',
-    categoria: 'Show',
-    dataEvento: '2026-10-12',
-    cidade: 'Recife',
-    estado: 'PE',
-    instagram: '@culturavivafest',
-    descricao: 'Festival multicultural com música, dança, gastronomia e artesanato.',
-    menoresAcompanhados: true,
-    status: 'Pendente',
-    dataSolicitacao: '2026-04-05',
-    observacoes: '',
-  },
-])
+const solicitacoes = ref<any[]>([])
+
+function mapStatus(status: string): string {
+  const map: Record<string, string> = {
+    PENDENTE: 'Pendente',
+    APROVADA: 'Aprovado',
+    REJEITADA: 'Rejeitado',
+  }
+  return map[status] || status
+}
+
+async function carregarSolicitacoes() {
+  carregando.value = true
+  try {
+    const response = await api.get('/solicitacoes-evento')
+    solicitacoes.value = response.data.map((s: any) => ({
+      id: s.id,
+      solicitante: s.nomeSolicitante,
+      email: s.emailSolicitante,
+      whatsapp: '',
+      nomeEvento: s.nomeEvento,
+      categoria: s.categoriaNome,
+      dataEvento: s.dataInicio,
+      cidade: s.espacoNome || '',
+      estado: '',
+      instagram: '',
+      descricao: s.descricao,
+      menoresAcompanhados: true,
+      status: mapStatus(s.status),
+      dataSolicitacao: s.criadaEm,
+      observacoes: s.motivoRejeicao || '',
+      expectativaPublico: s.expectativaPublico,
+      classificacaoIndicativa: s.classificacaoIndicativa,
+      espacoNome: s.espacoNome,
+    }))
+  } catch (error) {
+    console.error('Erro ao carregar solicitações:', error)
+  } finally {
+    carregando.value = false
+  }
+}
+
+const categoriasUnicas = computed(() => {
+  const cats = solicitacoes.value.map(s => s.categoria).filter(Boolean)
+  return [...new Set(cats)]
+})
 
 const solicitacoesPendentes = computed(() =>
   solicitacoes.value.filter((s) => s.status === 'Pendente'),
@@ -797,21 +751,31 @@ const fecharModal = () => {
   solicitacaoSelecionada.value = null
 }
 
-const aprovarSolicitacao = (solicitacao: any) => {
-  const index = solicitacoes.value.findIndex((s) => s.id === solicitacao.id)
-  if (index !== -1) {
-    solicitacoes.value[index].status = 'Aprovado'
+const aprovarSolicitacao = async (solicitacao: any) => {
+  try {
+    await api.post(`/admin/solicitacoes-evento/${solicitacao.id}/aprovar`)
+    await carregarSolicitacoes()
+    fecharModal()
+  } catch (error: any) {
+    alert(error.response?.data?.message || 'Erro ao aprovar solicitação.')
   }
-  fecharModal()
 }
 
-const rejeitarSolicitacao = (solicitacao: any) => {
-  const index = solicitacoes.value.findIndex((s) => s.id === solicitacao.id)
-  if (index !== -1) {
-    solicitacoes.value[index].status = 'Rejeitado'
+const rejeitarSolicitacao = async (solicitacao: any) => {
+  const motivo = prompt('Informe o motivo da rejeição:')
+  if (motivo === null) return
+  try {
+    await api.post(`/admin/solicitacoes-evento/${solicitacao.id}/rejeitar`, { motivo })
+    await carregarSolicitacoes()
+    fecharModal()
+  } catch (error: any) {
+    alert(error.response?.data?.message || 'Erro ao rejeitar solicitação.')
   }
-  fecharModal()
 }
+
+onMounted(() => {
+  carregarSolicitacoes()
+})
 </script>
 
 <style scoped>

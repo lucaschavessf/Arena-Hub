@@ -50,7 +50,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/produtor/cadastro', 
     name: 'ProdutorCadastro',
     component: () => import('@/views/ProdutorCadastro.vue'),
-    meta: { requiresAuth: true }
   },
   { 
     path: '/produtor/dashboard', 

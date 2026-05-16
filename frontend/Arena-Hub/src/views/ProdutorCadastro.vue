@@ -206,12 +206,41 @@
                 </div>
               </div>
 
+              <div class="form-section">
+                <h3 class="section-title">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  Credenciais de Acesso
+                </h3>
+                <div class="form-row">
+                  <div class="form-field">
+                    <label>Senha *</label>
+                    <input type="password" v-model="form.senha" class="input-field" required placeholder="Mínimo 6 caracteres" />
+                  </div>
+                  <div class="form-field">
+                    <label>Confirmar Senha *</label>
+                    <input type="password" v-model="form.confirmarSenha" class="input-field" required placeholder="Repita a senha" />
+                  </div>
+                </div>
+              </div>
+
+              <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
               <div class="form-actions">
                 <button type="button" class="btn-cancelar" @click="$router.push('/produtor')">
                   Cancelar
                 </button>
                 <button type="submit" class="btn-enviar" :disabled="enviando">
-                  {{ enviando ? 'Enviando...' : 'Enviar Solicitação' }}
+                  {{ enviando ? 'Cadastrando...' : 'Criar Conta de Produtor' }}
                 </button>
               </div>
             </form>
@@ -277,14 +306,13 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
+import api from '../services/api'
+import { useUserStore } from '../stores/userStore'
 
 const router = useRouter()
+const userStore = useUserStore()
 const enviando = ref(false)
-
-const uploadContrato = ref<HTMLInputElement>()
-const uploadComprovante = ref<HTMLInputElement>()
-const contratoNome = ref('')
-const comprovanteNome = ref('')
+const errorMessage = ref('')
 
 const form = ref({
   nome: '',
@@ -303,55 +331,71 @@ const form = ref({
   tiposEvento: [] as string[],
   portfolio: '',
   motivacao: '',
+  senha: '',
+  confirmarSenha: '',
   aceiteTermos: false,
   aceiteComunicacao: false,
 })
 
-function handleContratoUpload(event: Event) {
-  const input = event.target as HTMLInputElement
-  if (input.files && input.files[0]) {
-    contratoNome.value = input.files[0].name
-  }
-}
+async function enviarCadastro() {
+  errorMessage.value = ''
 
-function handleComprovanteUpload(event: Event) {
-  const input = event.target as HTMLInputElement
-  if (input.files && input.files[0]) {
-    comprovanteNome.value = input.files[0].name
-  }
-}
-
-function enviarCadastro() {
-  if (!form.value.aceiteTermos) {
-    alert('Você precisa aceitar os Termos de Uso para continuar')
+  if (!form.value.nome || !form.value.email || !form.value.cnpj) {
+    errorMessage.value = 'Preencha todos os campos obrigatórios.'
     return
   }
 
-  if (!contratoNome.value) {
-    alert('Faça o upload do Contrato Social')
+  if (!form.value.senha || !form.value.confirmarSenha) {
+    errorMessage.value = 'Preencha a senha e a confirmação.'
     return
   }
 
-  if (!comprovanteNome.value) {
-    alert('Faça o upload do Comprovante de Endereço')
+  if (form.value.senha !== form.value.confirmarSenha) {
+    errorMessage.value = 'As senhas não coincidem.'
+    return
+  }
+
+  if (form.value.senha.length < 6) {
+    errorMessage.value = 'A senha deve ter pelo menos 6 caracteres.'
+    return
+  }
+
+  const cnpjLimpo = form.value.cnpj.replace(/\D/g, '')
+  if (cnpjLimpo.length !== 14) {
+    errorMessage.value = 'CNPJ inválido. Deve ter 14 dígitos.'
     return
   }
 
   enviando.value = true
 
-  setTimeout(() => {
+  try {
+    const payload = {
+      name: form.value.nome,
+      email: form.value.email,
+      password: form.value.senha,
+      cnpj: cnpjLimpo,
+    }
+
+    await api.post('/user/produtor', payload)
+
+    const loginResponse = await api.post('/auth/login', {
+      email: form.value.email,
+      password: form.value.senha,
+    })
+
+    userStore.login({
+      name: loginResponse.data.name,
+      token: loginResponse.data.token,
+      tipo: loginResponse.data.tipo,
+    })
+
+    router.push('/produtor/dashboard')
+  } catch (error: any) {
+    errorMessage.value =
+      error.response?.data?.message || 'Ocorreu um erro no cadastro. Tente novamente.'
+  } finally {
     enviando.value = false
-    alert('Solicitação enviada com sucesso! Entraremos em contato em breve.')
-    router.push('/produtor')
-  }, 2000)
-}
-
-function abrirTermos() {
-  alert('Termos de Uso - Em desenvolvimento')
-}
-
-function abrirPolitica() {
-  alert('Política de Privacidade - Em desenvolvimento')
+  }
 }
 </script>
 
@@ -606,6 +650,13 @@ select.input-field {
 .btn-enviar:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.error-message {
+  color: #e05c5c;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 16px 0 0;
 }
 
 .info-sidebar {

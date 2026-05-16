@@ -204,7 +204,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, defineProps } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
@@ -225,6 +225,7 @@ const form = reactive({
   nome: '',
   cpf: '',
   cnpj: '',
+  dataNascimento: '',
   email: '',
   senha: '',
   confirmarSenha: '',
@@ -271,6 +272,23 @@ function formatarCNPJ(event: Event) {
   }
 
   form.cnpj = value
+}
+
+function formatarData(event: Event) {
+  const input = event.target as HTMLInputElement
+  let value = input.value.replace(/\D/g, '')
+
+  if (value.length > 8) {
+    value = value.slice(0, 8)
+  }
+
+  if (value.length > 4) {
+    value = value.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3')
+  } else if (value.length > 2) {
+    value = value.replace(/(\d{2})(\d{1,2})/, '$1/$2')
+  }
+
+  form.dataNascimento = value
 }
 
 function validarCPF(cpf: string): boolean {

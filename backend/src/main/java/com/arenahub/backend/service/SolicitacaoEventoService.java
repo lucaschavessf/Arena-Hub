@@ -42,6 +42,7 @@ public class SolicitacaoEventoService {
 
     public SolicitacaoEventoResponseDTO criarSolicitacao(SolicitacaoEventoRequestDTO dto) {
         validarDatas(dto);
+        validarConflitoDeData(dto);
 
         CategoriaEvento categoria = categoriaEventoRepository.findById(dto.categoriaId())
                 .orElseThrow(() -> new ResponseStatusException(
@@ -147,6 +148,19 @@ public class SolicitacaoEventoService {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "dataFim deve ser posterior a dataInicio");
+        }
+    }
+
+    private void validarConflitoDeData(SolicitacaoEventoRequestDTO dto) {
+        List<Evento> eventosConflitantes = eventoRepository.findConflitoDeDatas(
+                dto.dataInicio(), dto.dataFim());
+
+        if (!eventosConflitantes.isEmpty()) {
+            String nomeEvento = eventosConflitantes.get(0).getNome();
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Ja existe um evento aprovado para essa data: " + nomeEvento
+                            + ". Escolha outra data para o seu evento.");
         }
     }
 
