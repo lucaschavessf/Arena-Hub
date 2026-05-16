@@ -22,6 +22,16 @@ public class Lote {
     @Column(name = "quantidade_disponivel", nullable = false)
     private int quantidadeDisponivel;
 
+    private String nome;
+
+    private String status;
+
+    @Column(name = "data_inicio")
+    private java.time.LocalDateTime dataInicio;
+
+    @Column(name = "data_fim")
+    private java.time.LocalDateTime dataFim;
+
     @ManyToOne
     @JoinColumn(name = "evento_id", nullable = false)
     private Evento evento;
@@ -46,6 +56,18 @@ public class Lote {
 
     public int getQuantidadeDisponivel() { return quantidadeDisponivel; }
     public void setQuantidadeDisponivel(int quantidadeDisponivel) { this.quantidadeDisponivel = quantidadeDisponivel; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public java.time.LocalDateTime getDataInicio() { return dataInicio; }
+    public void setDataInicio(java.time.LocalDateTime dataInicio) { this.dataInicio = dataInicio; }
+
+    public java.time.LocalDateTime getDataFim() { return dataFim; }
+    public void setDataFim(java.time.LocalDateTime dataFim) { this.dataFim = dataFim; }
 
     public Evento getEvento() { return evento; }
     public void setEvento(Evento evento) { this.evento = evento; }

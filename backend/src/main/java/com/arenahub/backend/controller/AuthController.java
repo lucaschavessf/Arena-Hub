@@ -5,7 +5,6 @@ import com.arenahub.backend.dto.RegisterRequestDTO;
 import com.arenahub.backend.dto.ResponseDTO;
 import com.arenahub.backend.infra.security.TokenService;
 import com.arenahub.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.arenahub.backend.domain.User;
 import jakarta.validation.Valid;

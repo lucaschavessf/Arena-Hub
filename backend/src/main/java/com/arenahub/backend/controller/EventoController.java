@@ -14,9 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.arenahub.backend.dto.EventoDetalhesDTO;
+import com.arenahub.backend.dto.EventoResumoDTO;
+
+import com.arenahub.backend.dto.EventoResponseDTO;
 
 @RestController
-@RequestMapping("/eventos")
+@RequestMapping("/api/eventos")
 @CrossOrigin(origins = "*")
 public class EventoController {
 
@@ -27,10 +30,28 @@ public class EventoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Evento>> getEventos(
+    public ResponseEntity<List<EventoResponseDTO>> getEventos(
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) LocalDateTime data) {
-        List<Evento> eventos = eventoService.listarEventosFiltrados(categoria, data);
+        List<EventoResponseDTO> eventos = eventoService.listarEventosFiltrados(categoria, data);
+        return ResponseEntity.ok(eventos);
+    }
+
+    @GetMapping("/meus-eventos")
+    public ResponseEntity<List<EventoResumoDTO>> getMeusEventos() {
+        List<EventoResumoDTO> meusEventos = eventoService.listarMeusEventosAprovados();
+        return ResponseEntity.ok(meusEventos);
+    }
+
+    @GetMapping("/aprovados")
+    public ResponseEntity<List<EventoResponseDTO>> getEventosAprovados() {
+        List<EventoResponseDTO> eventos = eventoService.listarEventosAprovados();
+        return ResponseEntity.ok(eventos);
+    }
+
+    @GetMapping("/produtor")
+    public ResponseEntity<List<EventoResponseDTO>> getEventosDoProdutor() {
+        List<EventoResponseDTO> eventos = eventoService.listarEventosDoProdutor();
         return ResponseEntity.ok(eventos);
     }
 
@@ -41,16 +62,16 @@ public class EventoController {
     }
 
     @PostMapping
-    public ResponseEntity<Evento> createEvento(@Valid @RequestBody EventoRequestDTO data, UriComponentsBuilder uriBuilder) {
-        Evento evento = eventoService.cadastrarEvento(data);
-        URI uri = uriBuilder.path("/eventos/{id}").buildAndExpand(evento.getId()).toUri();
+    public ResponseEntity<EventoResponseDTO> createEvento(@Valid @RequestBody EventoRequestDTO data, UriComponentsBuilder uriBuilder) {
+        EventoResponseDTO evento = eventoService.cadastrarEvento(data);
+        URI uri = uriBuilder.path("/api/eventos/{id}").buildAndExpand(evento.id()).toUri();
         return ResponseEntity.created(uri).body(evento);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Evento> updateEvento(@PathVariable Long id, @Valid @RequestBody EventoRequestDTO data) {
+    public ResponseEntity<EventoResponseDTO> updateEvento(@PathVariable Long id, @Valid @RequestBody EventoRequestDTO data) {
         try {
-            Evento eventoAtualizado = eventoService.atualizarEvento(id, data);
+            EventoResponseDTO eventoAtualizado = eventoService.atualizarEvento(id, data);
             return ResponseEntity.ok(eventoAtualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -62,6 +83,28 @@ public class EventoController {
         try {
             eventoService.removerEvento(id);
             return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/{id}/aprovar")
+    public ResponseEntity<EventoResponseDTO> aprovarEvento(@PathVariable Long id) {
+        try {
+            EventoResponseDTO evento = eventoService.analisarEvento(id, true, null);
+            return ResponseEntity.ok(evento);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public record RejeitarRequest(String motivo) {}
+
+    @PostMapping("/{id}/rejeitar")
+    public ResponseEntity<EventoResponseDTO> rejeitarEvento(@PathVariable Long id, @RequestBody RejeitarRequest request) {
+        try {
+            EventoResponseDTO evento = eventoService.analisarEvento(id, false, request.motivo());
+            return ResponseEntity.ok(evento);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

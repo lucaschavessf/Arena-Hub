@@ -107,7 +107,7 @@
                       <path d="M4 20h16"/>
                     </svg>
                   </button>
-                  <button class="btn-excluir" @click="excluirLote(lote.id)">
+                  <button class="btn-excluir" @click="excluirLote(lote.nome)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                       <line x1="18" y1="6" x2="6" y2="18"/>
                       <line x1="6" y1="6" x2="18" y2="18"/>
@@ -118,39 +118,36 @@
 
               <div class="lote-body">
                 <div class="info-row">
-                  <span class="info-label">Preço</span>
-                  <span class="info-value">{{ formatCurrency(lote.preco) }}</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Quantidade Total</span>
-                  <span class="info-value">{{ lote.quantidadeTotal.toLocaleString() }} ingressos</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Vendidos</span>
-                  <span class="info-value">{{ lote.vendidos.toLocaleString() }} ingressos</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Disponíveis</span>
-                  <span class="info-value" :class="{ 'esgotando': lote.disponiveis < 100 }">
-                    {{ lote.disponiveis.toLocaleString() }} ingressos
-                  </span>
-                </div>
-                <div class="info-row">
                   <span class="info-label">Data de Início</span>
                   <span class="info-value">{{ formatarData(lote.dataInicio) }}</span>
                 </div>
-                <div class="info-row">
+                <div class="info-row" style="margin-bottom: 12px;">
                   <span class="info-label">Data de Término</span>
                   <span class="info-value">{{ formatarData(lote.dataFim) }}</span>
+                </div>
+                
+                <h4 style="font-size: 0.85rem; color: #8e9aaf; margin-bottom: 8px;">Categorias</h4>
+                <div v-for="item in lote.itens" :key="item.id" class="lote-item">
+                  <div class="item-header">
+                    <strong>{{ item.categoriaNome }}</strong>
+                    <span>{{ formatCurrency(item.preco) }}</span>
+                  </div>
+                  <div class="item-stats">
+                    <span>{{ item.vendidos }} / {{ item.quantidadeTotal }}</span>
+                    <span :class="{ 'esgotando': item.disponiveis < 50 }">Restam {{ item.disponiveis }}</span>
+                  </div>
+                  <div class="progress-bar mini-progress">
+                    <div class="progress-fill" :style="{ width: (item.vendidos / item.quantidadeTotal * 100) + '%' }"></div>
+                  </div>
                 </div>
               </div>
 
               <div class="lote-footer">
                 <div class="progress-container">
                   <div class="progress-bar">
-                    <div class="progress-fill" :style="{ width: (lote.vendidos / lote.quantidadeTotal * 100) + '%' }"></div>
+                    <div class="progress-fill" :style="{ width: ((lote.itens?.reduce((acc, i) => acc + i.vendidos, 0) / (lote.itens?.reduce((acc, i) => acc + i.quantidadeTotal, 0) || 1)) * 100) + '%' }"></div>
                   </div>
-                  <span class="progress-text">{{ Math.round(lote.vendidos / lote.quantidadeTotal * 100) }}% vendido</span>
+                  <span class="progress-text">{{ Math.round((lote.itens?.reduce((acc, i) => acc + i.vendidos, 0) / (lote.itens?.reduce((acc, i) => acc + i.quantidadeTotal, 0) || 1)) * 100) }}% vendido (Total)</span>
                 </div>
               </div>
             </div>
@@ -189,15 +186,32 @@
             <input type="text" v-model="formLote.nome" class="input-field" placeholder="Ex: 1º Lote, Promocional, Camarote..." />
           </div>
 
-          <div class="form-row">
-            <div class="form-field">
-              <label>Preço (R$) *</label>
-              <input type="number" v-model="formLote.preco" class="input-field" step="0.01" placeholder="0.00" />
+          <div class="lote-items-wrapper">
+            <h4 style="font-size: 0.9rem; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">Itens do Lote</h4>
+            <div v-for="(item, index) in formLote.itens" :key="index" class="form-row item-row" style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; align-items: flex-end;">
+              <div class="form-field" style="flex: 2;">
+                <label>Categoria</label>
+                <select v-model="item.categoriaId" class="input-field">
+                  <option :value="null">Selecione...</option>
+                  <option v-for="cat in categoriasIngresso" :key="cat.id" :value="cat.id">{{ cat.nome }}</option>
+                </select>
+              </div>
+              <div class="form-field" style="flex: 1.5;">
+                <label>Preço</label>
+                <input type="number" v-model="item.preco" class="input-field" step="0.01" />
+              </div>
+              <div class="form-field" style="flex: 1.5;">
+                <label>Qtd.</label>
+                <input type="number" v-model="item.quantidadeTotal" class="input-field" />
+              </div>
+              <button class="btn-excluir" style="padding: 10px; margin-bottom: 4px;" @click="removerLinha(index)" v-if="formLote.itens.length > 1">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
             </div>
-            <div class="form-field">
-              <label>Quantidade Total *</label>
-              <input type="number" v-model="formLote.quantidadeTotal" class="input-field" placeholder="Número de ingressos" />
-            </div>
+            <button class="btn-novo-lote" style="width: 100%; justify-content: center; margin-bottom: 16px; background: transparent; border: 1px dashed rgba(201, 168, 76, 0.5); color: #c9a84c;" @click="adicionarLinha">+ Adicionar Categoria</button>
           </div>
 
           <div class="form-row">
@@ -243,80 +257,63 @@ const modalLote = ref(false)
 const loteEditando = ref<any>(null)
 
 const formLote = ref({
-  id: null,
   nome: '',
-  preco: 0,
-  quantidadeTotal: 0,
-  vendidos: 0,
   dataInicio: '',
   dataFim: '',
-  status: 'ativo'
+  status: 'ativo',
+  itens: [] as Array<{ categoriaId: number | null, preco: number, quantidadeTotal: number }>
 })
 
-const evento = ref({
-  id: 1,
-  nome: 'Rock Nacional 2026',
-  data: '2026-08-15',
-  local: 'Arena Pernambuco'
-})
+const evento = ref<any>({})
+const lotes = ref<any[]>([])
+const categoriasIngresso = ref<any[]>([])
+const capacidadeMaxima = ref(0)
+const carregando = ref(false)
 
-const lotes = ref([
-  {
-    id: 1,
-    nome: '1º Lote - Promocional',
-    preco: 85.00,
-    quantidadeTotal: 5000,
-    vendidos: 4850,
-    disponiveis: 150,
-    dataInicio: '2026-01-15T10:00:00',
-    dataFim: '2026-03-15T23:59:59',
-    status: 'encerrado'
-  },
-  {
-    id: 2,
-    nome: '2º Lote - Normal',
-    preco: 120.00,
-    quantidadeTotal: 8000,
-    vendidos: 6200,
-    disponiveis: 1800,
-    dataInicio: '2026-03-16T10:00:00',
-    dataFim: '2026-05-15T23:59:59',
-    status: 'ativo'
-  },
-  {
-    id: 3,
-    nome: '3º Lote - Última Chance',
-    preco: 180.00,
-    quantidadeTotal: 3000,
-    vendidos: 1200,
-    disponiveis: 1800,
-    dataInicio: '2026-05-16T10:00:00',
-    dataFim: '2026-08-14T23:59:59',
-    status: 'ativo'
-  },
-  {
-    id: 4,
-    nome: 'Camarote',
-    preco: 350.00,
-    quantidadeTotal: 500,
-    vendidos: 320,
-    disponiveis: 180,
-    dataInicio: '2026-01-15T10:00:00',
-    dataFim: '2026-08-14T23:59:59',
-    status: 'ativo'
+import api from '../services/api'
+
+const carregarDados = async () => {
+  carregando.value = true
+  try {
+    const resEvento = await api.get(`/api/eventos/${eventoId.value}`)
+    evento.value = resEvento.data
+    capacidadeMaxima.value = evento.value.espaco?.capacidade || 0
+
+    const resCats = await api.get('/api/categorias-ingresso')
+    categoriasIngresso.value = resCats.data
+
+    await carregarLotes()
+  } catch (error) {
+    console.error('Erro ao carregar dados:', error)
+  } finally {
+    carregando.value = false
   }
-])
+}
 
+const carregarLotes = async () => {
+  try {
+    const resLotes = await api.get(`/api/eventos/${eventoId.value}/lotes`)
+    lotes.value = resLotes.data
+  } catch (error) {
+    console.error('Erro ao carregar lotes:', error)
+  }
+}
 const totalIngressos = computed(() => {
-  return lotes.value.reduce((acc, lote) => acc + lote.quantidadeTotal, 0)
+  return lotes.value.reduce((acc, lote) => {
+    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + item.quantidadeTotal, 0) || 0)
+  }, 0)
 })
 
 const ingressosVendidos = computed(() => {
-  return lotes.value.reduce((acc, lote) => acc + lote.vendidos, 0)
+  return lotes.value.reduce((acc, lote) => {
+    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + item.vendidos, 0) || 0)
+  }, 0)
 })
 
 const receitaTotal = computed(() => {
-  return lotes.value.reduce((acc, lote) => acc + (lote.vendidos * lote.preco), 0)
+  return lotes.value.reduce((acc, lote) => {
+    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + (item.vendidos * item.preco), 0) || 0)
+  }, 0)
 })
 
 function formatCurrency(value: number) {
@@ -349,14 +346,11 @@ function getStatusLabel(status: string) {
 function abrirModalNovoLote() {
   loteEditando.value = null
   formLote.value = {
-    id: null,
     nome: '',
-    preco: 0,
-    quantidadeTotal: 0,
-    vendidos: 0,
     dataInicio: '',
     dataFim: '',
-    status: 'ativo'
+    status: 'ativo',
+    itens: [{ categoriaId: null, preco: 0, quantidadeTotal: 0 }]
   }
   modalLote.value = true
 }
@@ -364,72 +358,62 @@ function abrirModalNovoLote() {
 function abrirModalEditarLote(lote: any) {
   loteEditando.value = lote
   formLote.value = {
-    id: lote.id,
     nome: lote.nome,
-    preco: lote.preco,
-    quantidadeTotal: lote.quantidadeTotal,
-    vendidos: lote.vendidos,
-    dataInicio: lote.dataInicio,
-    dataFim: lote.dataFim,
-    status: lote.status
+    dataInicio: lote.dataInicio || '',
+    dataFim: lote.dataFim || '',
+    status: lote.status,
+    itens: lote.itens.map((i: any) => ({
+      categoriaId: i.categoriaId,
+      preco: i.preco,
+      quantidadeTotal: i.quantidadeTotal
+    }))
   }
   modalLote.value = true
 }
 
-function salvarLote() {
+function adicionarLinha() {
+  formLote.value.itens.push({ categoriaId: null, preco: 0, quantidadeTotal: 0 })
+}
+
+function removerLinha(index: number) {
+  formLote.value.itens.splice(index, 1)
+}
+
+async function salvarLote() {
   if (!formLote.value.nome) {
     alert('Informe o nome do lote')
     return
   }
-  if (formLote.value.preco <= 0) {
-    alert('Informe um preço válido')
-    return
-  }
-  if (formLote.value.quantidadeTotal <= 0) {
-    alert('Informe uma quantidade válida')
+  if (formLote.value.itens.length === 0) {
+    alert('Adicione pelo menos um item ao lote')
     return
   }
 
-  if (loteEditando.value) {
-    const index = lotes.value.findIndex(l => l.id === loteEditando.value.id)
-    if (index !== -1) {
-      lotes.value[index] = {
-        ...lotes.value[index],
-        nome: formLote.value.nome,
-        preco: formLote.value.preco,
-        quantidadeTotal: formLote.value.quantidadeTotal,
-        dataInicio: formLote.value.dataInicio,
-        dataFim: formLote.value.dataFim,
-        status: formLote.value.status,
-        disponiveis: formLote.value.quantidadeTotal - lotes.value[index].vendidos
-      }
+  for (const item of formLote.value.itens) {
+    if (!item.categoriaId || item.preco <= 0 || item.quantidadeTotal <= 0) {
+      alert('Preencha todos os campos dos itens com valores válidos')
+      return
     }
-    alert('Lote atualizado com sucesso!')
-  } else {
-    const novoLote = {
-      id: Date.now(),
-      nome: formLote.value.nome,
-      preco: formLote.value.preco,
-      quantidadeTotal: formLote.value.quantidadeTotal,
-      vendidos: 0,
-      disponiveis: formLote.value.quantidadeTotal,
-      dataInicio: formLote.value.dataInicio,
-      dataFim: formLote.value.dataFim,
-      status: formLote.value.status
-    }
-    lotes.value.push(novoLote)
-    alert('Novo lote criado com sucesso!')
   }
 
-  fecharModalLote()
+  try {
+    await api.post(`/api/eventos/${eventoId.value}/lotes`, formLote.value)
+    alert(loteEditando.value ? 'Lote atualizado com sucesso!' : 'Novo lote criado com sucesso!')
+    await carregarLotes()
+    fecharModalLote()
+  } catch (error: any) {
+    alert(error.response?.data?.message || 'Erro ao salvar lote (verifique a capacidade do espaço).')
+  }
 }
 
-function excluirLote(id: number) {
-  if (confirm('Tem certeza que deseja excluir este lote?')) {
-    const index = lotes.value.findIndex(l => l.id === id)
-    if (index !== -1) {
-      lotes.value.splice(index, 1)
+async function excluirLote(nome: string) {
+  if (confirm(`Tem certeza que deseja excluir o lote "${nome}"?`)) {
+    try {
+      await api.delete(`/api/eventos/${eventoId.value}/lotes/${nome}`)
       alert('Lote excluído com sucesso!')
+      await carregarLotes()
+    } catch (error) {
+      alert('Erro ao excluir lote')
     }
   }
 }
@@ -441,6 +425,7 @@ function fecharModalLote() {
 
 onMounted(() => {
   window.scrollTo(0, 0)
+  carregarDados()
 })
 </script>
 
@@ -722,6 +707,38 @@ onMounted(() => {
 .info-value.esgotando {
   color: #f59e0b;
   font-weight: 700;
+}
+
+.lote-item {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  color: #e0e0e0;
+}
+
+.item-stats {
+  display: flex;
+  justify-content: space-between;
+  color: #6b7280;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+}
+
+.item-stats .esgotando {
+  color: #f59e0b;
+}
+
+.mini-progress {
+  height: 4px;
 }
 
 .lote-footer {

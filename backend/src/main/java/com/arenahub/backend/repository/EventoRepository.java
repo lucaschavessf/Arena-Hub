@@ -7,8 +7,15 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.arenahub.backend.domain.evento.StatusEvento;
 
 public interface EventoRepository extends JpaRepository<Evento, Long> {
+
+    List<Evento> findByProdutorIdAndStatus(String produtorId, StatusEvento status);
+
+    List<Evento> findByProdutorId(String produtorId);
+
+    List<Evento> findByStatus(StatusEvento status);
 
     /**
      * Busca eventos por categoria e uma data/hora de início específica.

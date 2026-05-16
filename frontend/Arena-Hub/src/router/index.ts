@@ -152,6 +152,9 @@ router.beforeEach((to) => {
   if (to.meta.requiresAuth) {
     const userStore = useUserStore()
     if (!userStore.isLoggedIn) {
+      if (to.path.startsWith('/produtor')) {
+        return { path: '/produtor/cadastro' }
+      }
       return { name: 'Login' }
     }
   }

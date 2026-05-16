@@ -211,12 +211,12 @@ const eventos = ref([])
 
 onMounted(async () => {
   try {
-    const response = await api.get('/eventos')
+    const response = await api.get('/api/eventos/aprovados')
     const data = response.data
     eventos.value = data.map((ev) => ({
       id: ev.id,
       title: ev.nome,
-      category: ev.categoria || 'Show',
+      category: ev.categoriaNome || 'Show',
       date: ev.dataInicio
         ? new Date(ev.dataInicio).toLocaleDateString('pt-BR', {
             day: '2-digit',

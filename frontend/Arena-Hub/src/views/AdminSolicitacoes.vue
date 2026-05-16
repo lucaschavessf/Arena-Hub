@@ -650,14 +650,15 @@ function mapStatus(status: string): string {
 async function carregarSolicitacoes() {
   carregando.value = true
   try {
-    const response = await api.get('/solicitacoes-evento')
+    const response = await api.get('/api/eventos')
+    // A API agora retorna EventoResponseDTO com campos flat.
     solicitacoes.value = response.data.map((s: any) => ({
       id: s.id,
-      solicitante: s.nomeSolicitante,
-      email: s.emailSolicitante,
+      solicitante: 'Produtor',
+      email: '',
       whatsapp: '',
-      nomeEvento: s.nomeEvento,
-      categoria: s.categoriaNome,
+      nomeEvento: s.nome,
+      categoria: s.categoriaNome || '',
       dataEvento: s.dataInicio,
       cidade: s.espacoNome || '',
       estado: '',
@@ -665,11 +666,11 @@ async function carregarSolicitacoes() {
       descricao: s.descricao,
       menoresAcompanhados: true,
       status: mapStatus(s.status),
-      dataSolicitacao: s.criadaEm,
-      observacoes: s.motivoRejeicao || '',
+      dataSolicitacao: null,
+      observacoes: '',
       expectativaPublico: s.expectativaPublico,
       classificacaoIndicativa: s.classificacaoIndicativa,
-      espacoNome: s.espacoNome,
+      espacoNome: s.espacoNome || '',
     }))
   } catch (error) {
     console.error('Erro ao carregar solicitações:', error)
@@ -753,7 +754,7 @@ const fecharModal = () => {
 
 const aprovarSolicitacao = async (solicitacao: any) => {
   try {
-    await api.post(`/admin/solicitacoes-evento/${solicitacao.id}/aprovar`)
+    await api.post(`/api/eventos/${solicitacao.id}/aprovar`)
     await carregarSolicitacoes()
     fecharModal()
   } catch (error: any) {
@@ -765,7 +766,7 @@ const rejeitarSolicitacao = async (solicitacao: any) => {
   const motivo = prompt('Informe o motivo da rejeição:')
   if (motivo === null) return
   try {
-    await api.post(`/admin/solicitacoes-evento/${solicitacao.id}/rejeitar`, { motivo })
+    await api.post(`/api/eventos/${solicitacao.id}/rejeitar`, { motivo })
     await carregarSolicitacoes()
     fecharModal()
   } catch (error: any) {

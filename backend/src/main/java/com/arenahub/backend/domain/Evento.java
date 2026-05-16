@@ -17,6 +17,8 @@ import jakarta.persistence.CascadeType;
 import java.util.List;
 import java.time.LocalDateTime;
 
+import com.arenahub.backend.domain.evento.StatusEvento;
+
 @Entity
 @Table(name = "eventos")
 public class Evento {
@@ -45,12 +47,25 @@ public class Evento {
     @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
     private List<Lote> lotes;
 
+    @Enumerated(EnumType.STRING)
+    private StatusEvento status;
+
+    private LocalDateTime criadaEm;
+
+    private LocalDateTime analisadaEm;
+
+    private String motivoRejeicao;
+
+    @ManyToOne
+    @JoinColumn(name = "produtor_id")
+    private Produtor produtor;
+
     public Evento() {
     }
 
     public Evento(String nome, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim,
             Integer expectativaPublico, ClassificacaoIndicativa classificacaoIndicativa, CategoriaEvento categoria,
-            Espaco espaco) {
+            Espaco espaco, Produtor produtor) {
         this.nome = nome;
         this.descricao = descricao;
         this.dataInicio = dataInicio;
@@ -59,6 +74,9 @@ public class Evento {
         this.classificacaoIndicativa = classificacaoIndicativa;
         this.categoria = categoria;
         this.espaco = espaco;
+        this.status = StatusEvento.PENDENTE;
+        this.criadaEm = LocalDateTime.now();
+        this.produtor = produtor;
     }
 
     public Long getId() {
@@ -139,5 +157,45 @@ public class Evento {
 
     public void setLotes(List<Lote> lotes) {
         this.lotes = lotes;
+    }
+
+    public StatusEvento getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEvento status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCriadaEm() {
+        return criadaEm;
+    }
+
+    public void setCriadaEm(LocalDateTime criadaEm) {
+        this.criadaEm = criadaEm;
+    }
+
+    public LocalDateTime getAnalisadaEm() {
+        return analisadaEm;
+    }
+
+    public void setAnalisadaEm(LocalDateTime analisadaEm) {
+        this.analisadaEm = analisadaEm;
+    }
+
+    public String getMotivoRejeicao() {
+        return motivoRejeicao;
+    }
+
+    public void setMotivoRejeicao(String motivoRejeicao) {
+        this.motivoRejeicao = motivoRejeicao;
+    }
+
+    public Produtor getProdutor() {
+        return produtor;
+    }
+
+    public void setProdutor(Produtor produtor) {
+        this.produtor = produtor;
     }
 }

@@ -319,7 +319,7 @@ const irParaPagamento = () => {
 
 const carregarEvento = async () => {
   try {
-    const response = await api.get(`/eventos/${eventoId.value}`)
+    const response = await api.get(`/api/eventos/${eventoId.value}`)
     evento.value = response.data
     lotes.value = response.data.lotes || []
     

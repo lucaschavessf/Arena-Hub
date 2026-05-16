@@ -279,14 +279,14 @@ const evento = computed(() => {
 
 onMounted(async () => {
   try {
-    const response = await api.get('/eventos')
+    const response = await api.get('/api/eventos/aprovados')
     const data = response.data
     
     eventos.value = data.map((ev: any) => ({
       id: ev.id,
       title: ev.nome,
       description: ev.descricao,
-      category: ev.categoria?.nome || 'Geral',
+      category: ev.categoriaNome || 'Geral',
       
       date: ev.dataInicio
         ? new Date(ev.dataInicio).toLocaleDateString('pt-BR', {
@@ -298,8 +298,8 @@ onMounted(async () => {
       time: ev.dataInicio 
         ? new Date(ev.dataInicio).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) 
         : '--:--',
-      venue: ev.espaco?.nome || 'Arena Hub',
-      location: ev.espaco?.localizacao || 'Endereço não informado',
+      venue: ev.espacoNome || 'Arena Hub',
+      location: 'Endereço não informado',
       classificacao: ev.classificacaoIndicativa || 'Livre',
       lineup: ev.lotes || [],
       

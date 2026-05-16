@@ -858,30 +858,7 @@ const solicitacoes = ref([
   },
 ])
 
-const eventos = ref([
-  {
-    id: 1,
-    nome: 'Rock Nacional 2026',
-    data: '2026-08-15',
-    local: 'Arena Pernambuco',
-    imagem: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=100&h=100&fit=crop',
-    ingressosVendidos: 18500,
-    ocupacao: 74,
-    receita: 425000,
-    status: 'aprovado',
-  },
-  {
-    id: 2,
-    nome: 'Recife Tech Summit',
-    data: '2026-07-20',
-    local: 'Arena Pernambuco',
-    imagem: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=100&h=100&fit=crop',
-    ingressosVendidos: 3200,
-    ocupacao: 64,
-    receita: 128000,
-    status: 'aprovado',
-  },
-])
+const eventos = ref<any[]>([])
 
 const novoEvento = ref({
   nome: '',
@@ -1021,22 +998,20 @@ async function enviarSolicitacao() {
   }
 
   const payload = {
-    nomeEvento: novoEvento.value.nome,
+    nome: novoEvento.value.nome,
     descricao: novoEvento.value.descricao,
     dataInicio: dataInicio,
     dataFim: dataFim,
     expectativaPublico: Number(novoEvento.value.publicoEstimado),
     classificacaoIndicativa: novoEvento.value.classificacaoIndicativa,
     categoriaId: Number(novoEvento.value.categoriaId),
-    espacoId: novoEvento.value.espacos[0].id,
-    nomeSolicitante: userStore.user.name || produtor.value.nome,
-    emailSolicitante: userStore.user.email || produtor.value.email,
+    espacoId: novoEvento.value.espacos[0].id
   }
 
   enviandoSolicitacao.value = true
 
   try {
-    await api.post('/solicitacoes-evento', payload)
+    await api.post('/api/eventos', payload)
 
     await carregarSolicitacoes()
 
@@ -1156,23 +1131,42 @@ function salvarPerfil() {
 
 async function carregarSolicitacoes() {
   try {
-    const response = await api.get('/solicitacoes-evento')
+    const response = await api.get('/api/eventos/produtor')
     solicitacoes.value = response.data.map((s: any) => ({
       id: s.id,
-      nomeEvento: s.nomeEvento,
-      categoria: s.categoriaNome,
+      nomeEvento: s.nome,
+      categoria: s.categoriaNome || '',
       dataEvento: s.dataInicio,
-      dataEnvio: s.criadaEm,
+      dataEnvio: null,
       horario: s.dataInicio ? new Date(s.dataInicio).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '',
       publicoEstimado: s.expectativaPublico,
-      espacos: [s.espacoNome],
+      espacos: [s.espacoNome || ''],
       descricao: s.descricao,
       imagem: null,
-      status: s.status === 'PENDENTE' ? 'pendente' : s.status === 'APROVADA' ? 'aprovado' : 'reprovado',
-      motivo: s.motivoRejeicao,
+      status: s.status === 'PENDENTE' ? 'pendente' : s.status === 'APROVADO' ? 'aprovado' : 'reprovado',
+      motivo: '',
     }))
   } catch (error) {
     console.error('Erro ao carregar solicitações:', error)
+  }
+}
+
+async function carregarMeusEventos() {
+  try {
+    const response = await api.get('/api/eventos/meus-eventos')
+    eventos.value = response.data.map((e: any) => ({
+      id: e.id,
+      nome: e.nome,
+      data: e.dataInicio,
+      local: e.espacoNome,
+      imagem: null,
+      ingressosVendidos: e.ingressosVendidos || 0,
+      ocupacao: 0,
+      receita: e.receita || 0,
+      status: 'aprovado',
+    }))
+  } catch (error) {
+    console.error('Erro ao carregar meus eventos aprovados:', error)
   }
 }
 
@@ -1192,6 +1186,7 @@ onMounted(async () => {
   }
 
   await carregarSolicitacoes()
+  await carregarMeusEventos()
 
   carregandoDados.value = false
 })
