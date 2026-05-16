@@ -57,11 +57,17 @@
           <span>Agenda</span>
         </router-link>
 
-
         <router-link to="/admin/produtores" class="nav-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
           </svg>
           <span>Produtores</span>
         </router-link>
@@ -132,11 +138,18 @@
         </router-link>
 
         <router-link to="/admin/criar-conta" class="nav-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <line x1="19" y1="8" x2="19" y2="14"/>
-            <line x1="22" y1="11" x2="16" y2="11"/>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" y1="8" x2="19" y2="14" />
+            <line x1="22" y1="11" x2="16" y2="11" />
           </svg>
           <span>Criar Admin</span>
         </router-link>
@@ -181,24 +194,7 @@
         <header class="content-header">
           <div class="header-titles">
             <h1>Cronograma da Arena</h1>
-            <p>Gestão de ocupação e horários técnicos</p>
-          </div>
-
-          <div class="header-actions">
-            <button class="btn-add" @click="abrirModalNovoEvento">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-              >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              <span>Novo Evento</span>
-            </button>
+            <p>Eventos aprovados e confirmados na agenda</p>
           </div>
         </header>
 
@@ -224,68 +220,13 @@
           </div>
         </div>
 
-        <div class="calendar-card">
-          <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
+        <div v-if="carregando" class="loading-container">
+          <div class="spinner"></div>
+          <p>Carregando eventos aprovados...</p>
         </div>
 
-        <div v-if="modalAberto" class="modal-overlay" @click="fecharModal">
-          <div class="modal-content" @click.stop>
-            <div class="modal-header">
-              <h3>{{ eventoTemp.id ? 'Editar Evento' : 'Novo Evento' }}</h3>
-              <button class="modal-close" @click="fecharModal">&times;</button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label>Título</label>
-                <input
-                  v-model="eventoTemp.title"
-                  type="text"
-                  class="form-input"
-                  placeholder="Ex: Show Banda XYZ"
-                />
-              </div>
-              <div class="form-group">
-                <label>Tipo de Evento</label>
-                <select v-model="eventoTemp.tipo" class="form-input">
-                  <option value="producao">Produção</option>
-                  <option value="show">Show</option>
-                  <option value="reuniao">Reunião</option>
-                  <option value="ensaio">Ensaio</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Data e Horário</label>
-                <div class="datetime-group">
-                  <input type="date" v-model="eventoTemp.startDate" class="form-input" />
-                  <input type="time" v-model="eventoTemp.startTime" class="form-input" />
-                  <span>até</span>
-                  <input type="time" v-model="eventoTemp.endTime" class="form-input" />
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Local</label>
-                <input
-                  v-model="eventoTemp.local"
-                  type="text"
-                  class="form-input"
-                  placeholder="Palco Principal, Sala de Produção..."
-                />
-              </div>
-              <div class="form-group">
-                <label>Descrição</label>
-                <textarea
-                  v-model="eventoTemp.descricao"
-                  class="form-textarea"
-                  rows="3"
-                  placeholder="Detalhes do evento..."
-                ></textarea>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button class="btn-cancel" @click="fecharModal">Cancelar</button>
-              <button class="btn-save" @click="salvarEvento">Salvar</button>
-            </div>
-          </div>
+        <div v-else class="calendar-card">
+          <FullCalendar ref="fullCalendarRef" :options="calendarOptions" :key="calendarKey" />
         </div>
 
         <div class="day-summary">
@@ -350,17 +291,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import AppNavbar from '../components/AppNavbar.vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import ptBrLocale from '@fullcalendar/core/locales/pt-br'
+import api from '../services/api'
 
 const isSidebarOpen = ref(false)
 const fullCalendarRef = ref()
-const modalAberto = ref(false)
+const carregando = ref(false)
+const calendarKey = ref(0)
 
 interface Evento {
   id: string
@@ -371,80 +314,100 @@ interface Evento {
   local: string
   descricao: string
   color?: string
-  backgroundColor?: string
-  borderColor?: string
 }
 
-const eventoTemp = ref({
-  id: '',
-  title: '',
-  tipo: 'show',
-  startDate: '',
-  startTime: '10:00',
-  endTime: '18:00',
-  local: '',
-  descricao: '',
-})
+const eventos = ref<Evento[]>([])
 
-const eventos = ref<Evento[]>([
-  {
-    id: '1',
-    title: 'Check-in Staff',
-    start: '2026-04-15T10:00:00',
-    end: '2026-04-15T12:30:00',
-    tipo: 'producao',
-    local: 'Sala de Produção',
-    descricao: 'Check-in da equipe técnica e produção',
-    color: '#c9a84c',
-  },
-  {
-    id: '2',
-    title: 'Show: Rock Nacional',
-    start: '2026-04-16T14:00:00',
-    end: '2026-04-16T17:00:00',
-    tipo: 'show',
-    local: 'Palco Principal',
-    descricao: 'Apresentação da banda de rock nacional',
-    color: '#4c87c9',
-  },
-  {
-    id: '3',
-    title: 'Reunião Técnica',
-    start: '2026-04-17T11:00:00',
-    end: '2026-04-17T13:00:00',
-    tipo: 'reuniao',
-    local: 'Sala de Reuniões',
-    descricao: 'Alinhamento técnico para evento do final de semana',
-    color: '#c94c4c',
-  },
-  {
-    id: '4',
-    title: 'Ensaio Geral',
-    start: '2026-04-18T18:00:00',
-    end: '2026-04-18T21:00:00',
-    tipo: 'ensaio',
-    local: 'Palco Principal',
-    descricao: 'Ensaio geral para apresentação',
-    color: '#4cc98e',
-  },
-])
-
-const getCorEvento = (tipo: string) => {
-  const cores = {
+function getCorEvento(tipo: string): string {
+  const cores: Record<string, string> = {
     producao: '#c9a84c',
     show: '#4c87c9',
     reuniao: '#c94c4c',
     ensaio: '#4cc98e',
   }
-  return cores[tipo as keyof typeof cores] || '#6b7280'
+  return cores[tipo] || '#6b7280'
 }
 
-const formatHorario = (dataStr: string) => {
+function mapearCategoriaParaTipo(categoria: string): string {
+  const map: Record<string, string> = {
+    Show: 'show',
+    Esportes: 'show',
+    Corporativo: 'reuniao',
+    Teatro: 'show',
+    Comédia: 'show',
+    Jogo: 'show',
+  }
+  return map[categoria] || 'show'
+}
+
+function formatHorario(dataStr: string): string {
+  if (!dataStr) return ''
   const data = new Date(dataStr)
   return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
 }
 
-const calendarOptions = ref({
+function converterEventoParaCalendario(evento: any): Evento | null {
+  try {
+    const dataInicio = new Date(evento.dataInicio)
+    const dataFim = new Date(evento.dataFim)
+
+    if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
+      console.warn('Data inválida para evento:', evento)
+      return null
+    }
+
+    const tipo = mapearCategoriaParaTipo(evento.categoriaNome)
+
+    return {
+      id: evento.id.toString(),
+      title: evento.nome,
+      start: dataInicio.toISOString(),
+      end: dataFim.toISOString(),
+      tipo: tipo,
+      local: evento.espacoNome || 'Local não informado',
+      descricao: evento.descricao || '',
+      color: getCorEvento(tipo),
+    }
+  } catch (error) {
+    console.error('Erro ao converter evento:', error)
+    return null
+  }
+}
+
+async function carregarEventosAprovados() {
+  carregando.value = true
+  try {
+    const response = await api.get('/api/eventos')
+    const todosEventos = response.data
+
+    console.log('Eventos recebidos da API:', todosEventos)
+
+    const eventosAprovados = todosEventos.filter((e: any) => e.status === 'APROVADO')
+
+    console.log('Eventos aprovados:', eventosAprovados)
+
+    const eventosCalendario = eventosAprovados
+      .map(converterEventoParaCalendario)
+      .filter((e) => e !== null)
+
+    eventos.value = eventosCalendario
+
+    calendarKey.value++
+
+    if (fullCalendarRef.value) {
+      const calendarApi = fullCalendarRef.value.getApi()
+      calendarApi.removeAllEvents()
+      calendarApi.addEventSource(eventos.value)
+      calendarApi.refetchEvents()
+    }
+  } catch (error) {
+    console.error('Erro ao carregar eventos aprovados:', error)
+  } finally {
+    carregando.value = false
+  }
+}
+
+const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: 'timeGridWeek',
   locale: ptBrLocale,
@@ -464,130 +427,44 @@ const calendarOptions = ref({
     hour12: false,
   },
   events: eventos.value,
-  editable: true,
-  selectable: true,
-  selectMirror: true,
+  editable: false,
+  selectable: false,
   dayMaxEvents: true,
   weekends: true,
   nowIndicator: true,
-  eventClick: (info: any) => {
-    info.jsEvent.preventDefault()
-    abrirModalEditar(info.event)
-  },
-  select: (info: any) => {
-    abrirModalNovoComData(info)
-  },
-  eventDrop: (info: any) => {
-    const evento = eventos.value.find((e) => e.id === info.event.id)
-    if (evento) {
-      evento.start = info.event.startStr
-      evento.end = info.event.endStr
-      console.log('Evento movido:', evento)
-    }
-  },
-  eventResize: (info: any) => {
-    const evento = eventos.value.find((e) => e.id === info.event.id)
-    if (evento) {
-      evento.end = info.event.endStr
-      console.log('Evento redimensionado:', evento)
-    }
-  },
   height: 'auto',
   contentHeight: 'auto',
   themeSystem: 'standard',
-})
+}))
 
 const eventosHoje = computed(() => {
-  const hoje = new Date().toISOString().split('T')[0]
-  return eventos.value.filter((evento) => evento.start.startsWith(hoje))
+  const hoje = new Date()
+  hoje.setHours(0, 0, 0, 0)
+  const amanha = new Date(hoje)
+  amanha.setDate(amanha.getDate() + 1)
+
+  return eventos.value.filter((evento) => {
+    const dataEvento = new Date(evento.start)
+    return dataEvento >= hoje && dataEvento < amanha
+  })
 })
 
-const abrirModalNovoEvento = () => {
-  const hoje = new Date().toISOString().split('T')[0]
-  eventoTemp.value = {
-    id: '',
-    title: '',
-    tipo: 'show',
-    startDate: hoje,
-    startTime: '10:00',
-    endTime: '18:00',
-    local: '',
-    descricao: '',
-  }
-  modalAberto.value = true
-}
-
-const abrirModalNovoComData = (info: any) => {
-  const start = new Date(info.start)
-  const end = new Date(info.end)
-
-  eventoTemp.value = {
-    id: '',
-    title: '',
-    tipo: 'show',
-    startDate: start.toISOString().split('T')[0],
-    startTime: start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-    endTime: end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-    local: '',
-    descricao: '',
-  }
-  modalAberto.value = true
-}
-
-const abrirModalEditar = (event: any) => {
-  const start = new Date(event.start)
-  const end = new Date(event.end)
-
-  eventoTemp.value = {
-    id: event.id,
-    title: event.title,
-    tipo: event.extendedProps.tipo || 'show',
-    startDate: start.toISOString().split('T')[0],
-    startTime: start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-    endTime: end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-    local: event.extendedProps.local || '',
-    descricao: event.extendedProps.descricao || '',
-  }
-  modalAberto.value = true
-}
-
-const salvarEvento = () => {
-  const startDate = `${eventoTemp.value.startDate}T${eventoTemp.value.startTime}:00`
-  const endDate = `${eventoTemp.value.startDate}T${eventoTemp.value.endTime}:00`
-
-  const eventoData = {
-    id: eventoTemp.value.id || Date.now().toString(),
-    title: eventoTemp.value.title,
-    start: startDate,
-    end: endDate,
-    tipo: eventoTemp.value.tipo,
-    local: eventoTemp.value.local,
-    descricao: eventoTemp.value.descricao,
-    color: getCorEvento(eventoTemp.value.tipo),
-  }
-
-  if (eventoTemp.value.id) {
-    const index = eventos.value.findIndex((e) => e.id === eventoTemp.value.id)
-    if (index !== -1) {
-      eventos.value[index] = eventoData as Evento
+watch(
+  eventos,
+  (novosEventos) => {
+    if (fullCalendarRef.value) {
+      const calendarApi = fullCalendarRef.value.getApi()
+      calendarApi.removeAllEvents()
+      calendarApi.addEventSource(novosEventos)
+      calendarApi.refetchEvents()
     }
-  } else {
-    eventos.value.push(eventoData as Evento)
-  }
+  },
+  { deep: true },
+)
 
-  if (fullCalendarRef.value) {
-    const calendarApi = fullCalendarRef.value.getApi()
-    calendarApi.refetchEvents()
-  }
-
-  fecharModal()
-}
-
-const fecharModal = () => {
-  modalAberto.value = false
-}
-
-onMounted(() => {})
+onMounted(async () => {
+  await carregarEventosAprovados()
+})
 </script>
 
 <style scoped>
@@ -760,34 +637,6 @@ onMounted(() => {})
   font-size: 0.85rem;
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.btn-add {
-  background: linear-gradient(135deg, #c9a84c, #d4af37);
-  color: #0a0e17;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.15);
-}
-
-.btn-add:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(201, 168, 76, 0.25);
-}
-
 .legend-bar {
   display: flex;
   align-items: center;
@@ -827,6 +676,32 @@ onMounted(() => {})
   border-radius: 3px;
 }
 
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
+  border-radius: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(201, 168, 76, 0.3);
+  border-top-color: #c9a84c;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .calendar-card {
   background: linear-gradient(135deg, #121826 0%, #0f131e 100%);
   border-radius: 20px;
@@ -852,7 +727,6 @@ onMounted(() => {})
   --fc-today-bg-color: rgba(201, 168, 76, 0.05);
   --fc-page-bg-color: transparent;
   --fc-neutral-bg-color: transparent;
-  --fc-list-event-hover-bg-color: rgba(255, 255, 255, 0.05);
 }
 
 :deep(.fc) {
@@ -872,15 +746,6 @@ onMounted(() => {})
   font-size: 0.85rem;
   padding: 6px 12px;
   border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-:deep(.fc-button-primary:not(:disabled):hover) {
-  background: rgba(201, 168, 76, 0.15);
-}
-
-:deep(.fc-button-primary:focus) {
-  box-shadow: none;
 }
 
 :deep(.fc-day-today) {
@@ -934,145 +799,6 @@ onMounted(() => {})
 :deep(.fc-timegrid-now-indicator-arrow) {
   border-color: #ef4444;
   color: #ef4444;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background: linear-gradient(135deg, #1a2233 0%, #121826 100%);
-  border-radius: 20px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.modal-header h3 {
-  font-size: 1.2rem;
-  color: #c9a84c;
-  margin: 0;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: #8e9aaf;
-  font-size: 28px;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.modal-close:hover {
-  color: #ef4444;
-}
-
-.modal-body {
-  padding: 24px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #8e9aaf;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.form-input,
-.form-textarea {
-  width: 100%;
-  padding: 10px 12px;
-  background: #0f131e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #e0e0e0;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-
-.form-input:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: #c9a84c;
-}
-
-.datetime-group {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.datetime-group input {
-  flex: 1;
-  min-width: 100px;
-}
-
-.datetime-group span {
-  color: #8e9aaf;
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 24px 24px;
-}
-
-.btn-cancel,
-.btn-save {
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-cancel {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #ef4444;
-}
-
-.btn-cancel:hover {
-  background: rgba(239, 68, 68, 0.2);
-}
-
-.btn-save {
-  background: linear-gradient(135deg, #c9a84c, #d4af37);
-  border: none;
-  color: #0a0e17;
-}
-
-.btn-save:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
 }
 
 .day-summary {
@@ -1208,30 +934,11 @@ onMounted(() => {})
   .content-container {
     padding: 24px 20px;
   }
-
-  .content-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .header-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
 }
 
 @media (max-width: 600px) {
   .header-titles h1 {
     font-size: 1.6rem;
-  }
-
-  .header-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-add {
-    justify-content: center;
   }
 
   .legend-bar {
@@ -1242,15 +949,6 @@ onMounted(() => {})
 
   .calendar-card {
     padding: 12px;
-  }
-
-  .datetime-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .datetime-group span {
-    text-align: center;
   }
 
   .summary-item {
