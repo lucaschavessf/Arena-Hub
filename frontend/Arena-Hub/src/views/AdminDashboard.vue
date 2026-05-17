@@ -183,7 +183,7 @@
             <p>Visão geral da Arena Pernambuco • {{ dataAtual }}</p>
           </div>
           <div class="header-actions">
-            <button class="btn-export" @click="exportarRelatorio">
+            <button class="btn-export" @click="exportarRelatorio" :disabled="carregando">
               <svg
                 width="16"
                 height="16"
@@ -198,6 +198,8 @@
             </button>
           </div>
         </header>
+
+        <p v-if="erroDashboard" class="dashboard-error">{{ erroDashboard }}</p>
 
         <section class="stats-grid">
           <div class="stat-card">
@@ -672,6 +674,8 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import { Chart, registerables } from 'chart.js'
+// @ts-expect-error O servico Axios existente ainda esta em JavaScript.
+import api from '../services/api'
 
 Chart.register(...registerables)
 
@@ -680,87 +684,44 @@ const isSidebarOpen = ref(false)
 const anoSelecionado = ref('2026')
 const receitaChart = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart | null = null
+const eventos = ref<any[]>([])
+const carregando = ref(false)
+const erroDashboard = ref('')
 
 const dataAtual = computed(() => {
   const hoje = new Date()
   return hoje.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
 })
 
-const receitaPorMes = {
-  2025: [42500, 48750, 52300, 49800, 58750, 62300, 65400, 68900, 64500, 71200, 75800, 82300],
-  2026: [
-    85000, 89700, 94500, 89500, 102300, 115000, 124500, 132000, 128500, 141000, 149000, 158000,
-  ],
-}
-
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
 const stats = ref({
-  receitaTotal: 124500,
-  receitaCrescimento: 12.5,
-  receitaAluguel: 85000,
-  aluguelCrescimento: 8,
-  receitaIngressos: 39500,
-  ingressosCrescimento: 15,
-  ticketMedio: 185.5,
-  ticketCrescimento: 5.8,
+  receitaTotal: 0,
+  receitaCrescimento: 0,
+  receitaAluguel: 0,
+  aluguelCrescimento: 0,
+  receitaIngressos: 0,
+  ingressosCrescimento: 0,
+  ticketMedio: 0,
+  ticketCrescimento: 0,
 
-  pendentes: 8,
-  pendentesTrend: -2,
-  aprovados: 6,
-  aprovadosCrescimento: 20,
-  ocupacaoMedia: 72,
-  ocupacaoCrescimento: 5,
-  publicoTotal: 18500,
-  publicoCrescimento: 18,
+  pendentes: 0,
+  pendentesTrend: 0,
+  aprovados: 0,
+  aprovadosCrescimento: 0,
+  ocupacaoMedia: 0,
+  ocupacaoCrescimento: 0,
+  publicoTotal: 0,
+  publicoCrescimento: 0,
 
-  eventosMes: 14,
-  eventosCrescimento: 3,
-  capacidadeUtilizada: 68,
+  eventosMes: 0,
+  eventosCrescimento: 0,
+  capacidadeUtilizada: 0,
 })
 
-const usoEspacos = ref([
-  { nome: 'Campo', percentual: 85, tipo: 'campo' },
-  { nome: 'Anel Inferior', percentual: 70, tipo: 'anel' },
-  { nome: 'Anel Superior', percentual: 45, tipo: 'anel' },
-  { nome: 'Camarote', percentual: 60, tipo: 'camarote' },
-  { nome: 'Estacionamento', percentual: 90, tipo: 'estacionamento' },
-])
+const usoEspacos = ref<{ nome: string; percentual: number; tipo: string }[]>([])
 
-const ultimasSolicitacoes = ref([
-  {
-    id: 1,
-    solicitante: 'Carlos Mendes',
-    evento: 'Festival de Jazz',
-    data: '2026-08-15',
-    valor: 15000,
-    status: 'Pendente',
-  },
-  {
-    id: 2,
-    solicitante: 'Ana Oliveira',
-    evento: 'Copa Nordeste',
-    data: '2026-07-20',
-    valor: 25000,
-    status: 'Aprovado',
-  },
-  {
-    id: 3,
-    solicitante: 'Tech Conference',
-    evento: 'Recife Tech Summit',
-    data: '2026-09-10',
-    valor: 18000,
-    status: 'Pendente',
-  },
-  {
-    id: 4,
-    solicitante: 'Comédia Produções',
-    evento: 'Noite do Riso',
-    data: '2026-06-05',
-    valor: 8000,
-    status: 'Aprovado',
-  },
-])
+const ultimasSolicitacoes = ref<any[]>([])
 
 const ultimaAtualizacao = computed(() => {
   const agora = new Date()
@@ -775,17 +736,196 @@ function formatCurrency(value: number): string {
 }
 
 function formatarData(data: string) {
-  return new Date(data).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+  const dataFormatada = new Date(data)
+  if (Number.isNaN(dataFormatada.getTime())) return ''
+
+  return dataFormatada.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+}
+
+function numeroSeguro(valor: unknown): number {
+  const numero = Number(valor || 0)
+  return Number.isFinite(numero) ? numero : 0
 }
 
 function verSolicitacao(id: number) {
   router.push(`/admin/solicitacoes`)
 }
 
+async function carregarDashboard() {
+  carregando.value = true
+  erroDashboard.value = ''
+
+  try {
+    const response = await api.get('/api/eventos')
+    eventos.value = Array.isArray(response.data) ? response.data : []
+
+    calcularStats()
+    usoEspacos.value = calcularUsoEspacos()
+    carregarUltimasSolicitacoes()
+    atualizarGrafico()
+  } catch (error) {
+    console.error('Erro ao carregar dashboard administrativo:', error)
+    erroDashboard.value = 'Não foi possível carregar os dados do dashboard.'
+  } finally {
+    carregando.value = false
+  }
+}
+
+function calcularReceitaEvento(evento: any): number {
+  if (!Array.isArray(evento?.lotes)) return 0
+
+  return evento.lotes.reduce((total: number, lote: any) => {
+    const preco = numeroSeguro(Number(lote?.preco || 0))
+    const vendidos = numeroSeguro(Number(lote?.vendidos || 0))
+
+    return total + preco * vendidos
+  }, 0)
+}
+
+function calcularTotalIngressosVendidos(listaEventos: any[]): number {
+  return listaEventos.reduce((totalEventos: number, evento: any) => {
+    if (!Array.isArray(evento?.lotes)) return totalEventos
+
+    const vendidosEvento = evento.lotes.reduce((totalLotes: number, lote: any) => {
+      return totalLotes + numeroSeguro(Number(lote?.vendidos || 0))
+    }, 0)
+
+    return totalEventos + vendidosEvento
+  }, 0)
+}
+
+function calcularStats() {
+  const eventosAprovados = eventos.value.filter((evento) => evento?.status === 'APROVADO')
+  const receitaIngressos = eventos.value.reduce((total, evento) => {
+    return total + calcularReceitaEvento(evento)
+  }, 0)
+  const receitaAluguel = 0
+  const totalIngressosVendidos = calcularTotalIngressosVendidos(eventos.value)
+  const ticketMedio = totalIngressosVendidos > 0 ? receitaIngressos / totalIngressosVendidos : 0
+  const publicoTotal = eventosAprovados.reduce((total, evento) => {
+    return total + numeroSeguro(evento?.expectativaPublico)
+  }, 0)
+  const ocupacaoMedia =
+    eventosAprovados.length > 0
+      ? eventosAprovados.reduce((total, evento) => {
+          return total + (numeroSeguro(evento?.expectativaPublico) / 46000) * 100
+        }, 0) / eventosAprovados.length
+      : 0
+  const hoje = new Date()
+  const eventosMes = eventos.value.filter((evento) => {
+    const dataInicio = new Date(evento?.dataInicio)
+
+    return (
+      !Number.isNaN(dataInicio.getTime()) &&
+      dataInicio.getMonth() === hoje.getMonth() &&
+      dataInicio.getFullYear() === hoje.getFullYear()
+    )
+  }).length
+
+  stats.value = {
+    receitaTotal: receitaIngressos + receitaAluguel,
+    receitaCrescimento: 0,
+    receitaAluguel,
+    aluguelCrescimento: 0,
+    receitaIngressos,
+    ingressosCrescimento: 0,
+    ticketMedio,
+    ticketCrescimento: 0,
+
+    pendentes: eventos.value.filter((evento) => evento?.status === 'PENDENTE').length,
+    pendentesTrend: 0,
+    aprovados: eventosAprovados.length,
+    aprovadosCrescimento: 0,
+    ocupacaoMedia: Math.round(ocupacaoMedia),
+    ocupacaoCrescimento: 0,
+    publicoTotal,
+    publicoCrescimento: 0,
+
+    eventosMes,
+    eventosCrescimento: 0,
+    capacidadeUtilizada: Math.round(ocupacaoMedia),
+  }
+}
+
+function calcularUsoEspacos() {
+  const eventosComEspaco = eventos.value.filter((evento) => evento?.espacoNome)
+  const totalEventosComEspaco = eventosComEspaco.length
+  const espacos = eventosComEspaco.reduce((agrupados: Record<string, number>, evento) => {
+    const nome = String(evento.espacoNome)
+    agrupados[nome] = (agrupados[nome] || 0) + 1
+
+    return agrupados
+  }, {})
+
+  return Object.entries(espacos).map(([nome, total]) => ({
+    nome,
+    percentual: totalEventosComEspaco > 0 ? Math.round((total / totalEventosComEspaco) * 100) : 0,
+    tipo: getTipoEspaco(nome),
+  }))
+}
+
+function getTipoEspaco(nome: string) {
+  const nomeNormalizado = nome.toLowerCase()
+
+  if (nomeNormalizado.includes('campo')) return 'campo'
+  if (nomeNormalizado.includes('anel')) return 'anel'
+  if (nomeNormalizado.includes('camarote')) return 'camarote'
+  if (nomeNormalizado.includes('estacionamento')) return 'estacionamento'
+
+  return 'outro'
+}
+
+function carregarUltimasSolicitacoes() {
+  ultimasSolicitacoes.value = [...eventos.value]
+    .sort((eventoA, eventoB) => {
+      const idA = numeroSeguro(eventoA?.id)
+      const idB = numeroSeguro(eventoB?.id)
+
+      return idB - idA
+    })
+    .slice(0, 4)
+    .map((evento) => ({
+      id: evento?.id,
+      solicitante: 'Produtor não informado',
+      evento: evento?.nome || 'Evento sem nome',
+      data: evento?.dataInicio,
+      valor: calcularReceitaEvento(evento),
+      status: traduzirStatus(evento?.status),
+    }))
+}
+
+function traduzirStatus(status: string) {
+  const statusTraduzidos: Record<string, string> = {
+    PENDENTE: 'Pendente',
+    APROVADO: 'Aprovado',
+    REJEITADO: 'Rejeitado',
+    CANCELADO: 'Cancelado',
+  }
+
+  return statusTraduzidos[status] || status
+}
+
+function gerarReceitaPorMes(ano: string | number) {
+  const receitas = Array(12).fill(0)
+  const anoNumerico = numeroSeguro(ano)
+
+  eventos.value.forEach((evento) => {
+    const dataInicio = new Date(evento?.dataInicio)
+    if (Number.isNaN(dataInicio.getTime()) || dataInicio.getFullYear() !== anoNumerico) return
+
+    receitas[dataInicio.getMonth()] += calcularReceitaEvento(evento)
+  })
+
+  return receitas
+}
+
 function atualizarGrafico() {
   if (chartInstance) {
-    const dados = receitaPorMes[anoSelecionado.value as keyof typeof receitaPorMes]
-    chartInstance.data.datasets[0].data = dados
+    const dados = gerarReceitaPorMes(anoSelecionado.value)
+    const dataset = chartInstance.data.datasets[0]
+    if (!dataset) return
+
+    dataset.data = dados
     chartInstance.update()
   }
 }
@@ -796,7 +936,7 @@ function initChart() {
     if (ctx) {
       if (chartInstance) chartInstance.destroy()
 
-      const dados = receitaPorMes[anoSelecionado.value as keyof typeof receitaPorMes]
+      const dados = gerarReceitaPorMes(anoSelecionado.value)
 
       chartInstance = new Chart(ctx, {
         type: 'line',
@@ -832,7 +972,7 @@ function initChart() {
               borderWidth: 1,
               callbacks: {
                 label: function (context) {
-                  return `Receita: ${formatCurrency(context.parsed.y)}`
+                  return `Receita: ${formatCurrency(context.parsed.y ?? 0)}`
                 },
               },
             },
@@ -862,7 +1002,8 @@ function exportarRelatorio() {
   alert('Funcionalidade de exportação em desenvolvimento')
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await carregarDashboard()
   initChart()
 })
 </script>

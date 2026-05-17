@@ -329,15 +329,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import AppNavbar from '../components/AppNavbar.vue'
+import { useUserStore } from '../stores/userStore'
 
 const isSidebarOpen = ref(false)
 const editandoDados = ref(false)
+const userStore = useUserStore()
 
 const admin = ref({
-  nome: 'Administrador',
-  email: 'admin@arenahub.com',
-  telefone: '(81) 99999-0000',
-  cargo: 'Administrador Master',
+  nome: userStore.user.name || 'Administrador',
+  email: userStore.user.email || '',
+  telefone: '',
+  cargo: 'Não informado',
 })
 
 const senhaAtual = ref('')

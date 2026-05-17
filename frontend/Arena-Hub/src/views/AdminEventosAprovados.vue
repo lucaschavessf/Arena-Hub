@@ -545,58 +545,7 @@ const tabs = [
   { label: 'Cancelados', value: 'CANCELADO' },
 ]
 
-const eventos = ref([
-  {
-    id: 1,
-    nome: 'Rock Nacional 2026',
-    produtor: 'Recife Eventos LTDA',
-    data: '2026-08-15',
-    horario: '20:00',
-    categoria: 'Show',
-    ocupacao: 75,
-    status: 'AGENDADO',
-  },
-  {
-    id: 2,
-    nome: 'Clássico Pernambucano',
-    produtor: 'Federação Pernambucana de Futebol',
-    data: '2026-07-20',
-    horario: '16:00',
-    categoria: 'Esportes',
-    ocupacao: 92,
-    status: 'AGENDADO',
-  },
-  {
-    id: 3,
-    nome: 'Festival de Verão',
-    produtor: 'Verão Produções',
-    data: '2026-06-10',
-    horario: '18:00',
-    categoria: 'Show',
-    ocupacao: 100,
-    status: 'FINALIZADO',
-  },
-  {
-    id: 4,
-    nome: 'Encontro de Startups',
-    produtor: 'Tech PE',
-    data: '2026-05-20',
-    horario: '14:00',
-    categoria: 'Corporativo',
-    ocupacao: 45,
-    status: 'CANCELADO',
-  },
-  {
-    id: 5,
-    nome: 'Show de Comédia',
-    produtor: 'Comédia Produções',
-    data: '2026-09-05',
-    horario: '21:00',
-    categoria: 'Comédia',
-    ocupacao: 60,
-    status: 'AGENDADO',
-  },
-])
+const eventos = ref<any[]>([])
 
 const eventosAgendados = computed(() => eventos.value.filter((e) => e.status === 'AGENDADO'))
 const eventosFinalizados = computed(() => eventos.value.filter((e) => e.status === 'FINALIZADO'))
@@ -607,8 +556,8 @@ const eventosFiltrados = computed(() => {
     const matchStatus = filtroStatus.value === 'todos' || evento.status === filtroStatus.value
     const matchBusca =
       !busca.value ||
-      evento.nome.toLowerCase().includes(busca.value.toLowerCase()) ||
-      evento.produtor.toLowerCase().includes(busca.value.toLowerCase())
+      evento.nome?.toLowerCase().includes(busca.value.toLowerCase()) ||
+      evento.produtor?.toLowerCase().includes(busca.value.toLowerCase())
     return matchStatus && matchBusca
   })
 })
@@ -634,6 +583,7 @@ function getCategoriaClass(categoria: string) {
 }
 
 function formatarData(data: string) {
+  if (!data) return ''
   return new Date(data).toLocaleDateString('pt-BR')
 }
 

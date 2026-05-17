@@ -237,51 +237,7 @@
           <p>Depoimentos de quem já realiza eventos na ArenaHub</p>
         </div>
         <div class="depoimentos-grid">
-          <div class="depoimento-card">
-            <div class="depoimento-texto">
-              <p>
-                "A ArenaHub superou todas as expectativas! Estrutura impecável e equipe extremamente
-                profissional. Meu evento foi um sucesso total."
-              </p>
-            </div>
-            <div class="depoimento-autor">
-              <div class="autor-avatar">CM</div>
-              <div class="autor-info">
-                <strong>Carlos Mendes</strong>
-                <span>Recife Eventos</span>
-              </div>
-            </div>
-          </div>
-          <div class="depoimento-card">
-            <div class="depoimento-texto">
-              <p>
-                "A plataforma de vendas integrada facilitou muito a gestão. Consegui acompanhar tudo
-                em tempo real e a ocupação foi de 95%!"
-              </p>
-            </div>
-            <div class="depoimento-autor">
-              <div class="autor-avatar">AO</div>
-              <div class="autor-info">
-                <strong>Ana Oliveira</strong>
-                <span>Sport Promotion</span>
-              </div>
-            </div>
-          </div>
-          <div class="depoimento-card">
-            <div class="depoimento-texto">
-              <p>
-                "Profissionalismo do início ao fim. O suporte da ArenaHub foi fundamental para o
-                sucesso da nossa operação."
-              </p>
-            </div>
-            <div class="depoimento-autor">
-              <div class="autor-avatar">TC</div>
-              <div class="autor-info">
-                <strong>Tech Conference</strong>
-                <span>Eventos Corporativos</span>
-              </div>
-            </div>
-          </div>
+          <p>Nenhum depoimento disponível no momento.</p>
         </div>
       </div>
     </section>

@@ -313,13 +313,18 @@
 
               <div class="evento-header">
                 <div class="evento-imagem">
-                  <img
-                    :src="
-                      evento.imagem ||
-                      'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=100&h=100&fit=crop'
-                    "
-                    :alt="evento.nome"
-                  />
+                  <img v-if="evento.imagem" :src="evento.imagem" :alt="evento.nome" />
+                  <svg
+                    v-else
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M20 12V8H4v16h16V20M12 12v8M8 12v4M16 12v4" />
+                  </svg>
                 </div>
                 <div class="evento-info">
                   <h3>{{ evento.nome }}</h3>
@@ -797,68 +802,24 @@ const categorias = ref<any[]>([])
 const carregandoDados = ref(false)
 
 const produtor = ref({
-  nome: 'João Produtor',
-  email: 'joao@produtora.com',
-  empresa: 'Recife Eventos LTDA',
-  documento: '12.345.678/0001-90',
-  telefone: '(81) 99999-8888',
-  website: 'www.recifeeventos.com.br',
-  bio: 'Produtor de eventos com mais de 10 anos de experiência no mercado pernambucano.',
+  nome: userStore.user.name || 'Produtor',
+  email: userStore.user.email || '',
+  empresa: '',
+  documento: '',
+  telefone: '',
+  website: '',
+  bio: '',
 })
 
-const stats = ref({
-  pendentes: 2,
-  aprovados: 3,
-  realizados: 5,
-  publicoTotal: '45.2k',
-})
-
-const solicitacoes = ref([
-  {
-    id: 1,
-    nomeEvento: 'Festival de Jazz PE',
-    categoria: 'Show',
-    dataEvento: '2026-09-15',
-    dataEnvio: '2026-04-01',
-    horario: '20:00',
-    publicoEstimado: 5000,
-    espacos: ['Campo', 'Anel Inferior'],
-    descricao: 'Festival de jazz com artistas nacionais e internacionais...',
-    imagem: null,
-    status: 'pendente',
-    motivo: null,
-  },
-  {
-    id: 2,
-    nomeEvento: 'Copa Nordeste de Vôlei',
-    categoria: 'Esportes',
-    dataEvento: '2026-08-20',
-    dataEnvio: '2026-03-15',
-    horario: '14:00',
-    publicoEstimado: 3000,
-    espacos: ['Campo', 'Camarote'],
-    descricao: 'Competição regional de vôlei...',
-    imagem: null,
-    status: 'aprovado',
-    motivo: null,
-  },
-  {
-    id: 3,
-    nomeEvento: 'Show de Comédia',
-    categoria: 'Comédia',
-    dataEvento: '2026-06-10',
-    dataEnvio: '2026-02-10',
-    horario: '21:00',
-    publicoEstimado: 1500,
-    espacos: ['Teatro'],
-    descricao: 'Show de stand-up comedy...',
-    imagem: null,
-    status: 'reprovado',
-    motivo: 'Data indisponível para o período solicitado. Sugerimos reagendar para julho.',
-  },
-])
-
+const solicitacoes = ref<any[]>([])
 const eventos = ref<any[]>([])
+
+const stats = computed(() => ({
+  pendentes: solicitacoes.value.filter((solicitacao) => solicitacao.status === 'pendente').length,
+  aprovados: solicitacoes.value.filter((solicitacao) => solicitacao.status === 'aprovado').length,
+  realizados: eventos.value.filter((evento) => evento.status === 'realizado').length,
+  publicoTotal: eventos.value.reduce((total, evento) => total + numeroSeguro(evento.publicoTotal), 0),
+}))
 
 const novoEvento = ref({
   nome: '',
@@ -889,7 +850,12 @@ function formatCurrency(value: number) {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(value)
+  }).format(numeroSeguro(value))
+}
+
+function numeroSeguro(valor: unknown): number {
+  const numero = Number(valor || 0)
+  return Number.isFinite(numero) ? numero : 0
 }
 
 function getStatusLabel(status: string) {
@@ -897,6 +863,7 @@ function getStatusLabel(status: string) {
     pendente: 'Pendente',
     aprovado: 'Aprovado',
     reprovado: 'Reprovado',
+    cancelado: 'Cancelado',
   }
   return map[status] || status
 }
@@ -908,6 +875,28 @@ function getEventoStatusLabel(status: string) {
     cancelado: 'Cancelado',
   }
   return map[status] || status
+}
+
+function normalizarStatusSolicitacao(status: string) {
+  const map: Record<string, string> = {
+    PENDENTE: 'pendente',
+    APROVADO: 'aprovado',
+    REJEITADO: 'reprovado',
+    CANCELADO: 'cancelado',
+  }
+
+  return map[status] || status?.toLowerCase?.() || ''
+}
+
+function normalizarStatusEvento(status: string) {
+  const map: Record<string, string> = {
+    APROVADO: 'aprovado',
+    FINALIZADO: 'realizado',
+    REALIZADO: 'realizado',
+    CANCELADO: 'cancelado',
+  }
+
+  return map[status] || status?.toLowerCase?.() || 'aprovado'
 }
 
 function handleImagemUpload(event: Event) {
@@ -1132,41 +1121,46 @@ function salvarPerfil() {
 async function carregarSolicitacoes() {
   try {
     const response = await api.get('/api/eventos/produtor')
-    solicitacoes.value = response.data.map((s: any) => ({
+    const dados = Array.isArray(response.data) ? response.data : []
+    solicitacoes.value = dados.map((s: any) => ({
       id: s.id,
       nomeEvento: s.nome,
       categoria: s.categoriaNome || '',
       dataEvento: s.dataInicio,
       dataEnvio: null,
       horario: s.dataInicio ? new Date(s.dataInicio).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '',
-      publicoEstimado: s.expectativaPublico,
-      espacos: [s.espacoNome || ''],
+      publicoEstimado: numeroSeguro(s.expectativaPublico),
+      espacos: s.espacoNome ? [s.espacoNome] : [],
       descricao: s.descricao,
       imagem: null,
-      status: s.status === 'PENDENTE' ? 'pendente' : s.status === 'APROVADO' ? 'aprovado' : 'reprovado',
+      status: normalizarStatusSolicitacao(s.status),
       motivo: '',
     }))
   } catch (error) {
     console.error('Erro ao carregar solicitações:', error)
+    solicitacoes.value = []
   }
 }
 
 async function carregarMeusEventos() {
   try {
     const response = await api.get('/api/eventos/meus-eventos')
-    eventos.value = response.data.map((e: any) => ({
+    const dados = Array.isArray(response.data) ? response.data : []
+    eventos.value = dados.map((e: any) => ({
       id: e.id,
       nome: e.nome,
       data: e.dataInicio,
-      local: e.espacoNome,
+      local: e.espacoNome || '',
       imagem: null,
-      ingressosVendidos: e.ingressosVendidos || 0,
+      ingressosVendidos: numeroSeguro(e.ingressosVendidos),
       ocupacao: 0,
-      receita: e.receita || 0,
-      status: 'aprovado',
+      receita: numeroSeguro(e.receita),
+      publicoTotal: numeroSeguro(e.expectativaPublico),
+      status: normalizarStatusEvento(e.status),
     }))
   } catch (error) {
     console.error('Erro ao carregar meus eventos aprovados:', error)
+    eventos.value = []
   }
 }
 
@@ -1179,10 +1173,12 @@ onMounted(async () => {
       api.get('/api/categoria-evento'),
       api.get('/api/espaco'),
     ])
-    categorias.value = categoriasRes.data
-    espacosDisponiveis.value = espacosRes.data
+    categorias.value = Array.isArray(categoriasRes.data) ? categoriasRes.data : []
+    espacosDisponiveis.value = Array.isArray(espacosRes.data) ? espacosRes.data : []
   } catch (error) {
     console.error('Erro ao carregar dados iniciais:', error)
+    categorias.value = []
+    espacosDisponiveis.value = []
   }
 
   await carregarSolicitacoes()

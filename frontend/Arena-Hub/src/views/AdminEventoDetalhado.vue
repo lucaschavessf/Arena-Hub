@@ -556,29 +556,24 @@ const modalCancelarAberto = ref(false)
 const motivoCancelamento = ref('')
 
 const evento = ref({
-  id: 1,
-  nome: 'Rock Nacional 2026',
-  produtor: 'Recife Eventos LTDA',
-  categoria: 'Show',
-  data: '2026-08-15',
-  horario: '20:00',
-  descricao:
-    'O maior festival de rock do Nordeste com bandas nacionais e internacionais. Estrutura completa com palco principal, camarotes e área VIP.',
-  status: 'AGENDADO',
-  capacidadeAutorizada: 25000,
-  publicoEstimado: 30000,
-  reservasConfirmadas: 22500,
-  ocupacao: 90,
-  espacos: ['Campo', 'Anel Inferior', 'Camarote'],
-  receitaArena: 85000,
-  receitaIngressos: 450000,
-  receitaTotal: 535000,
-  observacoes: 'Evento com grande expectativa de público. Reforçar segurança.',
-  reservasPorSetor: [
-    { nome: 'Campo', quantidade: 15000, capacidade: 18000 },
-    { nome: 'Anel Inferior', quantidade: 6000, capacidade: 7000 },
-    { nome: 'Camarote', quantidade: 1500, capacidade: 2000 },
-  ],
+  id: Number(route.params.id || 0),
+  nome: '',
+  produtor: '',
+  categoria: '',
+  data: '',
+  horario: '',
+  descricao: '',
+  status: 'CANCELADO',
+  capacidadeAutorizada: 0,
+  publicoEstimado: 0,
+  reservasConfirmadas: 0,
+  ocupacao: 0,
+  espacos: [] as string[],
+  receitaArena: 0,
+  receitaIngressos: 0,
+  receitaTotal: 0,
+  observacoes: '',
+  reservasPorSetor: [] as Array<{ nome: string; quantidade: number; capacidade: number }>,
 })
 
 const alertas = computed(() => {
@@ -621,6 +616,7 @@ function getCategoriaClass(categoria: string) {
 }
 
 function formatarData(data: string) {
+  if (!data) return ''
   return new Date(data).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: '2-digit',

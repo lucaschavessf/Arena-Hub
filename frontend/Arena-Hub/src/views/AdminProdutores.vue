@@ -725,108 +725,21 @@ const solicitacaoParaReprovar = ref<any>(null)
 const motivoReprovacao = ref('')
 const observacoesReprovacao = ref('')
 
-const stats = ref({
-  solicitacoes: 3,
-  ativos: 2,
-  eventos: 28,
-  publico: '125.5k',
-})
+const solicitacoesPendentes = ref<any[]>([])
+const produtoresAtivos = ref<any[]>([])
+const solicitacoesReprovadas = ref<any[]>([])
 
-const solicitacoesPendentes = ref([
-  {
-    id: 1,
-    nome: 'João Silva',
-    email: 'joao@produtora.com',
-    telefone: '(81) 99999-1111',
-    whatsapp: '(81) 98888-1111',
-    empresa: 'Recife Eventos LTDA',
-    cnpj: '12.345.678/0001-90',
-    razaoSocial: 'Recife Eventos e Produções LTDA',
-    nomeFantasia: 'Recife Eventos',
-    inscricaoEstadual: '123456789',
-    anosExperiencia: '5-10',
-    tiposEvento: ['Show', 'Esportes', 'Corporativo'],
-    portfolio: 'Festival de Jazz PE, Copa Nordeste de Vôlei',
-    motivacao: 'Quero levar entretenimento de qualidade para o público pernambucano',
-    dataSolicitacao: '2026-04-01',
-    status: 'pendente',
-  },
-  {
-    id: 2,
-    nome: 'Ana Oliveira',
-    email: 'ana@festivais.com',
-    telefone: '(81) 97777-2222',
-    whatsapp: '(81) 97777-2222',
-    empresa: 'Festivais Nordeste',
-    cnpj: '98.765.432/0001-11',
-    razaoSocial: 'Festivais Nordeste Produções',
-    nomeFantasia: 'Fest Nordeste',
-    anosExperiencia: '3-5',
-    tiposEvento: ['Show', 'Comédia'],
-    portfolio: 'Festival Nordestino de Música',
-    motivacao: 'Acredito no potencial cultural do Nordeste',
-    dataSolicitacao: '2026-04-05',
-    status: 'pendente',
-  },
-  {
-    id: 3,
-    nome: 'Tech Conference',
-    email: 'contato@techconf.com',
-    telefone: '(81) 98888-3333',
-    empresa: 'Tech Conference Brasil',
-    cnpj: '11.222.333/0001-44',
-    razaoSocial: 'Tech Conference Eventos',
-    anosExperiencia: '1-3',
-    tiposEvento: ['Corporativo'],
-    portfolio: 'Recife Tech Summit 2025',
-    motivacao: 'Conectar profissionais de tecnologia',
-    dataSolicitacao: '2026-04-08',
-    status: 'pendente',
-  },
-])
+const stats = computed(() => ({
+  solicitacoes: solicitacoesPendentes.value.length,
+  ativos: produtoresAtivos.value.length,
+  eventos: produtoresAtivos.value.reduce((total, produtor) => total + numeroSeguro(produtor.eventosRealizados), 0),
+  publico: produtoresAtivos.value.reduce((total, produtor) => total + numeroSeguro(produtor.publicoTotal), 0),
+}))
 
-const produtoresAtivos = ref([
-  {
-    id: 1,
-    nome: 'Carlos Mendes',
-    email: 'carlos@producoes.com',
-    telefone: '(81) 99999-4444',
-    empresa: 'Mendes Produções',
-    eventosRealizados: 12,
-    publicoTotal: 45000,
-    dataCadastro: '2025-01-15',
-    status: 'ativo',
-  },
-  {
-    id: 2,
-    nome: 'Sport Promotion',
-    email: 'contato@sportpromotion.com',
-    telefone: '(81) 95555-5555',
-    empresa: 'Sport Promotion LTDA',
-    eventosRealizados: 16,
-    publicoTotal: 80500,
-    dataCadastro: '2025-03-20',
-    status: 'ativo',
-  },
-])
-
-const solicitacoesReprovadas = ref([
-  {
-    id: 4,
-    nome: 'Maria Santos',
-    email: 'maria@eventos.com',
-    telefone: '(81) 96666-6666',
-    empresa: 'Santos Produções',
-    cnpj: '55.666.777/0001-88',
-    anosExperiencia: 'Menos de 1 ano',
-    tiposEvento: ['Show'],
-    portfolio: 'Eventos pequenos',
-    motivacao: 'Quero produzir eventos',
-    dataSolicitacao: '2026-03-20',
-    status: 'reprovado',
-    motivoReprovacao: 'Documentação incompleta - CNPJ irregular',
-  },
-])
+function numeroSeguro(valor: unknown): number {
+  const numero = Number(valor || 0)
+  return Number.isFinite(numero) ? numero : 0
+}
 
 function formatarData(data: string) {
   if (!data) return ''
@@ -877,8 +790,6 @@ function confirmarReprovacao() {
       motivoReprovacao: `${motivoReprovacao.value}${observacoesReprovacao.value ? ` - ${observacoesReprovacao.value}` : ''}`,
     })
   }
-
-  stats.value.solicitacoes = solicitacoesPendentes.value.length
   fecharModalReprovar()
   alert('Solicitação reprovada com sucesso!')
 }
@@ -899,9 +810,6 @@ function aprovarSolicitacao(solicitacao: any) {
       status: 'ativo',
     })
   }
-
-  stats.value.solicitacoes = solicitacoesPendentes.value.length
-  stats.value.ativos = produtoresAtivos.value.length
   alert(`Produtor ${solicitacao.nome} aprovado com sucesso!`)
 }
 
@@ -910,7 +818,6 @@ function bloquearProdutor(produtor: any) {
     const index = produtoresAtivos.value.findIndex((p) => p.id === produtor.id)
     if (index !== -1) {
       produtoresAtivos.value.splice(index, 1)
-      stats.value.ativos = produtoresAtivos.value.length
       alert(`Produtor ${produtor.nome} bloqueado com sucesso!`)
     }
   }

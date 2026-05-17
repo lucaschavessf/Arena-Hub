@@ -565,28 +565,33 @@ const novoEspaco = ref({
 })
 
 const espacosAtivos = computed(() => espacos.value.filter((e) => e.status === 'ATIVO'))
-const capacidadeTotal = computed(() => espacos.value.reduce((acc, e) => acc + e.capacidade, 0))
+const capacidadeTotal = computed(() => espacos.value.reduce((acc, e) => acc + numeroSeguro(e.capacidade), 0))
 const receitaPotencial = computed(() =>
-  espacos.value.reduce((acc, e) => acc + (e.status === 'ATIVO' ? e.preco : 0), 0),
+  espacos.value.reduce((acc, e) => acc + (e.status === 'ATIVO' ? numeroSeguro(e.preco) : 0), 0),
 )
 
 const precoMedioHora = computed(() => {
   const horaSpaces = espacos.value.filter((e) => e.tipoCobranca === 'HORA' && e.status === 'ATIVO')
   if (horaSpaces.length === 0) return 0
-  return horaSpaces.reduce((acc, e) => acc + e.preco, 0) / horaSpaces.length
+  return horaSpaces.reduce((acc, e) => acc + numeroSeguro(e.preco), 0) / horaSpaces.length
 })
 
 const precoMedioDia = computed(() => {
   const diaSpaces = espacos.value.filter((e) => e.tipoCobranca === 'DIA' && e.status === 'ATIVO')
   if (diaSpaces.length === 0) return 0
-  return diaSpaces.reduce((acc, e) => acc + e.preco, 0) / diaSpaces.length
+  return diaSpaces.reduce((acc, e) => acc + numeroSeguro(e.preco), 0) / diaSpaces.length
 })
+
+function numeroSeguro(valor: unknown): number {
+  const numero = Number(valor || 0)
+  return Number.isFinite(numero) ? numero : 0
+}
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(value)
+  }).format(numeroSeguro(value))
 }
 
 function getStatusLabel(status: string): string {
@@ -631,13 +636,15 @@ async function carregarEspacos() {
   loading.value = true
   try {
     const response = await api.get('/api/espaco')
-    espacos.value = response.data.map((item: any) => ({
+    const dados = Array.isArray(response.data) ? response.data : []
+    espacos.value = dados.map((item: any) => ({
       ...item,
       status: item.status || 'INATIVO',
     }))
     console.log('Espaços carregados:', espacos.value)
   } catch (error) {
     console.error('Erro ao carregar espaços:', error)
+    espacos.value = []
     alert('Erro ao carregar espaços')
   } finally {
     loading.value = false
@@ -725,7 +732,8 @@ async function alterarStatus(espaco: Espaco, event: Event) {
     alert('Erro ao alterar status')
     const index = espacos.value.findIndex((e) => e.id === espaco.id)
     if (index !== -1) {
-      espacos.value[index].status = espaco.status
+      const espacoAtual = espacos.value[index]
+      if (espacoAtual) espacoAtual.status = espaco.status
     }
   }
 }

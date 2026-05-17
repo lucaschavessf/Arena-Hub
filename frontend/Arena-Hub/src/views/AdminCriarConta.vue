@@ -301,29 +301,7 @@ const form = ref({
   }
 })
 
-const administradores = ref([
-  {
-    id: 1,
-    nome: 'Administrador Master',
-    email: 'admin@arenahub.com',
-    status: 'ativo',
-    ultimoAcesso: 'Hoje, 10:30'
-  },
-  {
-    id: 2,
-    nome: 'João Silva',
-    email: 'joao@arenahub.com',
-    status: 'ativo',
-    ultimoAcesso: 'Ontem, 15:45'
-  },
-  {
-    id: 3,
-    nome: 'Maria Santos',
-    email: 'maria@arenahub.com',
-    status: 'inativo',
-    ultimoAcesso: '05/05/2026'
-  }
-])
+const administradores = ref<any[]>([])
 
 const strengthPercent = computed(() => {
   let score = 0

@@ -378,7 +378,7 @@ async function carregarEventosAprovados() {
   carregando.value = true
   try {
     const response = await api.get('/api/eventos')
-    const todosEventos = response.data
+    const todosEventos = Array.isArray(response.data) ? response.data : []
 
     console.log('Eventos recebidos da API:', todosEventos)
 
@@ -402,6 +402,7 @@ async function carregarEventosAprovados() {
     }
   } catch (error) {
     console.error('Erro ao carregar eventos aprovados:', error)
+    eventos.value = []
   } finally {
     carregando.value = false
   }

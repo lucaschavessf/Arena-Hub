@@ -280,11 +280,14 @@ const carregarDados = async () => {
     capacidadeMaxima.value = evento.value.espaco?.capacidade || 0
 
     const resCats = await api.get('/api/categorias-ingresso')
-    categoriasIngresso.value = resCats.data
+    categoriasIngresso.value = Array.isArray(resCats.data) ? resCats.data : []
 
     await carregarLotes()
   } catch (error) {
     console.error('Erro ao carregar dados:', error)
+    evento.value = {}
+    categoriasIngresso.value = []
+    lotes.value = []
   } finally {
     carregando.value = false
   }
@@ -293,28 +296,34 @@ const carregarDados = async () => {
 const carregarLotes = async () => {
   try {
     const resLotes = await api.get(`/api/eventos/${eventoId.value}/lotes`)
-    lotes.value = resLotes.data
+    lotes.value = Array.isArray(resLotes.data) ? resLotes.data : []
   } catch (error) {
     console.error('Erro ao carregar lotes:', error)
+    lotes.value = []
   }
 }
 const totalIngressos = computed(() => {
   return lotes.value.reduce((acc, lote) => {
-    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + item.quantidadeTotal, 0) || 0)
+    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + numeroSeguro(item.quantidadeTotal), 0) || 0)
   }, 0)
 })
 
 const ingressosVendidos = computed(() => {
   return lotes.value.reduce((acc, lote) => {
-    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + item.vendidos, 0) || 0)
+    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + numeroSeguro(item.vendidos), 0) || 0)
   }, 0)
 })
 
 const receitaTotal = computed(() => {
   return lotes.value.reduce((acc, lote) => {
-    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + (item.vendidos * item.preco), 0) || 0)
+    return acc + (lote.itens?.reduce((accItens: number, item: any) => accItens + (numeroSeguro(item.vendidos) * numeroSeguro(item.preco)), 0) || 0)
   }, 0)
 })
+
+function numeroSeguro(valor: unknown): number {
+  const numero = Number(valor || 0)
+  return Number.isFinite(numero) ? numero : 0
+}
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat('pt-BR', {
