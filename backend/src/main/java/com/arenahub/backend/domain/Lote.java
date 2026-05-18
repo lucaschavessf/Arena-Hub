@@ -24,7 +24,8 @@ public class Lote {
 
     private String nome;
 
-    private String status;
+    @Convert(converter = StatusLoteConverter.class)
+    private StatusLote status;
 
     @Column(name = "data_inicio")
     private java.time.LocalDateTime dataInicio;
@@ -60,8 +61,8 @@ public class Lote {
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public StatusLote getStatus() { return status; }
+    public void setStatus(StatusLote status) { this.status = status; }
 
     public java.time.LocalDateTime getDataInicio() { return dataInicio; }
     public void setDataInicio(java.time.LocalDateTime dataInicio) { this.dataInicio = dataInicio; }

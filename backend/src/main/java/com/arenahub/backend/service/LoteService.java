@@ -3,6 +3,7 @@ package com.arenahub.backend.service;
 import com.arenahub.backend.domain.CategoriaIngresso;
 import com.arenahub.backend.domain.Evento;
 import com.arenahub.backend.domain.Lote;
+import com.arenahub.backend.domain.StatusLote;
 import com.arenahub.backend.dto.LoteBlocoRequestDTO;
 import com.arenahub.backend.dto.LoteBlocoResponseDTO;
 import com.arenahub.backend.dto.LoteItemRequestDTO;
@@ -42,7 +43,7 @@ public class LoteService {
             String nome = entry.getKey();
             List<Lote> lotesDoBloco = entry.getValue();
 
-            String status = lotesDoBloco.get(0).getStatus();
+            String status = lotesDoBloco.get(0).getStatus() != null ? lotesDoBloco.get(0).getStatus().name() : "";
             java.time.LocalDateTime dataInicio = lotesDoBloco.get(0).getDataInicio();
             java.time.LocalDateTime dataFim = lotesDoBloco.get(0).getDataFim();
 
@@ -82,6 +83,32 @@ public class LoteService {
             throw new RuntimeException("A soma da quantidade total ultrapassa a capacidade máxima do espaço!");
         }
 
+        if (dto.dataInicio() != null && dto.dataFim() != null) {
+            if (!dto.dataFim().isAfter(dto.dataInicio())) {
+                throw new RuntimeException("A data de término deve ser posterior à data de início.");
+            }
+        }
+
+        for (Lote existente : lotesExistentesOutros) {
+            if (existente.getDataInicio() != null && existente.getDataFim() != null &&
+                dto.dataInicio() != null && dto.dataFim() != null) {
+                if (dto.dataInicio().isBefore(existente.getDataFim()) && dto.dataFim().isAfter(existente.getDataInicio())) {
+                    throw new RuntimeException("Não pode haver sobreposição de datas entre lotes do mesmo evento.");
+                }
+            }
+        }
+
+        StatusLote novoStatus = dto.status() != null ? StatusLote.valueOf(dto.status().toUpperCase()) : StatusLote.AGENDADO;
+
+        if (novoStatus == StatusLote.ATIVO) {
+            for (Lote existente : lotesExistentesOutros) {
+                if (existente.getStatus() == StatusLote.ATIVO) {
+                    existente.setStatus(StatusLote.PAUSADO);
+                    loteRepository.save(existente);
+                }
+            }
+        }
+
         // Delete old lots of this block
         List<Lote> lotesAntigosDesteBloco = lotesExistentes.stream()
                 .filter(l -> dto.nome().equals(l.getNome()))
@@ -94,7 +121,7 @@ public class LoteService {
 
             Lote lote = new Lote();
             lote.setNome(dto.nome());
-            lote.setStatus(dto.status());
+            lote.setStatus(novoStatus);
             lote.setDataInicio(dto.dataInicio());
             lote.setDataFim(dto.dataFim());
             lote.setPreco(item.preco());
@@ -113,8 +140,21 @@ public class LoteService {
                 .filter(l -> nome.equals(l.getNome()))
                 .collect(Collectors.toList());
 
+        StatusLote novoStatusEnum = StatusLote.valueOf(novoStatus.toUpperCase());
+        if (novoStatusEnum == StatusLote.ATIVO) {
+            List<Lote> lotesExistentesOutros = lotesExistentes.stream()
+                    .filter(l -> !nome.equals(l.getNome()))
+                    .collect(Collectors.toList());
+            for (Lote existente : lotesExistentesOutros) {
+                if (existente.getStatus() == StatusLote.ATIVO) {
+                    existente.setStatus(StatusLote.PAUSADO);
+                    loteRepository.save(existente);
+                }
+            }
+        }
+
         for (Lote lote : lotesDesteBloco) {
-            lote.setStatus(novoStatus);
+            lote.setStatus(novoStatusEnum);
             loteRepository.save(lote);
         }
     }

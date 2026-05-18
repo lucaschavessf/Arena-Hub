@@ -81,7 +81,7 @@ public class EventoService {
                             lote.getQuantidadeTotal() - lote.getQuantidadeDisponivel(),
                             lote.getQuantidadeDisponivel(),
                             lote.getCategoria() != null ? lote.getCategoria().getNome() : null,
-                            lote.getStatus()))
+                            lote.getStatus() != null ? lote.getStatus().name() : null))
                     .collect(Collectors.toList());
 
             return new EventoDetalhesDTO(
@@ -263,7 +263,7 @@ public class EventoService {
                         lote.getQuantidadeTotal() - lote.getQuantidadeDisponivel(),
                         lote.getQuantidadeDisponivel(),
                         lote.getCategoria() != null ? lote.getCategoria().getNome() : null,
-                        lote.getStatus()))
+                        lote.getStatus() != null ? lote.getStatus().name() : null))
                 .collect(Collectors.toList());
 
         return new EventoResponseDTO(

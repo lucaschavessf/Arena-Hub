@@ -228,12 +228,16 @@
           <div class="form-field">
             <label>Status</label>
             <select v-model="formLote.status" class="input-field">
+              <option value="agendado">Agendado</option>
               <option value="ativo">Ativo</option>
               <option value="pausado">Pausado</option>
               <option value="encerrado">Encerrado</option>
             </select>
           </div>
         </div>
+        <p v-if="erroValidacao" style="color: #ef4444; font-size: 0.85rem; padding: 0 24px; margin: 12px 0 0 0; text-align: center; font-weight: 600;">
+          {{ erroValidacao }}
+        </p>
         <div class="modal-footer">
           <button class="btn-modal-cancelar" @click="fecharModalLote">Cancelar</button>
           <button class="btn-modal-confirmar" @click="salvarLote">Salvar Lote</button>
@@ -260,9 +264,11 @@ const formLote = ref({
   nome: '',
   dataInicio: '',
   dataFim: '',
-  status: 'ativo',
+  status: 'agendado',
   itens: [] as Array<{ categoriaId: number | null, preco: number, quantidadeTotal: number }>
 })
+
+const erroValidacao = ref('')
 
 const evento = ref<any>({})
 const lotes = ref<any[]>([])
@@ -358,9 +364,10 @@ function abrirModalNovoLote() {
     nome: '',
     dataInicio: '',
     dataFim: '',
-    status: 'ativo',
+    status: 'agendado',
     itens: [{ categoriaId: null, preco: 0, quantidadeTotal: 0 }]
   }
+  erroValidacao.value = ''
   modalLote.value = true
 }
 
@@ -377,6 +384,7 @@ function abrirModalEditarLote(lote: any) {
       quantidadeTotal: i.quantidadeTotal
     }))
   }
+  erroValidacao.value = ''
   modalLote.value = true
 }
 
@@ -393,6 +401,14 @@ async function salvarLote() {
     alert('Informe o nome do lote')
     return
   }
+  
+  if (formLote.value.dataInicio && formLote.value.dataFim) {
+    if (new Date(formLote.value.dataFim) <= new Date(formLote.value.dataInicio)) {
+      erroValidacao.value = 'A data de término deve ser posterior à data de início.'
+      return
+    }
+  }
+
   if (formLote.value.itens.length === 0) {
     alert('Adicione pelo menos um item ao lote')
     return
@@ -411,7 +427,15 @@ async function salvarLote() {
     await carregarLotes()
     fecharModalLote()
   } catch (error: any) {
-    alert(error.response?.data?.message || 'Erro ao salvar lote (verifique a capacidade do espaço).')
+    const status = error.response?.status
+    const msg = error.response?.data?.message || error.response?.data?.error || ''
+    if (status === 401 || status === 403) {
+      erroValidacao.value = 'Sessão expirada ou sem permissão. Faça login novamente.'
+    } else if (msg.includes('sobreposição')) {
+      erroValidacao.value = 'Conflito de Calendário: Existe sobreposição de datas com outro lote deste evento. Ajuste o período.'
+    } else {
+      erroValidacao.value = msg || 'Erro ao salvar lote (verifique a capacidade do espaço).'
+    }
   }
 }
 

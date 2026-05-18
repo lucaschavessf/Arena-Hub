@@ -1,6 +1,5 @@
 package com.arenahub.backend.controller;
 
-import com.arenahub.backend.domain.Evento;
 import com.arenahub.backend.dto.EventoRequestDTO;
 import com.arenahub.backend.service.EventoService;
 import jakarta.validation.Valid;

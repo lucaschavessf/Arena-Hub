@@ -3,6 +3,7 @@ package com.arenahub.backend.service;
 import com.arenahub.backend.domain.Cliente;
 import com.arenahub.backend.domain.Ingresso;
 import com.arenahub.backend.domain.Lote;
+import com.arenahub.backend.domain.StatusLote;
 import com.arenahub.backend.domain.Pedido;
 import com.arenahub.backend.dto.IngressoResponseDTO;
 import com.arenahub.backend.dto.PedidoRequestDTO;
@@ -71,6 +72,31 @@ public class PedidoService {
         lote.setQuantidadeDisponivel(
                 lote.getQuantidadeDisponivel() - dto.getQuantidade()
         );
+
+        if (lote.getQuantidadeDisponivel() == 0) {
+            lote.setStatus(StatusLote.ESGOTADO);
+            
+            List<Lote> lotesDoEvento = _loteRepository.findByEventoId(lote.getEvento().getId());
+            lotesDoEvento.stream()
+                .filter(l -> l.getStatus() == StatusLote.AGENDADO)
+                .min(java.util.Comparator.comparing(Lote::getDataInicio))
+                .ifPresent(proximo -> {
+                    lotesDoEvento.stream()
+                        .filter(l -> l.getStatus() == StatusLote.ATIVO)
+                        .filter(l -> l.getNome() != null && !l.getNome().equals(proximo.getNome()))
+                        .forEach(ativo -> {
+                            ativo.setStatus(StatusLote.PAUSADO);
+                            _loteRepository.atualizar(ativo);
+                        });
+                        
+                    lotesDoEvento.stream()
+                        .filter(l -> l.getNome() != null && l.getNome().equals(proximo.getNome()))
+                        .forEach(peer -> {
+                            peer.setStatus(StatusLote.ATIVO);
+                            _loteRepository.atualizar(peer);
+                        });
+                });
+        }
 
         _pedidoRepository.inserir(pedido);
         _loteRepository.atualizar(lote);
