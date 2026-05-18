@@ -43,7 +43,7 @@ O arena HUB é uma solução tecnológica desenvolvida para a disciplina de Prog
 - Implementação de no mínimo 2 histórias
 - Atualização do Issue/bug tracker - [Link](https://trello.com/b/aW6NGwj7/projeto-poo)
 - Novo screencast 
-- Documentação para configuração de ambiente
+- Documentação para configuração de ambiente - [Link] (https://docs.google.com/document/d/1_eznUeNYL1qgmu6KV2x5V0lhbKYjqY1bAEuztonSznw/edit?usp=sharing)
 
 ## 👥 Membros da Equipe,
 <table align="center">
