@@ -17,6 +17,8 @@ import com.arenahub.backend.dto.EventoDetalhesDTO;
 import com.arenahub.backend.dto.EventoResumoDTO;
 
 import com.arenahub.backend.dto.EventoResponseDTO;
+import java.util.Map;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @RestController
 @RequestMapping("/api/eventos")
@@ -59,6 +61,19 @@ public class EventoController {
     public ResponseEntity<EventoDetalhesDTO> getEventoById(@PathVariable Long id) {
         Optional<EventoDetalhesDTO> evento = eventoService.buscarDetalhesPorId(id);
         return evento.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/validar-disponibilidade")
+    public ResponseEntity<Map<String, Object>> validarDisponibilidade(
+            @RequestParam Long espacoId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
+        boolean disponivel = eventoService.validarDisponibilidade(espacoId, dataInicio, dataFim);
+        String mensagem = disponivel ? "Espaço disponível" : "Conflito de agenda: O espaço já possui um evento marcado nesse período.";
+        return ResponseEntity.ok(Map.of(
+                "disponivel", disponivel,
+                "mensagem", mensagem
+        ));
     }
 
     @PostMapping

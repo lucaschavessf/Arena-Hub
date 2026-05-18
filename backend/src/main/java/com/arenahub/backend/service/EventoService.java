@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,6 +118,15 @@ public class EventoService {
         )).collect(Collectors.toList());
     }
 
+    public boolean validarDisponibilidade(Long espacoId, LocalDateTime dataInicio, LocalDateTime dataFim) {
+        return !eventoRepository.existsConflitoDeAgenda(
+                espacoId,
+                dataInicio,
+                dataFim,
+                List.of(StatusEvento.REJEITADO, StatusEvento.CANCELADO)
+        );
+    }
+
     public EventoResponseDTO cadastrarEvento(EventoRequestDTO data) {
         User usuarioLogado = getUsuarioLogado();
 
@@ -136,6 +146,31 @@ public class EventoService {
         if (data.espacoId() != null) {
             espaco = espacoRepository.findById(data.espacoId())
                     .orElseThrow(() -> new EntityNotFoundException("Espaço não encontrado"));
+        }
+
+        if (data.dataInicio() != null && data.dataFim() != null) {
+            long dias = Duration.between(data.dataInicio(), data.dataFim()).toDays();
+            if (dias > 7) {
+                throw new IllegalArgumentException("O evento não pode ter duração superior a 7 dias.");
+            }
+        }
+
+        if (espaco != null) {
+            if (data.expectativaPublico() != null && data.expectativaPublico() > espaco.getCapacidade()) {
+                throw new IllegalArgumentException("A expectativa de público excede a capacidade do espaço selecionado.");
+            }
+
+            if (data.dataInicio() != null && data.dataFim() != null) {
+                boolean conflito = eventoRepository.existsConflitoDeAgenda(
+                        espaco.getId(),
+                        data.dataInicio(),
+                        data.dataFim(),
+                        List.of(StatusEvento.REJEITADO, StatusEvento.CANCELADO)
+                );
+                if (conflito) {
+                    throw new IllegalArgumentException("Conflito de agenda: O espaço já possui um evento marcado nesse período.");
+                }
+            }
         }
 
         Evento evento = new Evento(

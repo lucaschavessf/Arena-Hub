@@ -33,4 +33,13 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
      */
     @Query("SELECT e FROM Evento e WHERE e.dataInicio < :dataFim AND e.dataFim > :dataInicio")
     List<Evento> findConflitoDeDatas(@Param("dataInicio") LocalDateTime dataInicio, @Param("dataFim") LocalDateTime dataFim);
+
+    @Query("SELECT CASE WHEN COUNT(e) > 0 THEN TRUE ELSE FALSE END " +
+           "FROM Evento e WHERE e.espaco.id = :espacoId " +
+           "AND e.status NOT IN (:statusExcluidos) " +
+           "AND e.dataInicio < :dataFim AND e.dataFim > :dataInicio")
+    boolean existsConflitoDeAgenda(@Param("espacoId") Long espacoId,
+                                   @Param("dataInicio") LocalDateTime dataInicio,
+                                   @Param("dataFim") LocalDateTime dataFim,
+                                   @Param("statusExcluidos") List<StatusEvento> statusExcluidos);
 }

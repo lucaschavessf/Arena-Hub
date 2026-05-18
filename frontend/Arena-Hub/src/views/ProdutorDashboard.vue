@@ -484,24 +484,25 @@
           <div class="form-row">
             <div class="form-field">
               <label>Data início do Evento</label>
-              <input type="date" v-model="novoEvento.dataInicio" class="input-field" />
+              <input type="date" v-model="novoEvento.dataInicio" class="input-field" :class="{ 'input-error': erroDatas }" />
             </div>
 
             <div class="form-field">
               <label>Data fim do Evento</label>
-              <input type="date" v-model="novoEvento.dataFim" class="input-field" />
+              <input type="date" v-model="novoEvento.dataFim" class="input-field" :class="{ 'input-error': erroDatas }" />
             </div>
 
             <div class="form-field">
               <label>Horário de Início</label>
-              <input type="time" v-model="novoEvento.horarioInicio" class="input-field" />
+              <input type="time" v-model="novoEvento.horarioInicio" class="input-field" :class="{ 'input-error': erroDatas }" />
             </div>
 
             <div class="form-field">
               <label>Horário de Término</label>
-              <input type="time" v-model="novoEvento.horarioFim" class="input-field" />
+              <input type="time" v-model="novoEvento.horarioFim" class="input-field" :class="{ 'input-error': erroDatas }" />
             </div>
           </div>
+          <p v-if="erroDatas" class="field-error-message" style="margin-top: -12px; margin-bottom: 16px;">{{ erroDatas }}</p>
 
           <div class="form-field">
             <label>Espaços Disponíveis</label>
@@ -600,8 +601,10 @@
                 type="number"
                 v-model="novoEvento.publicoEstimado"
                 class="input-field"
+                :class="{ 'input-error': erroPublico }"
                 placeholder="Número de pessoas"
               />
+              <p v-if="erroPublico" class="field-error-message">{{ erroPublico }}</p>
             </div>
           </div>
 
@@ -780,7 +783,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import AppNavbar from '../components/AppNavbar.vue'
 import AppFooter from '../components/AppFooter.vue'
@@ -798,6 +801,8 @@ const modalEspacoDetalhes = ref(false)
 const espacoSelecionado = ref<any>(null)
 const enviandoSolicitacao = ref(false)
 const erroSolicitacao = ref('')
+const erroDatas = ref('')
+const erroPublico = ref('')
 const categorias = ref<any[]>([])
 const carregandoDados = ref(false)
 
@@ -839,7 +844,74 @@ const novoEvento = ref({
 
 const espacosDisponiveis = ref<any[]>([])
 
+watch(
+  [
+    () => novoEvento.value.dataInicio,
+    () => novoEvento.value.horarioInicio,
+    () => novoEvento.value.dataFim,
+    () => novoEvento.value.horarioFim,
+    () => novoEvento.value.espacos
+  ],
+  async ([dataInicio, horarioInicio, dataFim, horarioFim, espacos]) => {
+    if (erroDatas.value) {
+      erroDatas.value = ''
+    }
+    
+    if (dataInicio && horarioInicio && dataFim && horarioFim) {
+      const inicio = new Date(`${dataInicio}T${horarioInicio}:00`)
+      const fim = new Date(`${dataFim}T${horarioFim}:00`)
+      
+      if (!isNaN(inicio.getTime()) && !isNaN(fim.getTime())) {
+        const diffDias = (fim.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)
+        if (diffDias > 7) {
+          erroDatas.value = 'O evento não pode ter duração superior a 7 dias.'
+          return
+        }
+        
+        if (diffDias <= 0) {
+          erroDatas.value = 'A data/hora de término deve ser posterior à de início.'
+          return
+        }
 
+        if (espacos && espacos.length > 0) {
+          const espacoId = espacos[0].id
+          try {
+            const res = await api.get('/api/eventos/validar-disponibilidade', {
+              params: {
+                espacoId: espacoId,
+                dataInicio: `${dataInicio}T${horarioInicio}:00`,
+                dataFim: `${dataFim}T${horarioFim}:00`
+              }
+            })
+            if (res.data && res.data.disponivel === false) {
+              erroDatas.value = res.data.mensagem || 'Conflito de agenda: O espaço já possui um evento marcado nesse período.'
+            }
+          } catch (e) {
+            console.error('Erro ao validar disponibilidade', e)
+          }
+        }
+      }
+    }
+  },
+  { deep: true }
+)
+
+watch(
+  [() => novoEvento.value.publicoEstimado, () => novoEvento.value.espacos],
+  ([publico, espacos]) => {
+    if (publico && espacos && espacos.length > 0) {
+      const espaco = espacos[0]
+      if (Number(publico) > Number(espaco.capacidade)) {
+        erroPublico.value = 'Capacidade excedida: A expectativa de público é maior que a capacidade do espaço selecionado.'
+      } else {
+        erroPublico.value = ''
+      }
+    } else {
+      erroPublico.value = ''
+    }
+  },
+  { deep: true }
+)
 
 function formatarData(data: string) {
   if (!data) return ''
@@ -978,6 +1050,11 @@ async function enviarSolicitacao() {
     return
   }
 
+  if (erroDatas.value || erroPublico.value) {
+    erroSolicitacao.value = 'Corrija os erros destacados no formulário antes de enviar.'
+    return
+  }
+
   const dataInicio = `${novoEvento.value.dataInicio}T${novoEvento.value.horarioInicio}:00`
   const dataFim = `${novoEvento.value.dataFim}T${novoEvento.value.horarioFim}:00`
 
@@ -1109,9 +1186,34 @@ function selecionarEspaco() {
 }
 
 const calcularTotalEspacos = computed(() => {
-  return novoEvento.value.espacos.reduce((total, espaco) => {
-    return total + Number(espaco.preco || 0)
-  }, 0)
+  if (novoEvento.value.espacos.length === 0) return 0;
+  
+  const inicio = new Date(`${novoEvento.value.dataInicio}T${novoEvento.value.horarioInicio}:00`);
+  const fim = new Date(`${novoEvento.value.dataFim}T${novoEvento.value.horarioFim}:00`);
+  
+  if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) return 0;
+  
+  const diffMs = fim.getTime() - inicio.getTime();
+  if (diffMs <= 0) return 0;
+  
+  let total = 0;
+  for (const espaco of novoEvento.value.espacos) {
+    const preco = Number(espaco.preco || 0);
+    const tipo = (espaco.tipoCobranca || '').toUpperCase();
+    
+    if (tipo === 'HORA') {
+      const diffMinutos = Math.ceil(diffMs / (1000 * 60));
+      const horas = Math.ceil(diffMinutos / 60);
+      total += horas * preco;
+    } else if (tipo === 'DIARIA' || tipo === 'DIA') {
+      const diffHoras = Math.ceil(diffMs / (1000 * 60 * 60));
+      const dias = Math.ceil(diffHoras / 24);
+      total += dias * preco;
+    } else {
+      total += preco;
+    }
+  }
+  return total;
 })
 
 function salvarPerfil() {
@@ -2391,5 +2493,15 @@ textarea.input-field {
   .tab-btn {
     white-space: nowrap;
   }
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+}
+
+.field-error-message {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 4px;
 }
 </style>
